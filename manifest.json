@@ -1,0 +1,19 @@
+{
+  "name": "SHREE VAISHNAVI COMPUTERS - AI+ Office Suite",
+  "short_name": "SVC Office Suite",
+  "description": "Offline PDF, OCR, Image, Typing & Multimodal AI+ Office Workstation",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e3a8a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

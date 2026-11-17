@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data:; connect-src 'none'; img-src 'self' data:; form-action 'self' mailto:;">
+    <title>About, Privacy & Disclaimer | SHREE VAISHNAVI COMPUTERS - AI+ Office Suite</title>
+    <meta name="description" content="SHREE VAISHNAVI COMPUTERS (Bhilwara) - Offline PDF Manager, OCR, Photo Resizer, Typing Test, Excel Tools & Multimodal AI+ Office Suite की विशेषताएँ, गोपनीयता नीति एवं अस्वीकरण।">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <style>
+        :root {
+            --gov-blue: #1e3a8a;
+            --gov-navy: #0f172a;
+            --accent-amber: #f59e0b;
+            --accent-green: #059669;
+            --bg-page: #f1f5f9;
+            --bg-card: #ffffff;
+            --border-color: #cbd5e1;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, "Noto Sans Devanagari", sans-serif; }
+        body { background-color: var(--bg-page); color: var(--text-dark); line-height: 1.65; padding: 15px; }
+        .container { max-width: 1150px; margin: 0 auto; }
+        .header {
+            background: linear-gradient(135deg, var(--gov-navy) 0%, var(--gov-blue) 65%, #1d4ed8 100%);
+            color: #ffffff; padding: 18px 24px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 15px; box-shadow: 0 8px 22px rgba(15, 23, 42, 0.18);
+            border-bottom: 4px solid var(--accent-amber); margin-bottom: 24px;
+        }
+        .brand-box { display: flex; align-items: center; gap: 14px; }
+        .brand-box img { width: 54px; height: 54px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.25); }
+        .brand-title h1 { font-size: 1.35rem; letter-spacing: 0.4px; font-weight: 800; }
+        .brand-title p { font-size: 0.85rem; color: #fde68a; font-weight: 600; }
+        .nav-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .back-btn {
+            background-color: #ffffff; color: var(--gov-navy); text-decoration: none;
+            padding: 9px 16px; border-radius: 8px; font-weight: 700; font-size: 0.88rem;
+            display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s ease;
+        }
+        .back-btn:hover { background-color: var(--accent-amber); color: #0f172a; }
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; margin-bottom: 22px; box-shadow: 0 2px 8px rgba(15,23,42,0.04); }
+        .section-title { color: var(--gov-blue); font-size: 1.2rem; font-weight: 800; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid #e2e8f0; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-top: 14px; }
+        .feature-item { background: #f8fafc; border: 1px solid #e2e8f0; border-left: 4px solid var(--gov-blue); padding: 15px; border-radius: 8px; }
+        .feature-item h3 { font-size: 1rem; color: var(--gov-navy); margin-bottom: 6px; }
+        .feature-item p { font-size: 0.88rem; color: var(--text-muted); }
+        .privacy-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-left: 5px solid var(--accent-green); padding: 20px; border-radius: 10px; margin-bottom: 22px; }
+        .privacy-box h2 { color: #166534; font-size: 1.15rem; margin-bottom: 10px; }
+        .privacy-box p, .privacy-box li { color: #15803d; font-size: 0.93rem; margin-bottom: 8px; }
+        .privacy-box ul { padding-left: 20px; }
+        .disclaimer-box { background: #fffbeb; border: 1px solid #fde68a; border-left: 5px solid var(--accent-amber); padding: 20px; border-radius: 10px; margin-bottom: 22px; }
+        .disclaimer-box h2 { color: #92400e; font-size: 1.12rem; margin-bottom: 8px; }
+        .disclaimer-box ul { padding-left: 20px; color: #78350f; font-size: 0.9rem; }
+        .disclaimer-box li { margin-bottom: 6px; }
+        .license-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; margin-top: 12px; }
+        .license-pill { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 9px 12px; font-size: 0.84rem; display: flex; justify-content: space-between; align-items: center; }
+        .license-tag { background: #e0f2fe; color: #0369a1; padding: 2px 7px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 0.9rem; font-weight: 600; color: var(--gov-navy); margin-bottom: 5px; }
+        .form-control { width: 100%; padding: 10px 14px; border: 1px solid var(--border-color); border-radius: 7px; font-size: 0.95rem; background: #f8fafc; }
+        .submit-btn { background: var(--gov-blue); color: #fff; border: none; padding: 10px 20px; font-size: 0.92rem; font-weight: 700; border-radius: 7px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+        .copy-btn { background: #f1f5f9; color: var(--gov-navy); border: 1px solid var(--border-color); padding: 10px 18px; font-size: 0.9rem; font-weight: 600; border-radius: 7px; cursor: pointer; }
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 12px; }
+        .contact-card { background: #f8fafc; border: 1px solid var(--border-color); padding: 16px; border-radius: 8px; }
+        .footer { background: var(--bg-card); border: 1px solid var(--border-color); border-top: 3px solid var(--gov-blue); border-radius: 10px; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.88rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="brand-box">
+            <img src="logo.svg" alt="SVC AI+ Office Suite Logo">
+            <div class="brand-title">
+                <h1>SHREE VAISHNAVI COMPUTERS</h1>
+                <p>AI+ Office Suite · Offline PDF · OCR · Photo · Typing · Calculators</p>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="guide.html" target="_blank" class="back-btn" style="background:#059669;color:#fff;">📘 गाइड व शर्तें (PPT)</a>
+            <a href="index.html" class="back-btn">⬅ वापस Office Suite पर जाएं</a>
+        </div>
+    </header>
+
+    <section class="card">
+        <h2 class="section-title">🏢 AI+ Office Suite का परिचय (About This Workstation)</h2>
+        <p style="margin-bottom: 10px;">
+            <strong>SHREE VAISHNAVI COMPUTERS (भीलवाड़ा, राजस्थान)</strong> द्वारा विकसित यह आधुनिक <strong>AI+ Office Suite (PWA Web & Desktop App)</strong> सरकारी कार्यालयों, ई-मित्र केंद्रों, अधिवक्ताओं, संवेदकों और पेशेवर ऑपरेटरों के दैनिक डिजिटल कार्यों को तेज़, सुरक्षित और सटीक बनाने हेतु निर्मित किया गया है।
+        </p>
+        <p>
+            यह एक <strong>Installable Offline-Ready ऐप (PWA)</strong> है—जिसे आप अपने कंप्यूटर या मोबाइल में सीधे इंस्टॉल करके बिना इंटरनेट के भी PDF संपादन, लोकल OCR स्कैनिंग, परीक्षा फोटो रीसाइज़र, टाइपिंग टेस्ट, Excel प्रबंधन और कैलकुलेटर का उपयोग कर सकते हैं, साथ ही ऑनलाइन होने पर <strong>Multimodal AI+ Assistant</strong> की सहायता ले सकते हैं।
+        </p>
+    </section>
+
+    <section class="card">
+        <h2 class="section-title">✨ प्रमुख विशेषताएँ (Core Modules & Capabilities)</h2>
+        <div class="features-grid">
+            <div class="feature-item"><h3>🤖 मल्टीमॉडल AI+ Assistant</h3><p>एक साथ 4 फ़ाइलें (डिजिटल/स्कैन PDF, Word <code>.docx</code>, Excel <code>.xlsx/.csv</code> व फ़ोटो) पढ़कर तुलना, सॉर्टिंग, हिंदी वॉइस टाइपिंग, HD पोस्टर निर्माण तथा सीधे <b>Excel (.xlsx)</b> व <b>लेटरहेड Word</b> एक्सपोर्ट।</p></div>
+            <div class="feature-item"><h3>📕 एडवांस ऑफ़लाइन PDF सुइट</h3><p>बिना सर्वर अपलोड किए AES-128/256 पासवर्ड लॉक, पासवर्ड अनलॉक, स्मार्ट कंप्रेशन, मर्ज, स्प्लिट, पेज रोटेट, रीऑर्डर, वॉटरमार्क और हिंदी/अंग्रेज़ी OCR।</p></div>
+            <div class="feature-item"><h3>🌐 Same-Format Visual Translator</h3><p>अपलोड की गई Image (JPG/PNG), PDF या Word फ़ाइल के मूल लेआउट और तालिकाओं को सुरक्षित रखते हुए शुद्ध हिंदी में अनुवाद।</p></div>
+            <div class="feature-item"><h3>🖼️ परीक्षा फोटो व हस्ताक्षर रीसाइज़र</h3><p>सटीक पिक्सेल व निर्धारित KB साइज़ में पासपोर्ट फोटो व हस्ताक्षर क्रॉप, रोटेट और DPI संदर्भ सहित डाउनलोड।</p></div>
+            <div class="feature-item"><h3>⌨️ RSSB / SSC टाइपिंग टेस्ट</h3><p>हिंदी (DevLys 010 / Kruti Dev / Unicode) व अंग्रेज़ी में वर्ड-लॉक, बैकस्पेस नियंत्रण, नेट WPM व सटीकता की लाइव गणना।</p></div>
+            <div class="feature-item"><h3>📊 Excel टूलकिट व कैलकुलेटर</h3><p>ऑफ़लाइन Excel/CSV संपादन, डुप्लीकेट हटाना, Age, Percentage, GST, TDS तथा भारतीय प्रणाली में Number-to-Words।</p></div>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="guide.html" target="_blank" class="submit-btn" style="background:var(--accent-green);">📘 संपूर्ण कार्यक्षमता एवं शर्तें (PPT स्लाइडशो देखें)</a>
+            <a href="https://shree-vaishnavi-computers.github.io/font-converter/" target="_blank" class="submit-btn">🔤 हिंदी फ़ॉन्ट कनवर्टर पोर्टल खोलें</a>
+        </div>
+    </section>
+
+    <section class="privacy-box" id="privacy-policy">
+        <h2>🛡️ गोपनीयता नीति एवं डेटा सुरक्षा (Privacy Policy)</h2>
+        <ul>
+            <li><strong>100% लोकल ऑफ़लाइन प्रोसेसिंग:</strong> सभी PDF टूल्स, OCR स्कैनिंग, फोटो रीसाइज़र, टाइपिंग टेस्ट, Excel संपादन और कैलकुलेटर सीधे आपके अपने ब्राउज़र में चलते हैं। आपकी कोई भी फ़ाइल हमारे किसी सर्वर पर अपलोड या संग्रहीत नहीं होती।</li>
+            <li><strong>AI+ सेवा एवं स्पष्ट सहमति:</strong> AI+ चैट, इमेज जनरेशन व अनुवाद सुविधाएँ केवल आपकी स्पष्ट सहमति के बाद सक्रिय होती हैं। आप एक क्लिक में अपनी अनुमति वापस ले सकते हैं या पूरा लोकल डेटा मिटा सकते हैं।</li>
+            <li><strong>संवेदनशील जानकारी पर रोक:</strong> गोपनीयता की रक्षा हेतु किसी भी ऑनलाइन AI सुविधा में आधार नंबर, पैन कार्ड, बैंक खाता संख्या या अति-गोपनीय पासवर्ड दर्ज न करें।</li>
+        </ul>
+    </section>
+
+    <section class="disclaimer-box" id="disclaimer">
+        <h2>⚖️ वैधानिक अस्वीकरण एवं उपयोग की शर्तें (Disclaimer & Terms of Use)</h2>
+        <ul>
+            <li><strong>अंतिम सत्यापन अनिवार्य:</strong> AI, OCR या अनुवाद द्वारा तैयार किए गए किसी भी शासकीय आदेश, विधिक सूचना, शपथ-पत्र या गणना का उपयोग करने से पूर्व संबंधित नियमों के अनुसार स्वयं प्रूफरीडिंग व सत्यापन करना उपयोगकर्ता की ज़िम्मेदारी है।</li>
+            <li><strong>प्रतिबंधित उपयोग:</strong> किसी भी प्रकार के फ़र्ज़ी दस्तावेज़, जाली प्रमाण-पत्र या गैर-कानूनी सामग्री का निर्माण पूर्णतः वर्जित है।</li>
+            <li><strong>पासवर्ड सुरक्षा:</strong> PDF लॉक करते समय लगाए गए पासवर्ड हमारे सर्वर पर सेव नहीं होते; पासवर्ड भूल जाने पर फ़ाइल रिकवर नहीं की जा सकेगी।</li>
+        </ul>
+    </section>
+
+    <section class="card">
+        <h2 class="section-title">📜 ओपन-सोर्स सॉफ्टवेयर श्रेय (Open-Source Licenses)</h2>
+        <div class="license-grid">
+            <div class="license-pill"><strong>QPDF / qpdf-wasm</strong><span class="license-tag">Apache-2.0 / MIT</span></div>
+            <div class="license-pill"><strong>Tesseract.js OCR</strong><span class="license-tag">Apache-2.0</span></div>
+            <div class="license-pill"><strong>Mozilla PDF.js</strong><span class="license-tag">Apache-2.0</span></div>
+            <div class="license-pill"><strong>pdf-lib</strong><span class="license-tag">MIT License</span></div>
+            <div class="license-pill"><strong>Mammoth.js (.docx)</strong><span class="license-tag">BSD-2-Clause</span></div>
+            <div class="license-pill"><strong>Cropper.js</strong><span class="license-tag">MIT License</span></div>
+            <div class="license-pill"><strong>JSZip</strong><span class="license-tag">MIT License</span></div>
+            <div class="license-pill"><strong>SheetJS (xlsx)</strong><span class="license-tag">Apache-2.0</span></div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 class="section-title">📝 सीधा सुझाव एवं सहायता बॉक्स (Zero-Server Direct Email)</h2>
+        <form onsubmit="sendDirectMail(event)">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;">
+                <div class="form-group"><label>आपका नाम</label><input type="text" id="name" class="form-control" required></div>
+                <div class="form-group"><label>ईमेल या मोबाइल नंबर</label><input type="text" id="email" class="form-control" required></div>
+            </div>
+            <div class="form-group"><label>संदेश / सुझाव</label><textarea id="message" class="form-control" rows="4" required></textarea></div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                <button type="submit" class="submit-btn">✉️ ईमेल ऐप में खोलें</button>
+                <button type="button" class="copy-btn" onclick="copySupportDetails()">📋 संदेश कॉपी करें</button>
+            </div>
+            <p id="formNote" style="font-size:0.85rem;color:#15803d;margin-top:8px;font-weight:600;"></p>
+        </form>
+    </section>
+
+    <footer class="footer">
+        <div><a href="index.html" style="color:var(--gov-blue);font-weight:700;text-decoration:none;">⬅ वापस AI+ Office Suite पर जाएं</a></div>
+        <div>© 2026 <strong style="color:var(--gov-navy);">SHREE VAISHNAVI COMPUTERS</strong> (Bhilwara, Rajasthan) · All Rights Reserved.</div>
+    </footer>
+</div>
+<script>
+function buildSupportBody() {
+    const name = document.getElementById('name').value.trim();
+    const contact = document.getElementById('email').value.trim();
+    const msg = document.getElementById('message').value.trim();
+    return {
+        subject: `[SVC Office Suite] Support / Feedback - ${name}`,
+        body: `नाम: ${name}\nसंपर्क: ${contact}\n\nविवरण:\n${msg}`
+    };
+}
+function sendDirectMail(e) {
+    e.preventDefault();
+    const d = buildSupportBody();
+    window.location.href = `mailto:svcomputers.812@gmail.com?subject=${encodeURIComponent(d.subject)}&body=${encodeURIComponent(d.body)}`;
+    document.getElementById('formNote').textContent = "✓ आपका ईमेल ऐप खुल रहा है (svcomputers.812@gmail.com)।";
+}
+function copySupportDetails() {
+    const d = buildSupportBody();
+    navigator.clipboard.writeText(`To: svcomputers.812@gmail.com\nSubject: ${d.subject}\n\n${d.body}`).then(() => {
+        document.getElementById('formNote').textContent = "✓ संदेश कॉपी हो गया है! अब इसे svcomputers.812@gmail.com पर ईमेल कर दें।";
+    });
+}
+</script>
+</body>
+</html>

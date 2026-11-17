@@ -1,0 +1,2846 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<meta name="theme-color" content="#1e3a8a">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#12366b">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://js.puter.com; connect-src 'self' blob: data: https://*.puter.com https://api.groq.com https://generativelanguage.googleapis.com https://translate.googleapis.com; img-src 'self' blob: data:; font-src 'self' blob: data:; worker-src 'self' blob:;">
+<title>SHREE VAISHNAVI COMPUTERS | Professional Tools Suite</title>
+<link rel="stylesheet" href="libs/cropper.min.css">
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--ink:#182235;--muted:#64748b;--primary:#155eef;--line:#dce4ef;--good:#087443;--bad:#b42318;--shadow:0 8px 24px #102a5610}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 Arial,"Noto Sans Devanagari",sans-serif}
+header{background:linear-gradient(120deg,#102a56,#155eef);color:#fff;padding:24px 16px;text-align:center}header h1{font-size:clamp(21px,4vw,31px);margin:0}header p{margin:6px 0 0;color:#dbeafe}
+.wrap{max-width:1250px;margin:auto;padding:16px}.tabs{display:flex;gap:8px;overflow:auto;padding:8px 0 14px;position:sticky;top:0;background:var(--bg);z-index:8}
+.tabs button,.btn{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700;white-space:nowrap}
+.tabs button.active,.btn.primary{background:var(--primary);color:#fff;border-color:var(--primary)}.btn.danger{background:#fff1f0;color:#b42318;border-color:#ffd5d2}.btn:disabled{opacity:.5;cursor:not-allowed}
+.panel{display:none}.panel.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}
+h2{font-size:20px;margin:0 0 12px}h3{font-size:16px;margin:12px 0 8px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+label{display:block;font-weight:700;font-size:13px;color:#344054;margin:8px 0 5px}
+input,select,textarea{width:100%;border:1px solid #cbd5e1;border-radius:9px;padding:10px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:110px;resize:vertical}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.row>*{flex:0 0 auto}.row .grow{flex:1 1 180px}
+.hint{font-size:12px;color:var(--muted)}.status{padding:10px;border-radius:9px;margin-top:10px;display:none;white-space:pre-wrap}.status.good{display:block;background:#ecfdf3;color:#067647}.status.bad{display:block;background:#fff1f0;color:#b42318}.status.info{display:block;background:#eff6ff;color:#1d4ed8}
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px}.stat{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:12px}.stat b{display:block;font-size:23px}
+.preview{max-width:100%;max-height:420px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#f8fafc}
+table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid var(--line);padding:7px;text-align:left}th{background:#f1f5f9}
+#typingPassage{font-size:22px;line-height:1.9;white-space:pre-wrap;background:#f8fafc;padding:15px;border:1px solid var(--line);border-radius:10px;min-height:120px}
+#typingInput{font-size:22px;line-height:1.8;min-height:160px;font-family:Arial,"Noto Sans Devanagari",sans-serif}
+.keyhint{background:#eef4ff;padding:10px;border-radius:9px;font-size:13px}
+.progress{height:9px;background:#e2e8f0;border-radius:99px;overflow:hidden}.progress span{display:block;height:100%;background:var(--primary);width:0}
+.small{font-size:12px;color:var(--muted)}.hidden{display:none!important}.sheetwrap{overflow:auto;max-height:420px}
+@media(max-width:600px){.wrap{padding:10px}.card{padding:12px}.tabs{top:0}#typingPassage,#typingInput{font-size:19px}}
+
+/* ===== SVC Professional Colour UI refresh ===== */
+:root{
+ --bg:#f2f6fc;--card:#ffffff;--ink:#172b4d;--muted:#667792;
+ --primary:#2457d6;--line:#dbe5f2;--good:#087a55;--bad:#c43232;
+ --shadow:0 10px 28px rgba(24,52,99,.075);--navy:#102b56;--teal:#0d9488;
+}
+body{background:radial-gradient(ellipse at 8% 0%,#e4edff 0,transparent 32%),linear-gradient(180deg,#f5f8fe 0%,#eef3fa 100%);color:var(--ink)}
+header{position:relative;overflow:hidden;text-align:left;padding:30px max(20px,calc((100% - 1210px)/2));background:linear-gradient(115deg,#10264f 0%,#174a91 55%,#2869d8 100%);box-shadow:0 8px 26px rgba(15,43,86,.2)}
+header:before,header:after{content:"";position:absolute;border-radius:50%;pointer-events:none}
+header:before{width:300px;height:300px;right:7%;top:-190px;background:rgba(255,255,255,.09)}
+header:after{width:190px;height:190px;right:22%;bottom:-145px;border:1px solid rgba(255,255,255,.16)}
+header h1{position:relative;z-index:1;letter-spacing:.5px;font-weight:800;text-shadow:0 2px 12px #071b3c55}
+header p{position:relative;z-index:1;color:#d8e8ff;font-size:14px;letter-spacing:.25px}
+.wrap{max-width:1280px;padding:18px 18px 34px}
+.tabs{gap:9px;padding:12px 4px 16px;background:rgba(242,246,252,.92);backdrop-filter:blur(12px);border-bottom:1px solid #dce6f3;margin-bottom:12px}
+.tabs button{border:1px solid #d8e2f0;background:#fff;color:#365071;border-radius:12px;padding:11px 16px;box-shadow:0 2px 7px #18345f0a;transition:transform .18s,box-shadow .18s,background .18s;}
+.tabs button:hover{transform:translateY(-2px);box-shadow:0 6px 14px #18345f18;border-color:#a9c0e8}
+.tabs button.active{background:linear-gradient(135deg,#174a9b,#3474e8);border-color:#2457d6;color:#fff;box-shadow:0 6px 16px #2457d640}
+.panel.active{animation:panelIn .24s ease-out}@keyframes panelIn{from{opacity:.45;transform:translateY(5px)}to{opacity:1;transform:none}}
+.card{position:relative;border:1px solid #dfe7f2;border-radius:17px;padding:19px;margin-bottom:16px;box-shadow:var(--shadow);overflow:hidden}
+.card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#3474e8,#18a6a0);opacity:.9}
+.panel#pdf .card:before{background:linear-gradient(180deg,#3975e8,#7c5ce7)}
+.panel#photo .card:before{background:linear-gradient(180deg,#0d9488,#36b6a0)}
+.panel#typing .card:before{background:linear-gradient(180deg,#e18a24,#e9b84d)}
+.panel#excel .card:before{background:linear-gradient(180deg,#15976a,#55bd83)}
+.panel#calc .card:before{background:linear-gradient(180deg,#d65b83,#ee8ba4)}
+.panel#words .card:before{background:linear-gradient(180deg,#7657d6,#a58be9)}
+h2{display:flex;align-items:center;gap:10px;font-size:21px;font-weight:800;letter-spacing:-.2px;color:#18345f;margin:0 0 14px}
+h2:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,#dce6f3,transparent);margin-left:4px}
+h3{color:#29466d;font-weight:750}
+label{color:#344d70;font-size:13px;font-weight:750;letter-spacing:.1px}
+input,select,textarea{border:1px solid #ccd8e8;border-radius:10px;padding:11px 12px;background:#fbfdff;transition:border-color .15s,box-shadow .15s,background .15s}
+input:hover,select:hover,textarea:hover{border-color:#9db5dc}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#3974df;background:#fff;box-shadow:0 0 0 3px rgba(57,116,223,.13)}
+input[type=file]{padding:8px;background:#f7faff;border-style:dashed}
+input[type=color]{height:43px;padding:4px}
+.btn{border:1px solid #d6e1ef;background:linear-gradient(180deg,#fff,#f7faff);color:#29466d;border-radius:10px;padding:10px 15px;box-shadow:0 2px 6px #18345f0a;transition:all .16s;font-weight:750}
+.btn:hover:not(:disabled){transform:translateY(-1px);border-color:#9fb8df;box-shadow:0 5px 12px #18345f18}
+.btn.primary{background:linear-gradient(135deg,#1d4fb5,#3475e7);border-color:#2457d6;color:#fff;box-shadow:0 4px 10px #2457d62a}
+.btn.primary:hover:not(:disabled){background:linear-gradient(135deg,#173f94,#2865d1);box-shadow:0 7px 16px #2457d640}
+.btn.danger{background:linear-gradient(180deg,#fff8f7,#fff0ee);color:#b52c2c;border-color:#f4ceca}
+.btn:disabled{filter:grayscale(.25);opacity:.48}
+.hint,.small{color:#71819a}
+.status{border:1px solid transparent;border-radius:11px;padding:12px 14px;font-weight:600}
+.status.good{background:#eaf8f1;color:#08734d;border-color:#c8ecd9}
+.status.bad{background:#fff0ef;color:#b42318;border-color:#f5d0cc}
+.status.info{background:#edf4ff;color:#2257b3;border-color:#d3e2ff}
+.stat{border-radius:13px;padding:14px;background:linear-gradient(145deg,#f8fbff,#eef4fc);border:1px solid #dce7f5}
+.stat b{font-size:25px;color:#1f56b3;font-variant-numeric:tabular-nums}
+.preview{border-color:#d7e2f0;box-shadow:0 3px 12px #18345f0a}
+table{border-radius:10px;overflow:hidden}th{background:#eaf1fb;color:#2a4770;font-weight:800}td,th{border-color:#dce5f0}
+#typing .card:first-child{overflow:visible}
+#typingPassage{background:linear-gradient(145deg,#f8fbff,#eef4fc);border:1px solid #d9e5f4;border-radius:13px;color:#203d66;position:sticky;top:76px;z-index:6;max-height:220px;min-height:130px;overflow-y:auto;overscroll-behavior:contain;padding:14px;box-shadow:0 8px 22px rgba(24,52,99,.12);scrollbar-gutter:stable}
+#typingInput{background:#fff;border:1px solid #c9d8ed;border-radius:13px;box-shadow:inset 0 2px 5px #18345f08;height:210px;min-height:180px;max-height:36vh;overflow-y:auto;resize:vertical;overscroll-behavior:contain}
+@media(max-width:700px){#typingPassage{top:8px;max-height:24vh;min-height:100px;font-size:17px;line-height:1.65}#typingInput{height:180px;min-height:150px;max-height:30vh;font-size:18px}}
+.keyhint{background:linear-gradient(110deg,#edf4ff,#e8f8f6);border:1px solid #d8e8f5;color:#355578}
+.progress{height:10px;background:#e4ebf5}.progress span{background:linear-gradient(90deg,#2457d6,#16a69a);border-radius:99px;transition:width .2s}
+.sheetwrap{border:1px solid #dce5f0;border-radius:10px}
+.pdf-thumb{width:112px;padding:6px;border:1px solid #d5dfec;border-radius:10px;background:#fff;cursor:pointer;text-align:center}.pdf-thumb canvas{width:100%;height:130px;object-fit:contain;background:#f5f7fb}.pdf-thumb.selected{outline:3px solid #8bb5ff}.pdf-thumb.dragging{opacity:.4}
+button:focus-visible{outline:3px solid #86b3ff;outline-offset:2px}
+@media(max-width:700px){header{padding:24px 16px;text-align:center}.wrap{padding:10px}.card{padding:15px 13px 14px}.tabs{margin-left:-2px;margin-right:-2px}.tabs button{padding:10px 13px;font-size:13px}.btn{padding:10px 12px;font-size:13px}h2{font-size:19px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Centered PDF task progress overlay */
+#pdfTaskOverlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(10,25,49,.48);backdrop-filter:blur(5px)}
+#pdfTaskOverlay.active{display:flex}
+.pdf-task-card{width:min(390px,94vw);background:#fff;border:1px solid #dbe5f2;border-radius:20px;padding:25px 22px 22px;text-align:center;box-shadow:0 24px 70px rgba(7,24,52,.28)}
+.pdf-task-ring{--pct:0deg;width:88px;height:88px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#2457d6 var(--pct),#e7edf6 0);position:relative}
+.pdf-task-ring:before{content:"";position:absolute;inset:8px;background:#fff;border-radius:50%}
+.pdf-task-ring span{position:relative;z-index:1;font-size:20px;font-weight:800;color:#1e4fae;font-variant-numeric:tabular-nums}
+#pdfTaskOverlay.indeterminate .pdf-task-ring{background:conic-gradient(#2457d6 0 28%,#e7edf6 28% 100%);animation:pdfRingSpin 1s linear infinite}
+#pdfTaskOverlay.indeterminate .pdf-task-ring:before{inset:8px}
+@keyframes pdfRingSpin{to{transform:rotate(360deg)}}
+.pdf-task-title{font-size:17px;font-weight:800;color:#18345f;margin-bottom:5px}
+.pdf-task-detail{font-size:13px;color:#657792;min-height:20px;overflow-wrap:anywhere}
+.pdf-task-track{height:7px;border-radius:99px;background:#e8eef7;overflow:hidden;margin-top:17px}
+.pdf-task-track span{display:block;width:0;height:100%;border-radius:99px;background:linear-gradient(90deg,#2457d6,#16a69a);transition:width .2s}
+@media(prefers-reduced-motion:reduce){#pdfTaskOverlay.indeterminate .pdf-task-ring{animation:none}}
+</style>
+</head>
+<body>
+
+<div id="pdfTaskOverlay" role="status" aria-live="polite" aria-label="PDF processing">
+ <div class="pdf-task-card"><div class="pdf-task-ring" id="pdfTaskRing"><span id="pdfTaskPct">0%</span></div>
+ <div class="pdf-task-title" id="pdfTaskTitle">PDF प्रक्रिया जारी है</div><div class="pdf-task-detail" id="pdfTaskDetail">कृपया प्रतीक्षा करें…</div>
+ <div class="pdf-task-track"><span id="pdfTaskBar"></span></div></div>
+</div>
+
+<header style="background:linear-gradient(135deg,#0f172a 0%,#1e3a8a 60%,#1d4ed8 100%);color:#ffffff;padding:18px 24px;border-radius:14px;margin:12px auto 16px auto;max-width:1280px;box-shadow:0 10px 25px rgba(15,23,42,0.22);border-bottom:4px solid #f59e0b;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;">
+  <div style="display:flex;align-items:center;gap:14px;">
+    <img src="logo.svg" alt="SVC Logo" style="width:54px;height:54px;border-radius:12px;box-shadow:0 4px 10px rgba(0,0,0,0.25);">
+    <div>
+      <h1 style="margin:0;font-size:1.4rem;letter-spacing:0.4px;font-weight:800;color:#ffffff;">SHREE VAISHNAVI COMPUTERS</h1>
+      <p style="margin:3px 0 0 0;font-size:0.86rem;color:#fde68a;font-weight:600;">AI+ Office Suite · Offline PDF · OCR · Photo · Typing · Calculators</p>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+    <a href="https://shree-vaishnavi-computers.github.io/font-converter/" target="_blank" style="background:rgba(255,255,255,0.14);color:#ffffff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;border:1px solid rgba(255,255,255,0.28);">🔤 हिंदी फ़ॉन्ट कनवर्टर</a>
+    <a href="guide.html" target="_blank" style="background:#059669;color:#ffffff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">📘 गाइड व शर्तें</a>
+    <a href="about.html" style="background:#ffffff;color:#0f172a;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">ℹ️ परिचय व नीति</a>
+    <button type="button" id="svcPwaInstallBtn" style="display:none;background:#f59e0b;color:#0f172a;border:none;padding:8px 15px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 10px rgba(245,158,11,0.4);">📥 App इंस्टॉल करें</button>
+  </div>
+</header>
+<div class="wrap">
+<nav class="tabs" id="tabs">
+<button class="active" data-tab="pdf">PDF Tools</button><button data-tab="photo">Photo / Signature</button><button data-tab="typing">Typing Test</button><button data-tab="excel">Excel Tools</button><button data-tab="calc">Calculators</button><button data-tab="words">Number to Words</button>
+</nav>
+
+<section class="panel active" id="pdf">
+<div class="card"><h2>PDF Manager</h2><p class="hint">फाइलें आपके ब्राउज़र में ही प्रोसेस होती हैं। बड़ी PDF में समय लग सकता है।</p>
+<div class="grid"><div><label>मुख्य PDF चुनें</label><input id="pdfFile" type="file" accept="application/pdf"><div class="row" style="margin-top:7px"><button class="btn danger" id="pdfRemove1" type="button" disabled>× Remove PDF</button><span class="small" id="pdfFileInfo">कोई PDF चयनित नहीं</span></div></div><div><label>दूसरी PDF (Merge / Insert)</label><input id="pdfFile2" type="file" accept="application/pdf"><div class="row" style="margin-top:7px"><button class="btn danger" id="pdfRemove2" type="button" disabled>× Remove Second PDF</button><span class="small" id="pdfFileInfo2">कोई दूसरी PDF चयनित नहीं</span></div></div><div><label>Page Range (उदा. 1,3,5-7)</label><input id="pdfRange" placeholder="1,3,5-7"></div></div>
+<div class="row" style="margin-top:12px"><button class="btn primary" id="pdfLoad">Preview PDF</button><button class="btn" id="pdfMerge">Merge PDFs</button><button class="btn" id="pdfInsert">Insert Second PDF</button><button class="btn" id="pdfExtract">Extract Pages</button><button class="btn danger" id="pdfDelete">Delete Pages</button></div>
+<div class="grid" style="margin-top:12px"><div><label>Rotate selected pages</label><select id="pdfRotate"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select><button class="btn" id="pdfRotateBtn">Rotate</button></div><div><label>Reorder (उदा. 3,1,2,4)</label><input id="pdfOrder" placeholder="3,1,2,4"><button class="btn" id="pdfReorder">Reorder Pages</button></div><div><label>Resize page</label><select id="pdfSize"><option value="a4">A4</option><option value="letter">Letter</option><option value="fit">Original</option></select><button class="btn" id="pdfResize">Set Page Size</button></div></div>
+<div class="grid" style="margin-top:12px"><div><label>Watermark Text</label><input id="pdfWatermark" placeholder="CONFIDENTIAL"></div><div><label>Page Number</label><select id="pdfNumPos"><option value="bottom">Bottom Center</option><option value="top">Top Center</option></select></div><div><label>Raster Fallback Quality</label><select id="pdfQuality"><option value="0.8">High</option><option value="0.6">Medium</option><option value="0.4">Small size</option></select></div></div>
+<div class="row" style="margin-top:10px"><button class="btn" id="pdfWatermarkBtn">Add Watermark</button><button class="btn" id="pdfNumbers">Add Page Numbers</button><button class="btn" id="pdfCompress">Smart Compress</button><button class="btn" id="pdfJpg">PDF to JPG</button></div>
+<div class="card" style="margin-top:14px;background:#f8fbff">
+<h3>Smart Compression & Batch Processing</h3>
+<div class="grid">
+<div><label>Compression Profile</label><select id="pdfSmartProfile"><option value="balanced">Smart Hybrid · Recommended</option><option value="quality">Lossless · Preserve text & vector</option><option value="small">Maximum reduction · Raster fallback</option></select></div>
+<div><label>Batch PDFs (multiple files)</label><input id="pdfBatchFiles" type="file" accept="application/pdf" multiple></div>
+<div><label>OCR Language</label><select id="pdfOcrLang"><option value="eng">English</option><option value="hin">Hindi</option><option value="eng+hin">Hindi + English</option></select></div>
+</div>
+<div class="row" style="margin-top:10px"><button class="btn primary" id="pdfBatchCompress" type="button">Compress All & Download ZIP</button><button class="btn" id="pdfOcrBtn" type="button">OCR · Extract Text</button><button class="btn" id="pdfHistoryClear" type="button">Clear Session History</button></div>
+<p class="hint">पहले lossless optimization होगा, जिससे text और vector content सुरक्षित रहता है। जरूरत पड़ने पर ही चुनी गई profile के अनुसार raster fallback इस्तेमाल होगा। OCR अलग TXT फाइल बनाता है।</p>
+<div id="pdfOcrStatus" class="status" aria-live="polite"></div><div id="pdfHistory" class="small" style="margin-top:8px"></div>
+</div>
+<div class="grid" style="margin-top:12px"><div><label>Images to PDF</label><input id="imagesPdf" type="file" accept="image/*" multiple><button class="btn" id="imagesToPdf">Create PDF</button></div><div><label>PDF page thumbnails</label><div id="pdfPages" class="row"></div></div></div>
+<div id="pdfStatus" class="status" role="status" aria-live="polite"></div>
+<div id="pdfProgressWrap" class="hidden" style="margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:12px;background:#f8fbff"><div class="row" style="justify-content:space-between"><strong id="pdfProgressText">प्रक्रिया शुरू हो रही है…</strong><strong id="pdfProgressPct">0%</strong></div><div class="progress" style="margin-top:8px"><span id="pdfProgressBar" style="width:0%"></span></div></div>
+<div id="pdfResult" class="hidden" style="margin:12px 0;padding:14px;border:1px solid #b7e4cd;border-radius:12px;background:#f0fdf4"><h3 style="margin:0 0 10px;color:#166534">Compression Comparison</h3><div class="statgrid"><div class="stat"><span class="small">Original Size</span><b id="pdfOriginalSize">—</b></div><div class="stat"><span class="small">Compressed Size</span><b id="pdfCompressedSize">—</b></div><div class="stat"><span class="small">Space Saved</span><b id="pdfSavedSize">—</b></div><div class="stat"><span class="small">Reduction</span><b id="pdfSavedPct">—</b></div></div><p class="small" id="pdfCompareNote" style="margin:10px 0"></p><button class="btn primary" id="pdfDownloadResult" type="button">Download Compressed PDF</button></div>
+<div class="grid" style="margin-top:12px"><div><h3>Original Preview</h3><canvas id="pdfBeforePreview" class="preview"></canvas></div><div><h3>Compressed Preview</h3><canvas id="pdfAfterPreview" class="preview"></canvas></div></div>
+<div id="pdfPreview" class="grid"></div>
+<div class="card" style="margin-top:14px;background:#f8fbff" id="pdfPasswordCard">
+<h3>PDF Password Protection</h3>
+<p class="hint">AES पासवर्ड सुरक्षा · फाइल आपके ब्राउज़र में ही प्रोसेस होगी।</p>
+<div class="grid">
+<div><label>Open Password (PDF खोलने के लिए)</label><input id="pdfUserPassword" type="password" autocomplete="new-password" placeholder="कम से कम 8 अक्षर"></div>
+<div><label>Owner Password (सुरक्षा/अनुमतियों के लिए)</label><input id="pdfOwnerPassword" type="password" autocomplete="new-password" placeholder="अलग मजबूत पासवर्ड"></div>
+<div><label>Encryption / Reader Compatibility</label><select id="pdfEncryption"><option value="128" selected>AES-128 · Adobe Reader 7.0 और बाद के संस्करण</option><option value="256">AES-256 · आधुनिक Adobe Reader (नया संस्करण)</option></select></div>
+<div><label>Permissions</label><select id="pdfPermission"><option value="standard">Print allowed · Copy/Edit restricted</option><option value="full">All actions allowed</option><option value="strict">Print, Copy & Edit restricted</option></select></div>
+</div>
+<div class="row" style="margin-top:10px"><button class="btn primary" id="pdfLockBtn" type="button">Protect PDF · AES</button><input id="pdfUnlockPassword" type="password" autocomplete="current-password" placeholder="मौजूदा PDF का पासवर्ड" style="max-width:260px"><button class="btn" id="pdfUnlockBtn" type="button">Unlock / Remove Password</button></div>
+<div id="pdfPasswordStatus" class="status" role="status" aria-live="polite"></div>
+</div>
+</div></section>
+
+<section class="panel" id="photo">
+<div class="card"><h2>Photo / Signature Resizer</h2><div class="grid">
+<div><label>Image चुनें</label><input type="file" id="photoFile" accept="image/*"></div>
+<div><label>Preset</label><select id="photoPreset"><option value="413x531">Passport Photo · 413×531</option><option value="200x230">Small Photo · 200×230</option><option value="140x60">Signature · 140×60</option><option value="200x100">Signature · 200×100</option><option value="custom">Custom Size</option></select></div>
+<div><label>Width (px)</label><input type="number" id="photoW" value="413" min="1"></div><div><label>Height (px)</label><input type="number" id="photoH" value="531" min="1"></div>
+<div><label>Maximum file size (KB)</label><input type="number" id="photoKB" value="50" min="1"></div><div><label>Format</label><select id="photoFormat"><option value="image/jpeg">JPG</option><option value="image/png">PNG</option></select></div>
+<div><label>Background (JPG)</label><input type="color" id="photoBg" value="#ffffff"></div><div><label>Output DPI (print size reference)</label><select id="photoDpi"><option>300</option><option>200</option><option>150</option></select></div>
+</div><div class="row" style="margin-top:12px"><button class="btn primary" id="photoApply">Apply Crop & Resize</button><button class="btn" id="photoRotate">Rotate 90°</button><button class="btn" id="photoReset">Reset Crop</button></div>
+<div class="grid" style="margin-top:12px"><div><h3>Crop</h3><img id="photoImage" class="preview hidden" alt="Crop preview"></div><div><h3>Output Preview</h3><canvas id="photoCanvas" class="preview"></canvas><div id="photoInfo" class="small"></div><button class="btn primary" id="photoDownload" disabled>Download Image</button></div></div><div id="photoStatus" class="status"></div></div>
+</section>
+
+<section class="panel" id="typing">
+<div class="card"><h2>Typing Test</h2>
+<div class="grid">
+<div><label>Exam Profile</label><select id="typeProfile"><option value="general">General Practice</option><option value="rssb">RSSB / Rajasthan IA-style</option><option value="ssc">SSC-style Practice</option><option value="custom">Custom Practice</option></select></div>
+<div><label>Typing Language</label><select id="typeLang"><option value="en">English</option><option value="hi">Hindi</option></select></div>
+<div><label>Hindi Keyboard Layout</label><select id="typeLayout"><option value="remington">Remington GAIL / DevLys-Kruti Practice</option><option value="inscript">Inscript</option><option value="phonetic">Phonetic</option></select></div>
+<div><label>Display / Input Font</label><select id="typeFont"><option value="unicode">Unicode</option><option value="devlys">DevLys 010</option><option value="kruti">Kruti Dev 010</option></select></div>
+<div><label>Test Duration</label><select id="typeDuration"><option value="1">1 Minute</option><option value="5" selected>5 Minutes</option><option value="10">10 Minutes</option><option value="15">15 Minutes</option></select></div>
+<div><label>Backspace</label><select id="typeBackspace"><option value="yes">Allowed</option><option value="rssb">Word Lock</option><option value="no">Disabled</option></select></div>
+<div><label>Passage</label><select id="typePassage"><option value="0">Passage 1</option><option value="1">Passage 2</option><option value="2">Passage 3</option></select></div>
+</div>
+<div class="row" style="margin:12px 0"><button class="btn" id="loadDevlysFont">Load DevLys Font</button><button class="btn" id="loadKrutiFont">Load Kruti Dev Font</button><input type="file" id="devlysFont" accept=".ttf,.otf,font/ttf" hidden><input type="file" id="krutiFont" accept=".ttf,.otf,font/ttf" hidden></div>
+<div class="row" style="margin:12px 0"><button class="btn primary" id="typeStart">Start Test</button><button class="btn" id="typeReset">Reset</button><button class="btn" id="typePrint">Print Result</button></div>
+<div class="statgrid"><div class="stat"><span class="small">Time Left</span><b id="typeTime">05:00</b></div><div class="stat"><span class="small">Gross WPM</span><b id="typeGross">0</b></div><div class="stat"><span class="small">Net WPM</span><b id="typeNet">0</b></div><div class="stat"><span class="small">Accuracy</span><b id="typeAccuracy">100%</b></div><div class="stat"><span class="small">Char. Errors</span><b id="typeErrors">0</b></div><div class="stat"><span class="small">Characters</span><b id="typeChars">0</b></div></div>
+<div class="progress" style="margin:12px 0"><span id="typeProgress"></span></div>
+<h3>Passage</h3><div id="typingPassage">यहाँ परीक्षा का passage दिखाई देगा।</div>
+<h3>Your Typing</h3><textarea id="typingInput" placeholder="Start Test दबाकर यहाँ टाइप करें..." disabled spellcheck="false" autocapitalize="off" autocomplete="off"></textarea>
+<div id="typingResult" class="status"></div><div id="fontStatus" class="status" aria-live="polite"></div>
+</div>
+</section>
+
+<section class="panel" id="excel">
+<div class="card"><h2>Excel / CSV Tools</h2><div class="grid"><div><label>Excel / CSV File</label><input type="file" id="excelFile" accept=".xlsx,.xls,.csv"></div><div><label>Worksheet</label><select id="excelSheet" disabled></select></div><div><label>Search</label><input id="excelSearch" placeholder="Search in visible sheet"></div></div>
+<div class="row" style="margin:12px 0"><button class="btn primary" id="excelLoad">Load File</button><button class="btn" id="excelSearchBtn">Find</button><button class="btn" id="excelRemoveBlank">Remove Blank Rows</button><button class="btn" id="excelRemoveDup">Remove Duplicate Rows</button><button class="btn" id="excelCsv">Export CSV</button><button class="btn" id="excelXlsx">Export XLSX</button></div>
+<div class="grid"><div><label>Find text</label><input id="excelFind" placeholder="Text to find"></div><div><label>Replace with</label><input id="excelReplace" placeholder="Replacement"></div><div><label>Sort by column number (1-based)</label><input type="number" id="excelSortCol" min="1" value="1"></div><div><label>Sort order</label><select id="excelSortOrder"><option value="asc">Ascending</option><option value="desc">Descending</option></select></div></div>
+<div class="row" style="margin-top:10px"><button class="btn" id="excelReplaceBtn">Replace All</button><button class="btn" id="excelSortBtn">Sort Rows</button></div>
+<div id="excelStatus" class="status"></div><div class="sheetwrap" style="margin-top:12px"><table id="excelTable"></table></div>
+<p class="hint">Note: spreadsheet formulas and advanced Excel formatting may not survive CSV export. XLSX export preserves cell data and sheet names, but not every advanced workbook feature.</p></div></section>
+
+<section class="panel" id="calc">
+<div class="card"><h2>Calculators</h2><div class="grid">
+<div class="card"><h3>Age Calculator</h3><label>Date of Birth</label><input type="date" id="dob"><label>Calculate As On</label><input type="date" id="asOn"><button class="btn primary" id="ageCalc">Calculate Age</button><div id="ageResult" class="status"></div></div>
+<div class="card"><h3>Percentage Calculator</h3><label>Obtained Marks</label><input type="number" id="obtained" min="0"><label>Total Marks</label><input type="number" id="totalMarks" min="0"><button class="btn primary" id="percentCalc">Calculate</button><div id="percentResult" class="status"></div></div>
+<div class="card"><h3>GST Calculator</h3><label>Amount</label><input type="number" id="gstAmount" min="0"><label>GST Rate</label><select id="gstRate"><option>0</option><option>5</option><option>12</option><option selected>18</option><option>28</option></select><label>Tax Type</label><select id="gstType"><option value="intra">Intra-state (CGST + SGST)</option><option value="inter">Inter-state (IGST)</option></select><label>Amount Type</label><select id="gstMode"><option value="exclusive">Before GST</option><option value="inclusive">GST Included</option></select><button class="btn primary" id="gstCalc">Calculate GST</button><div id="gstResult" class="status"></div></div>
+<div class="card"><h3>TDS Calculator</h3><label>Payment Amount</label><input type="number" id="tdsAmount" min="0"><label>TDS Rate (%)</label><input type="number" id="tdsRate" min="0" step=".01" value="2"><label>Section (reference only)</label><select id="tdsSection"><option value="user">Rate entered manually</option><option value="194C">194C - Contractor</option><option value="194J">194J - Professional/Technical</option><option value="194I">194I - Rent</option><option value="194H">194H - Commission</option></select><button class="btn primary" id="tdsCalc">Calculate TDS</button><div id="tdsResult" class="status"></div><p class="hint">TDS rate, threshold, PAN status and applicability depend on the financial year and facts. Verify the applicable law before deduction.</p></div>
+</div></div></section>
+
+<section class="panel" id="words">
+<div class="card"><h2>Number to Words</h2><div class="grid"><div><label>Amount / Number</label><input id="numberInput" type="number" step="0.01" placeholder="उदा. 125430.50"></div><div><label>Language</label><select id="numberLang"><option value="en">English</option><option value="hi">हिंदी</option></select></div><div><label>Format</label><select id="numberFormat"><option value="currency">Rupees / रुपये</option><option value="number">Number only</option></select></div></div><div class="row" style="margin-top:12px"><button class="btn primary" id="numberConvert">Convert</button><button class="btn" id="numberCopy">Copy</button></div><div id="numberResult" class="status"></div></div></section>
+<footer class="small" style="text-align:center;padding:16px">© SHREE VAISHNAVI COMPUTERS · Browser-based processing · Keep a backup of original files</footer>
+</div>
+
+<script src="libs/pdf-lib.min.js"></script>
+<script src="libs/pdf.min.js"></script>
+<script src="libs/jszip.min.js"></script>
+<script src="libs/tesseract.min.js"></script>
+<script src="libs/xlsx.full.min.js"></script>
+<script src="libs/cropper.min.js"></script>
+<script>window._qpdfErr='';window.addEventListener('error',function(e){if(e.filename&&e.filename.indexOf('qpdf.local')!==-1)window._qpdfErr=e.message+' (L'+e.lineno+')';});</script>
+<script src="libs/qpdf.local.js"></script>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+function msg(id,text,type="info"){const e=$(id);e.textContent=text;e.className="status "+type}
+function downloadBlob(blob,name){const u=URL.createObjectURL(blob),a=document.createElement("a");a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500)}
+function fileBytes(file){return file.arrayBuffer()}
+document.querySelectorAll(".tabs button").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("active",x.id===b.dataset.tab))}));
+
+// QPDF-powered local browser toolkit: AES-128/AES-256 encryption/decryption and lossless optimization.
+let pdfToolkitPromise=null;
+async function getPdfToolkit(){
+ if(!window.crypto||!crypto.subtle)throw Error("Web Crypto unavailable");
+ if(!pdfToolkitPromise)pdfToolkitPromise=(async()=>{
+  if(typeof window.createModule!=="function"||!window._QPDF_WASM_B64)throw Error("QPDF load error: "+(window._qpdfErr||"libs/qpdf.local.js not initialized"));
+  var b=atob(window._QPDF_WASM_B64),w=new Uint8Array(b.length);
+  for(var i=0;i<b.length;i++)w[i]=b.charCodeAt(i);
+
+  // Intercept ONLY QPDF wasm (ignores Tesseract OCR wasm so OCR works 100%)
+  if(!window._qpdfFetchPatched){
+   window._qpdfFetchPatched=true;
+   var isQpdfReq=function(u){
+    var s=(typeof u==="string")?u:((u&&u.url)?u.url:String(u||""));
+    if(s.indexOf("tesseract")!==-1)return false;
+    return (s.indexOf("qpdf")!==-1||s.indexOf("application/wasm")!==-1||s.indexOf("octet-stream")!==-1||(s.indexOf(".wasm")!==-1&&s.indexOf("lstm")===-1));
+   };
+   var origFetch=window.fetch;
+   window.fetch=async function(u,o){
+    if(isQpdfReq(u)){
+     return new Response(w.buffer.slice(0),{status:200,headers:{"Content-Type":"application/wasm"}});
+    }
+    return origFetch.apply(this,arguments);
+   };
+   var origOpen=XMLHttpRequest.prototype.open,origSend=XMLHttpRequest.prototype.send;
+   XMLHttpRequest.prototype.open=function(m,u){
+    this._isQpdfWasm=isQpdfReq(u);
+    return origOpen.apply(this,arguments);
+   };
+   XMLHttpRequest.prototype.send=function(){
+    if(this._isQpdfWasm){
+     var self=this,buf=w.buffer.slice(0);
+     try{Object.defineProperty(self,"status",{value:200,configurable:true});}catch(e){}
+     try{Object.defineProperty(self,"readyState",{value:4,configurable:true});}catch(e){}
+     try{Object.defineProperty(self,"response",{value:buf,configurable:true});}catch(e){}
+     setTimeout(function(){
+      if(typeof self.onreadystatechange==="function")self.onreadystatechange();
+      if(typeof self.onload==="function")self.onload();
+     },0);
+     return;
+    }
+    return origSend.apply(this,arguments);
+   };
+  }
+
+  var compiledMod=await WebAssembly.compile(w.buffer.slice(0));
+  async function runQ(buf,args){
+   var errs=[];
+   var qpdf=await window.createModule({
+    wasmBinary:w.buffer.slice(0),
+    locateFile:function(){return "data:application/octet-stream;base64,"+window._QPDF_WASM_B64;},
+    instantiateWasm:function(imports,successCallback){
+     WebAssembly.instantiate(compiledMod,imports).then(function(inst){
+      successCallback(inst,compiledMod);
+     });
+     return {};
+    },
+    noInitialRun:true,
+    print:function(){},
+    printErr:function(m){if(m)errs.push(String(m));}
+   });
+   var ip="/in.pdf",op="/out.pdf",rc=0;
+   qpdf.FS.writeFile(ip,new Uint8Array(buf));
+   try{
+    var r=qpdf.callMain(args.concat([ip,op]));
+    if(typeof r==="number")rc=r;
+   }catch(e){
+    if(e&&typeof e.status==="number")rc=e.status;
+    else throw Error(errs.join(" ")||(e.message||String(e)));
+   }
+   if(rc!==0&&rc!==3)throw Error(errs.join(" ")||("QPDF error code "+rc));
+   return qpdf.FS.readFile(op);
+  }
+  return{
+   compress:async function(f){return runQ(await f.arrayBuffer(),["--object-streams=generate","--compress-streams=y","--"]);},
+   lock:async function(f,o){
+    var is256=(Number(o.keyLength)===256),p=o.permissions||{},pr=(p.print==="none")?"none":"full",mo=(p.modify==="all")?"all":"none",ex=(p.extract===true)?"y":"n";
+    var a=["--encrypt",String(o.userPassword),String(o.ownerPassword),is256?"256":"128"];
+    if(!is256){a.push("--use-aes=y");}
+    a.push("--print="+pr,"--modify="+mo,"--extract="+ex);
+    if(!is256&&pr==="none"){a.push("--cleartext-metadata");}
+    a.push("--");
+    return runQ(await f.arrayBuffer(),a);
+   },
+   unlock:async function(f,o){return runQ(await f.arrayBuffer(),["--password="+String(o.password),"--decrypt","--"]);}
+  };
+ })();
+ return await pdfToolkitPromise;
+}
+function activePdfFile(){return $("pdfFile").files[0]||null}
+function replaceMainPdf(bytes,name){const f=new File([bytes],name,{type:"application/pdf"}),dt=new DataTransfer();dt.items.add(f);$("pdfFile").files=dt.files;return f}
+
+// PDF manager
+let pdfDoc=null,pdfBytes=null,selectedPages=new Set(),pdfResultBlob=null,pdfResultUrl=null,pdfHistory=[];
+function prettyBytes(n){if(n<1024)return n+" B";if(n<1024*1024)return (n/1024).toFixed(1)+" KB";return (n/1024/1024).toFixed(2)+" MB"}
+function resetPdfResult(){pdfResultBlob=null;$("pdfResult").classList.add("hidden");if(pdfResultUrl){URL.revokeObjectURL(pdfResultUrl);pdfResultUrl=null}["pdfBeforePreview","pdfAfterPreview"].forEach(id=>{const c=$(id);if(c){const ctx=c.getContext("2d");if(ctx)ctx.clearRect(0,0,c.width,c.height);c.width=300;c.height=150}});}
+let pdfTaskActive=false;
+function showPdfTask(title,detail="कृपया प्रतीक्षा करें…",indeterminate=false){pdfTaskActive=true;const o=$("pdfTaskOverlay");o.classList.add("active");o.classList.toggle("indeterminate",!!indeterminate);$("pdfTaskTitle").textContent=title;$("pdfTaskDetail").textContent=detail;$("pdfTaskPct").textContent="0%";$("pdfTaskRing").style.setProperty("--pct","0deg");$("pdfTaskBar").style.width="0%"}
+function updatePdfTask(done,total,label){if(!pdfTaskActive)return;const pct=total?Math.max(0,Math.min(100,Math.round(done/total*100))):0;$("pdfTaskOverlay").classList.remove("indeterminate");$("pdfTaskTitle").textContent="कार्य प्रगति पर है";$("pdfTaskDetail").textContent=label||"PDF प्रोसेस हो रही है…";$("pdfTaskPct").textContent=pct+"%";$("pdfTaskRing").style.setProperty("--pct",(pct*3.6)+"deg");$("pdfTaskBar").style.width=pct+"%"}
+async function hidePdfTask(){if(!pdfTaskActive)return;$("pdfTaskTitle").textContent="कार्य पूरा हुआ";$("pdfTaskDetail").textContent="तैयार";$("pdfTaskPct").textContent="100%";$("pdfTaskRing").style.setProperty("--pct","360deg");$("pdfTaskBar").style.width="100%";await new Promise(r=>setTimeout(r,450));$("pdfTaskOverlay").classList.remove("active","indeterminate");pdfTaskActive=false}
+function setPdfProgress(done,total,label){const pct=total?Math.round(done/total*100):0;$("pdfProgressWrap").classList.remove("hidden");$("pdfProgressText").textContent=label;$("pdfProgressPct").textContent=pct+"%";$("pdfProgressBar").style.width=pct+"%";updatePdfTask(done,total,label)}
+function clearPdf(which){const id=which===1?"pdfFile":"pdfFile2";$(id).value="";if(which===1){pdfDoc=null;pdfBytes=null;selectedPages.clear();$("pdfFileInfo").textContent="कोई PDF चयनित नहीं";$("pdfRemove1").disabled=true;$("pdfPages").innerHTML="";$("pdfPreview").innerHTML="";resetPdfResult();$("pdfProgressWrap").classList.add("hidden");["pdfStatus","pdfOcrStatus","pdfPasswordStatus"].forEach(s=>{if($(s)){$(s).className="status";$(s).textContent=""}});["pdfRange","pdfOrder","pdfWatermark","pdfUserPassword","pdfOwnerPassword","pdfUnlockPassword"].forEach(f=>{if($(f))$(f).value=""});}else{$("pdfFileInfo2").textContent="कोई दूसरी PDF चयनित नहीं";$("pdfRemove2").disabled=true;$("pdfStatus").className="status";$("pdfStatus").textContent="";}}
+async function loadPdf(){const f=$("pdfFile").files[0];if(!f)throw Error("पहले PDF चुनें।");resetPdfResult();pdfBytes=await fileBytes(f);pdfDoc=await PDFLib.PDFDocument.load(pdfBytes);selectedPages=new Set(Array.from({length:pdfDoc.getPageCount()},(_,i)=>i));$("pdfFileInfo").textContent=`${f.name} · ${prettyBytes(f.size)} · ${pdfDoc.getPageCount()} pages`;$("pdfRemove1").disabled=false;await renderPdfPages();msg("pdfStatus",`${pdfDoc.getPageCount()} पेज लोड हो गए।`,"good")}
+$("pdfFile").addEventListener("change",()=>pdfAction(loadPdf,"PDF Preview"));
+$("pdfFile2").addEventListener("change",()=>{const f=$("pdfFile2").files[0];$("pdfRemove2").disabled=!f;$("pdfFileInfo2").textContent=f?`${f.name} · ${prettyBytes(f.size)}`:"कोई दूसरी PDF चयनित नहीं";});
+$("pdfRemove1").onclick=()=>clearPdf(1);$("pdfRemove2").onclick=()=>clearPdf(2);
+async function renderPdfPages(){
+ const box=$("pdfPages");box.innerHTML="";if(!pdfDoc)return;
+ let src;try{pdfjsLib.GlobalWorkerOptions.workerSrc="libs/pdf.worker.min.js";src=await pdfjsLib.getDocument({data:pdfBytes.slice(0)}).promise}catch(e){box.textContent="Thumbnail preview unavailable";return}
+ for(let i=0;i<pdfDoc.getPageCount();i++){
+  updatePdfTask(i,pdfDoc.getPageCount(),`PDF Preview · पेज ${i+1}/${pdfDoc.getPageCount()}`);
+  const wrap=document.createElement("div");wrap.className="pdf-thumb"+(selectedPages.has(i)?" selected":"");wrap.draggable=false;wrap.dataset.index=i;
+  const c=document.createElement("canvas"),cap=document.createElement("div");cap.className="small";cap.textContent=`Page ${i+1}${selectedPages.has(i)?" ✓":""}`;wrap.append(c,cap);
+  const pg=await src.getPage(i+1),vp=pg.getViewport({scale:.24});c.width=vp.width;c.height=vp.height;await pg.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+  wrap.addEventListener("click",ev=>{
+   ev.preventDefault();ev.stopPropagation();
+   if(selectedPages.has(i))selectedPages.delete(i);else selectedPages.add(i);
+   wrap.classList.toggle("selected",selectedPages.has(i));
+   cap.textContent=`Page ${i+1}${selectedPages.has(i)?" ✓":""}`;
+  });
+  box.appendChild(wrap);
+ }
+}
+function addPdfHistory(label,detail){pdfHistory.unshift({label,detail,time:new Date().toLocaleTimeString()});pdfHistory=pdfHistory.slice(0,12);$("pdfHistory").innerHTML="<b>Recent session activity</b><br>"+pdfHistory.map(x=>`${x.time} · ${x.label} — ${x.detail}`).join("<br>")}
+async function refreshPdfPreview(doc){
+ pdfDoc=doc;pdfBytes=await doc.save();
+ selectedPages=new Set(Array.from({length:doc.getPageCount()},(_,i)=>i));
+ const f=activePdfFile();$("pdfFileInfo").textContent=`${f?f.name:"PDF"} · ${prettyBytes(pdfBytes.byteLength)} · ${doc.getPageCount()} pages (updated)`;
+ await renderPdfPages();
+}
+async function drawPdfFirstPage(bytes,canvasId){try{pdfjsLib.GlobalWorkerOptions.workerSrc="libs/pdf.worker.min.js";const d=await pdfjsLib.getDocument({data:bytes.slice(0)}).promise,p=await d.getPage(1),vp=p.getViewport({scale:.7}),c=$(canvasId);c.width=vp.width;c.height=vp.height;await p.render({canvasContext:c.getContext("2d"),viewport:vp}).promise}catch(e){}}
+async function compressPdfFile(file,profile,onProgress){
+ onProgress(0,1,`${file.name}: सुरक्षित lossless optimization शुरू…`);
+ const raw=await file.arrayBuffer();
+ let losslessBytes;
+ try{
+  const toolkit=await getPdfToolkit();
+  const lossless=await toolkit.compress(file);
+  losslessBytes=lossless instanceof Uint8Array?lossless:new Uint8Array(lossless);
+ }catch(e){
+  try{
+   const docTmp=await PDFLib.PDFDocument.load(raw);
+   losslessBytes=await docTmp.save({useObjectStreams:true});
+  }catch(err){
+   throw Error("PDF optimization नहीं हो सकी। PDF password-protected या damaged हो सकती है। विवरण: "+(err.message||err));
+  }
+ }
+ pdfjsLib.GlobalWorkerOptions.workerSrc="libs/pdf.worker.min.js";
+ if(profile==="quality" || losslessBytes.length<file.size*0.985){
+  const chosen=losslessBytes.length<file.size?losslessBytes:new Uint8Array(raw);
+  const d=await pdfjsLib.getDocument({data:chosen.slice(0)}).promise;
+  const method=chosen===losslessBytes?"Lossless structural optimization":"PDF पहले से optimized · Original सुरक्षित रखा";
+  onProgress(1,1,"Lossless optimization पूरी · Text और vector सुरक्षित");
+  return {bytes:chosen,pages:d.numPages,method,preserved:true};
+ }
+ if(profile==="balanced"||profile==="small"){
+  onProgress(0,1,"Lossless से पर्याप्त बचत नहीं हुई · वैकल्पिक image compression जाँची जा रही है…");
+  const cfg=profile==="small"?{scale:.9,q:.42}:{scale:1.2,q:.68};
+  const src=await pdfjsLib.getDocument({data:raw.slice(0)}).promise,out=await PDFLib.PDFDocument.create();
+  for(let i=1;i<=src.numPages;i++){
+   onProgress(i,src.numPages,`${file.name}: वैकल्पिक image pass · पेज ${i}/${src.numPages}`);await new Promise(r=>requestAnimationFrame(r));
+   const pg=await src.getPage(i),vp=pg.getViewport({scale:cfg.scale}),c=document.createElement("canvas");c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);
+   await pg.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;
+   const blob=await new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(Error("Image compression failed")),"image/jpeg",cfg.q));
+   const img=await out.embedJpg(await blob.arrayBuffer()),page=out.addPage([vp.width,vp.height]);page.drawImage(img,{x:0,y:0,width:vp.width,height:vp.height});c.width=1;c.height=1;
+  }
+  const rasterBytes=await out.save({useObjectStreams:true});
+  if(rasterBytes.length<Math.min(losslessBytes.length,file.size))return {bytes:rasterBytes,pages:src.numPages,method:"Lossless + adaptive raster fallback",preserved:false};
+  if(losslessBytes.length<file.size)return {bytes:losslessBytes,pages:src.numPages,method:"Lossless structural optimization",preserved:true};
+  return {bytes:new Uint8Array(raw),pages:src.numPages,method:"PDF पहले से optimized · Original सुरक्षित रखा",preserved:true};
+ }
+ return {bytes:losslessBytes,pages:0,method:"Lossless structural optimization",preserved:true};
+}
+async function getPdf(){if(!pdfDoc)await loadPdf();return pdfDoc}
+function parseRange(v,count){
+ if(!v.trim())return [...Array(count).keys()];
+ const s=new Set();
+ v.split(",").forEach(part=>{
+  const token=part.trim(),a=token.split("-").map(x=>x.trim());
+  if(a.length===1&&/^\d+$/.test(a[0])){const n=Number(a[0]);if(n<1||n>count)throw Error(`Page ${n} उपलब्ध सीमा 1-${count} से बाहर है।`);s.add(n-1);return}
+  if(a.length===2&&a.every(x=>/^\d+$/.test(x))){const first=Number(a[0]),last=Number(a[1]);if(first<1||last>count||first>last)throw Error(`Page range '${token}' सही नहीं है। सीमा 1-${count} है।`);for(let n=first;n<=last;n++)s.add(n-1);return}
+  throw Error(`Page range '${token}' गलत है। उदाहरण: 1,3,5-7`)
+ });
+ return [...s].sort((a,b)=>a-b)
+}
+async function savePdf(doc,name="document.pdf"){downloadBlob(new Blob([await doc.save()],{type:"application/pdf"}),name)}
+async function pdfAction(fn,label="PDF कार्य"){showPdfTask(label,"फाइल प्रोसेस हो रही है…",true);try{await fn()}catch(e){msg("pdfStatus",e.message||String(e),"bad")}finally{await hidePdfTask()}}
+$("pdfLoad").onclick=()=>pdfAction(loadPdf,"PDF Preview");
+$("pdfMerge").onclick=()=>pdfAction(async()=>{const a=await getPdf(),f=$("pdfFile2").files[0];if(!f)throw Error("दूसरी PDF चुनें।");const b=await PDFLib.PDFDocument.load(await fileBytes(f)),out=await PDFLib.PDFDocument.create();for(let si=0;si<2;si++){const src=[a,b][si];updatePdfTask(si,2,`PDF Merge · दस्तावेज़ ${si+1}/2`);const pages=await out.copyPages(src,src.getPageIndices());pages.forEach(p=>out.addPage(p))}await savePdf(out,"merged.pdf");msg("pdfStatus","PDF merge हो गई।","good")},"PDF Merge");
+$("pdfInsert").onclick=()=>pdfAction(async()=>{const a=await getPdf(),f=$("pdfFile2").files[0];if(!f)throw Error("दूसरी PDF चुनें।");const b=await PDFLib.PDFDocument.load(await fileBytes(f)),pages=await a.copyPages(b,b.getPageIndices());let at=Math.min(...selectedPages)+1;if(!Number.isFinite(at))at=a.getPageCount();pages.forEach((p,i)=>{updatePdfTask(i,pages.length,`PDF Insert · पेज ${i+1}/${pages.length}`);a.insertPage(at+i,p)});await savePdf(a,"inserted.pdf");await refreshPdfPreview(a);msg("pdfStatus","दूसरी PDF चयनित पेज के बाद insert की गई।","good")},"PDF Insert");
+$("pdfExtract").onclick=()=>pdfAction(async()=>{const a=await getPdf(),idx=parseRange($("pdfRange").value,a.getPageCount()),o=await PDFLib.PDFDocument.create();(await o.copyPages(a,idx)).forEach((p,i)=>{updatePdfTask(i,idx.length,`Pages Extract · ${i+1}/${idx.length}`);o.addPage(p)});await savePdf(o,"extracted-pages.pdf");msg("pdfStatus","Selected pages extract हो गए।","good")},"PDF Pages Extract");
+$("pdfDelete").onclick=()=>pdfAction(async()=>{const a=await getPdf(),idx=parseRange($("pdfRange").value,a.getPageCount()).sort((x,y)=>y-x);if(idx.length===a.getPageCount())throw Error("सभी pages delete नहीं कर सकते।");idx.forEach((i,n)=>{updatePdfTask(n,idx.length,`Pages Delete · ${n+1}/${idx.length}`);a.removePage(i)});await savePdf(a,"pages-deleted.pdf");await refreshPdfPreview(a);msg("pdfStatus","Pages delete कर दिए गए।","good")},"PDF Pages Delete");
+$("pdfRotateBtn").onclick=()=>pdfAction(async()=>{const a=await getPdf(),deg=Number($("pdfRotate").value);Array.from(selectedPages).forEach((i,n)=>{updatePdfTask(n,selectedPages.size,`PDF Rotate · ${n+1}/${selectedPages.size}`);const p=a.getPage(i);p.setRotation(PDFLib.degrees((p.getRotation().angle+deg)%360))});await savePdf(a,"rotated.pdf");await refreshPdfPreview(a);msg("pdfStatus","Selected pages rotate हो गए।","good")},"PDF Rotate");
+$("pdfReorder").onclick=()=>pdfAction(async()=>{const a=await getPdf(),order=$("pdfOrder").value.split(",").map(x=>Number(x.trim())-1);if(order.length!==a.getPageCount()||new Set(order).size!==order.length||order.some(i=>!Number.isInteger(i)||i<0||i>=a.getPageCount()))throw Error("सभी page numbers का सही पूर्णांक क्रम दें; हर page number एक बार होना चाहिए।");const o=await PDFLib.PDFDocument.create();(await o.copyPages(a,order)).forEach((p,i)=>{updatePdfTask(i,order.length,`PDF Reorder · ${i+1}/${order.length}`);o.addPage(p)});await savePdf(o,"reordered.pdf");await refreshPdfPreview(o);msg("pdfStatus","Pages reorder हो गए।","good")},"PDF Reorder Pages");
+$("pdfResize").onclick=()=>pdfAction(async()=>{const a=await getPdf(),size=$("pdfSize").value;let w=595.28,h=841.89;if(size==="letter"){w=612;h=792}a.getPages().forEach((p,i)=>{updatePdfTask(i,a.getPageCount(),`Page Size · ${i+1}/${a.getPageCount()}`);if(size!=="fit")p.setSize(w,h)});await savePdf(a,"resized-canvas.pdf");await refreshPdfPreview(a);msg("pdfStatus","Page canvas बदला गया। ध्यान दें: मौजूदा content को scale/center नहीं किया गया है।","info")},"PDF Page Size");
+$("pdfWatermarkBtn").onclick=()=>pdfAction(async()=>{const a=await getPdf(),t=$("pdfWatermark").value.trim();if(!t)throw Error("Watermark text लिखें।");a.getPages().forEach((p,i)=>{updatePdfTask(i,a.getPageCount(),`Watermark · ${i+1}/${a.getPageCount()}`);const {width,height}=p.getSize();p.drawText(t,{x:width*.2,y:height*.5,size:34,opacity:.25,rotate:PDFLib.degrees(-35),color:PDFLib.rgb(.5,.5,.5)})});await savePdf(a,"watermarked.pdf");await refreshPdfPreview(a);msg("pdfStatus","Watermark add हो गया। Standard font में Devanagari glyph support सीमित है।","good")},"PDF Watermark");
+$("pdfNumbers").onclick=()=>pdfAction(async()=>{const a=await getPdf();a.getPages().forEach((p,i)=>{updatePdfTask(i,a.getPageCount(),`Page Numbers · ${i+1}/${a.getPageCount()}`);const {width,height}=p.getSize();p.drawText(String(i+1),{x:width/2,y:$("pdfNumPos").value==="top"?height-24:18,size:10})});await savePdf(a,"page-numbered.pdf");await refreshPdfPreview(a);msg("pdfStatus","Page numbers add हो गए।","good")},"PDF Page Numbers");
+$("pdfCompress").onclick=()=>pdfAction(async()=>{
+ const f=$("pdfFile").files[0];if(!f)throw Error("पहले PDF चुनें।");if(!window.pdfjsLib)throw Error("PDF.js load नहीं हुआ।");
+ resetPdfResult();$("pdfCompress").disabled=true;showPdfTask("PDF Compression","तैयारी हो रही है…",false);setPdfProgress(0,1,"Compression शुरू हो रही है…");
+ try{const originalBytes=await f.arrayBuffer();await drawPdfFirstPage(originalBytes,"pdfBeforePreview");const result=await compressPdfFile(f,$("pdfSmartProfile").value,setPdfProgress);pdfResultBlob=new Blob([result.bytes],{type:"application/pdf"});await drawPdfFirstPage(result.bytes,"pdfAfterPreview");
+ const original=f.size,compressed=pdfResultBlob.size,saved=original-compressed,pct=saved/original*100;
+ $("pdfOriginalSize").textContent=prettyBytes(original);$("pdfCompressedSize").textContent=prettyBytes(compressed);$("pdfSavedSize").textContent=(saved>=0?prettyBytes(saved):"+"+prettyBytes(-saved));$("pdfSavedPct").textContent=(saved>=0?pct.toFixed(1)+"% बचत":Math.abs(pct).toFixed(1)+"% आकार बढ़ा");
+ $("pdfCompareNote").textContent=`${result.pages||"PDF"} pages processed · ${result.method}. ${result.preserved?"Text selection, search और vector content सुरक्षित रखा गया है।":"इस बार छोटा आकार पाने के लिए pages को images में बदला गया; text selection/search उपलब्ध नहीं रहेगा।"} Original और compressed preview ऊपर देखें।`;
+ $("pdfResult").classList.remove("hidden");if(pdfResultUrl)URL.revokeObjectURL(pdfResultUrl);pdfResultUrl=URL.createObjectURL(pdfResultBlob);$("pdfDownloadResult").onclick=()=>downloadBlob(pdfResultBlob,"compressed-raster.pdf");setPdfProgress(1,1,"Compression पूरी हुई");msg("pdfStatus",`Compression पूरी हुई · Original ${prettyBytes(original)} · Output ${prettyBytes(compressed)} · ${saved>=0?pct.toFixed(1)+"% बचत":"आकार बढ़ा"}`,saved>0?"good":"info");addPdfHistory("Single PDF compression",`${f.name}: ${prettyBytes(original)} → ${prettyBytes(compressed)}`);
+ }finally{$("pdfCompress").disabled=false;await hidePdfTask();}
+});
+$("pdfLockBtn").onclick=async()=>{
+ const f=activePdfFile(),user=$("pdfUserPassword").value,owner=$("pdfOwnerPassword").value,btn=$("pdfLockBtn");
+ if(!f){msg("pdfPasswordStatus","पहले मुख्य PDF चुनें।","bad");return}
+ if(user.length<8||owner.length<8){msg("pdfPasswordStatus","दोनों पासवर्ड कम से कम 8 अक्षरों के रखें।","bad");return}
+ if(user===owner){msg("pdfPasswordStatus","Open और Owner पासवर्ड अलग रखें।","bad");return}
+ btn.disabled=true;showPdfTask("PDF Password Protection","सुरक्षा लागू की जा रही है…",true);msg("pdfPasswordStatus","PDF पर चुनी गई AES encryption लागू हो रही है…","info");
+ try{const toolkit=await getPdfToolkit(),permission=$("pdfPermission").value,keyLength=Number($("pdfEncryption").value||128),locked=await toolkit.lock(f,{userPassword:user,ownerPassword:owner,keyLength,permissions:permission==="full"?{print:"full",modify:"all",extract:true}:permission==="strict"?{print:"none",modify:"none",extract:false}:{print:"full",modify:"none",extract:false}});const bytes=locked instanceof Uint8Array?locked:new Uint8Array(locked);downloadBlob(new Blob([bytes],{type:"application/pdf"}),f.name.replace(/\.pdf$/i,"")+"-protected.pdf");const encLabel=keyLength===128?"AES-128 (Adobe Reader 7+)":"AES-256 (modern Reader)";msg("pdfPasswordStatus",`PDF पर ${encLabel} password protection लगा दी गई। Adobe Reader में compatibility के लिए AES-128 default रखा गया है। डाउनलोड की गई फाइल खोलकर पासवर्ड जाँचें।`,"good");addPdfHistory("PDF protected",encLabel+" · "+f.name);$("pdfUserPassword").value="";$("pdfOwnerPassword").value=""}
+ catch(e){msg("pdfPasswordStatus","Password protection पूरी नहीं हुई: "+(e.message||String(e)),"bad")}finally{btn.disabled=false;await hidePdfTask()}
+};
+$("pdfUnlockBtn").onclick=async()=>{
+ const f=activePdfFile(),password=$("pdfUnlockPassword").value,btn=$("pdfUnlockBtn");
+ if(!f){msg("pdfPasswordStatus","पहले password वाली PDF चुनें।","bad");return}
+ if(!password){msg("pdfPasswordStatus","PDF का मौजूदा पासवर्ड भरें।","bad");return}
+ btn.disabled=true;showPdfTask("PDF Unlock","पासवर्ड जाँचा जा रहा है…",true);msg("pdfPasswordStatus","पासवर्ड जाँचा जा रहा है और PDF unlock हो रही है…","info");
+ try{const toolkit=await getPdfToolkit(),plain=await toolkit.unlock(f,{password}),bytes=plain instanceof Uint8Array?plain:new Uint8Array(plain);const unlocked=replaceMainPdf(bytes,f.name.replace(/\.pdf$/i,"")+"-unlocked.pdf");$("pdfUnlockPassword").value="";await loadPdf();msg("pdfPasswordStatus","सही पासवर्ड। PDF unlock हो गई है और अब बाकी PDF tools में इस्तेमाल कर सकते हैं।","good");addPdfHistory("PDF unlocked",unlocked.name)}
+ catch(e){msg("pdfPasswordStatus","PDF unlock नहीं हुई। पासवर्ड गलत हो सकता है या फाइल इस encryption format में समर्थित नहीं है। विवरण: "+(e.message||String(e)),"bad")}finally{btn.disabled=false;await hidePdfTask()}
+};
+$("pdfBatchCompress").onclick=async()=>{const files=[...$("pdfBatchFiles").files];if(!files.length){msg("pdfStatus","Batch के लिए एक या अधिक PDF चुनें।","bad");return}if(!window.JSZip){msg("pdfStatus","ZIP library load नहीं हुई।","bad");return}const btn=$("pdfBatchCompress");btn.disabled=true;const zip=new JSZip();showPdfTask("Batch PDF Compression",`${files.length} PDF फाइलें प्रोसेस होंगी…`,false);try{for(let i=0;i<files.length;i++){setPdfProgress(i,files.length,`Batch ${i+1}/${files.length}: ${files[i].name}`);const r=await compressPdfFile(files[i],$("pdfSmartProfile").value,(d,t,l)=>setPdfProgress(i+d/t,files.length,l));zip.file(files[i].name.replace(/\.pdf$/i,"")+"-compressed.pdf",r.bytes);addPdfHistory("Batch compression",`${files[i].name} · ${prettyBytes(files[i].size)} source`)}setPdfProgress(files.length,files.length,"ZIP तैयार हो रही है…");const blob=await zip.generateAsync({type:"blob",compression:"DEFLATE"});downloadBlob(blob,"SVC-compressed-PDFs.zip");msg("pdfStatus",`${files.length} PDF compress होकर ZIP में डाउनलोड हो गईं।`,"good");}catch(e){msg("pdfStatus",e.message||String(e),"bad")}finally{btn.disabled=false;await hidePdfTask()}};
+$("pdfOcrBtn").onclick=async()=>{const f=$("pdfFile").files[0];if(!f){msg("pdfOcrStatus","पहले मुख्य PDF चुनें।","bad");return}if(!window.Tesseract){msg("pdfOcrStatus","OCR library load नहीं हुई।","bad");return}const btn=$("pdfOcrBtn");btn.disabled=true;showPdfTask("PDF OCR","पेज पढ़े जा रहे हैं…",false);try{pdfjsLib.GlobalWorkerOptions.workerSrc="libs/pdf.worker.min.js";const doc=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise,lang=$("pdfOcrLang").value;let textOut="";const worker=await Tesseract.createWorker(lang,1,{workerPath:new URL("libs/worker.min.js",location.href).href,corePath:new URL("libs/",location.href).href,langPath:new URL("libs",location.href).href,workerBlobURL:false,logger:m=>{if(m.status)$("pdfOcrStatus").textContent=`OCR: ${m.status} ${m.progress?Math.round(m.progress*100)+"%":""}`}});for(let i=1;i<=doc.numPages;i++){updatePdfTask(i-1,doc.numPages,`OCR पेज ${i}/${doc.numPages}`);const page=await doc.getPage(i),vp=page.getViewport({scale:1.6}),c=document.createElement("canvas");c.width=vp.width;c.height=vp.height;await page.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;const r=await worker.recognize(c);textOut+=`\n\n--- Page ${i} ---\n`+r.data.text;c.width=1;c.height=1;$("pdfOcrStatus").textContent=`OCR page ${i}/${doc.numPages} complete`}await worker.terminate();downloadBlob(new Blob([textOut],{type:"text/plain;charset=utf-8"}),f.name.replace(/\.pdf$/i,"")+"-OCR.txt");msg("pdfOcrStatus","OCR पूरा हुआ। निकाला गया टेक्स्ट TXT फाइल में डाउनलोड हुआ; पहचान की शुद्धता स्कैन गुणवत्ता पर निर्भर है।","good");addPdfHistory("OCR extraction",`${f.name} · ${doc.numPages} pages`)}catch(e){msg("pdfOcrStatus",e.message||String(e),"bad")}finally{btn.disabled=false;await hidePdfTask()}};
+$("pdfHistoryClear").onclick=()=>{pdfHistory=[];$("pdfHistory").textContent="Session history cleared."};
+$("pdfJpg").onclick=()=>pdfAction(async()=>{const a=await getPdf();pdfjsLib.GlobalWorkerOptions.workerSrc="libs/pdf.worker.min.js";const src=await pdfjsLib.getDocument({data:pdfBytes.slice(0)}).promise;for(let i=1;i<=src.numPages;i++){updatePdfTask(i-1,src.numPages,`PDF to JPG · पेज ${i}/${src.numPages}`);const p=await src.getPage(i),vp=p.getViewport({scale:1.5}),c=document.createElement("canvas");c.width=vp.width;c.height=vp.height;await p.render({canvasContext:c.getContext("2d"),viewport:vp}).promise;const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.92));downloadBlob(blob,`page-${i}.jpg`)}msg("pdfStatus","हर पेज अलग JPG में डाउनलोड किया गया।","good")},"PDF to JPG");
+$("imagesToPdf").onclick=()=>pdfAction(async()=>{const fs=[...$("imagesPdf").files];if(!fs.length)throw Error("Images चुनें।");const d=await PDFLib.PDFDocument.create();for(let i=0;i<fs.length;i++){updatePdfTask(i,fs.length,`Images to PDF · ${i+1}/${fs.length}`);const f=fs[i],b=await fileBytes(f),im=f.type==="image/png"?await d.embedPng(b):await d.embedJpg(b),p=d.addPage([im.width,im.height]);p.drawImage(im,{x:0,y:0,width:im.width,height:im.height})}await savePdf(d,"images.pdf");msg("pdfStatus","Images से PDF बन गई।","good")},"Images to PDF");
+
+// Photo cropper
+let cropper=null,photoFile=null,photoBlob=null,photoRotation=0;
+$("photoPreset").onchange=()=>{if($("photoPreset").value!=="custom"){const [w,h]=$("photoPreset").value.split("x");$("photoW").value=w;$("photoH").value=h;if(cropper)cropper.setAspectRatio(+w/+h)}};
+$("photoFile").onchange=()=>{const f=$("photoFile").files[0];if(!f)return;photoFile=f;const im=$("photoImage");im.src=URL.createObjectURL(f);im.classList.remove("hidden");im.onload=()=>{if(cropper)cropper.destroy();cropper=new Cropper(im,{viewMode:1,autoCropArea:.95,aspectRatio:+$("photoW").value/+ $("photoH").value,background:false})};msg("photoStatus","Image loaded. Crop area adjust करें।","good")};
+$("photoRotate").onclick=()=>cropper&&cropper.rotate(90);$("photoReset").onclick=()=>cropper&&cropper.reset();
+$("photoApply").onclick=async()=>{try{if(!cropper)throw Error("पहले image चुनें।");const w=+$("photoW").value,h=+$("photoH").value,kb=+$("photoKB").value;if(!(w>0&&h>0&&kb>0))throw Error("Width, height और KB सही भरें।");const c=cropper.getCroppedCanvas({width:w,height:h,fillColor:$("photoBg").value}),type=$("photoFormat").value;let quality=.92;const make=()=>new Promise(r=>c.toBlob(r,type,quality));photoBlob=await make();if(type==="image/jpeg"){while(photoBlob.size>kb*1024&&quality>.25){quality-=.05;photoBlob=await make()}}$("photoCanvas").width=w;$("photoCanvas").height=h;$("photoCanvas").getContext("2d").drawImage(c,0,0);$("photoInfo").textContent=`${w}×${h}px · ${(photoBlob.size/1024).toFixed(1)} KB · ${$("photoDpi").value} DPI पर ${(w/+$("photoDpi").value).toFixed(2)}×${(h/+$("photoDpi").value).toFixed(2)} inch`; $("photoDownload").disabled=false;if(photoBlob.size>kb*1024)msg("photoStatus","PNG में target KB guarantee नहीं होती; JPG में भी minimum quality तक पहुँचने पर size अधिक रह सकता है।","info");else msg("photoStatus","Image तैयार है।","good")}catch(e){msg("photoStatus",e.message,"bad")}};
+$("photoDownload").onclick=()=>photoBlob&&downloadBlob(photoBlob,`SVC-${$("photoW").value}x${$("photoH").value}.${$("photoFormat").value==="image/png"?"png":"jpg"}`);
+
+// Typing Test Engine — Unicode and legacy-font input use separate, correctly scored text layers.
+const passages={
+ en:[
+ "The purpose of education is to develop knowledge, discipline and confidence. Every citizen should perform duties honestly and contribute to the progress of society. Regular practice improves speed, accuracy and concentration. A candidate should read every instruction carefully and maintain a steady rhythm throughout the examination.",
+ "Time management is an important skill in every examination. Read the instructions carefully, remain calm and maintain a steady typing rhythm. Accuracy should always be given priority over unnecessary speed. Regular practice helps candidates improve their performance.",
+ "A well-organized office saves time and improves public service. Records should be maintained carefully, applications should be processed promptly and every person should be treated with respect. Good administration depends on accuracy, responsibility and timely action."
+ ],
+ hi:[
+ "शिक्षा का उद्देश्य ज्ञान, अनुशासन और आत्मविश्वास का विकास करना है। प्रत्येक नागरिक को अपने कर्तव्यों का ईमानदारी से पालन करना चाहिए तथा समाज की प्रगति में योगदान देना चाहिए। नियमित अभ्यास से गति, शुद्धता और एकाग्रता में सुधार होता है।",
+ "समय का सही उपयोग प्रत्येक परीक्षा में सफलता के लिए आवश्यक है। निर्देशों को ध्यानपूर्वक पढ़ें, शांत रहें और नियमित अभ्यास करें। गति के साथ शुद्धता बनाए रखना भी बहुत महत्वपूर्ण है।",
+ "एक सुव्यवस्थित कार्यालय से समय की बचत होती है और नागरिकों को बेहतर सेवाएँ मिलती हैं। अभिलेखों का सही रखरखाव तथा कार्यों का समय पर निस्तारण आवश्यक है। प्रत्येक कार्य में सावधानी और जिम्मेदारी जरूरी है।"
+ ]
+};
+function unicodeToLegacyTyping(sourceText) {
+ if (!sourceText) return "";
+ let text = sourceText;
+ text = text.replace(/\(/g, "¼");
+ text = text.replace(/\)/g, "½");
+ text = text.replace(/\/\-/g, "@&");
+ text = text.replace(/\//g, "@");
+ text = text.replace(/रू\.\s*/g, ":- ");
+ text = text.replace(/रू/g, ":");
+ text = text.replace(/।/g, "A");
+ text = text.replace(/,\s*/g, "] ");
+ text = text.replace(/,/g, "]");
+ text = text.replace(/विरूद्ध/g, "fo:)");
+ text = text.replace(/विरुद्ध/g, "fo:)");
+ text = text.replace(/मैंनें/g, "eSuas");
+ text = text.replace(/मैंने/g, "eSuas");
+ text = text.replace(/प्रियदर्शिनी/g, "fiz;nf'kZuh");
+ text = text.replace(/ऑनलाइन/g, "vkWuykbZu");
+ text = text.replace(/ऑनलाईन/g, "vkWuykbZu");
+ text = text.replace(/लॉटरी/g, "ykWVjh");
+ text = text.replace(/लाटरी/g, "ykWVjh");
+ text = text.replace(/क्रमांक/g, "Øekad");
+ text = text.replace(/कार्मिकों/g, "dkfeZdksa");
+ text = text.replace(/कार्मिक/g, "dkfeZd");
+ text = text.replace(/कार्यवाही/g, "dk;Zokgh");
+ text = text.replace(/उपरोक्त/g, "mijksDr");
+ text = text.replace(/विशिष्ट/g, "fof'k\"V");
+ text = text.replace(/आपत्ति/g, "vkifRr");
+ text = text.replace(/श्री/g, "Jh");
+ text = text.replace(/श्रा/g, "Jk");
+ text = text.replace(/श्रे/g, "Js");
+ text = text.replace(/श्र/g, "J");
+ text = text.replace(/द्वारा/g, "}kjk");
+ text = text.replace(/द्व/g, "}");
+ text = text.replace(/एवं/g, ",oa");
+ text = text.replace(/ऐसी/g, ",slh");
+ text = text.replace(/ऐ/g, ",s");
+ text = text.replace(/ए/g, ",");
+ text = text.replace(/करूंगा/g, "d:axk");
+ text = text.replace(/करूंगी/g, "d:axh");
+ text = text.replace(/इच्छुक/g, "bPNqd");
+ text = text.replace(/([0-9a-zA-Z\u0900-\u097F])\-([0-9a-zA-Z\u0900-\u097F])/g, "$1&$2");
+ text = text.replace(/ - /g, " & ");
+ text = text.replace(/\./g, "-");
+ text = text.replace(/[\u095C]|(?:\u0921\u093C)/g, "M+");
+ text = text.replace(/[\u095D]|(?:\u0922\u093C)/g, "<+");
+ text = text.replace(/द्ध/g, ")");
+ text = text.replace(/द्ग/g, "(");
+ text = text.replace(/द्य/g, "»");
+ text = text.replace(/द्ब/g, "Á");
+ text = text.replace(/द्म/g, "Ò");
+ text = text.replace(/दृ/g, "¾");
+ text = text.replace(/त्त/g, "Rr");
+ text = text.replace(/क्त/g, "Dr");
+ text = text.replace(/ष्ट/g, "\"V");
+ text = text.replace(/ष्ठ/g, "\"B");
+ text = text.replace(/श्च/g, "'p");
+ text = text.replace(/र्([\u0915-\u0939])ि/g, "ि$1Z");
+ text = text.replace(/र्((?:[\u0915-\u0939]्)*[\u0915-\u0939])([ाीुूृेैोौंँः]*)/g, "$1$2Z");
+ text = text.replace(/((?:[\u0915-\u0939]्)*[\u0915-\u0939](?:[z]|्र)?)ि/g, "f$1");
+ const raPrakarMap = [
+  ["प्र", "iz"], ["क्र", "Ø"], ["ग्र", "xz"], ["ज्र", "tz"],
+  ["द्र", "nz"], ["ब्र", "cz"], ["भ्र", "Hz"], ["म्र", "ez"],
+  ["व्र", "oz"], ["ह्र", "gz"], ["स्र", "lz"], ["त्र", "="]
+ ];
+ for (let i = 0; i < raPrakarMap.length; i++) {
+  text = text.replace(new RegExp(raPrakarMap[i][0], 'g'), raPrakarMap[i][1]);
+ }
+ const revTable = [
+  ["क्ष्", "{" ], ["क्ष", "{k"],
+  ["त्र्", "="], ["त्रा", "=k"], ["त्र", "="],
+  ["ज्ञ", "K"],
+  ["क्", "D"], ["ख्", "["], ["ग्", "X"], ["घ्", "?"],
+  ["च्", "P"], ["ज्", "T"], ["त्", "R"], ["थ्", "F"],
+  ["ध्", "/"], ["न्", "U"], ["प्", "I"], ["ब्", "C"],
+  ["भ्", "H"], ["म्", "E"], ["य्", ";~"], ["ल्", "Y"],
+  ["व्", "O"], ["श्", "'"], ["ष्", "\""], ["स्", "L"],
+  ["ण्", "."], ["ह्", "g~"],
+  ["ख", "[k"], ["घ", "?k"], ["थ", "Fk"], ["ध", "/k"],
+  ["भ", "Hk"], ["श", "'k"], ["ष", "\"k"], ["ण", ".k"],
+  ["क", "d"], ["ग", "x"], ["च", "p"], ["छ", "N"],
+  ["ज", "t"], ["झ", ">"], ["ट", "V"], ["ठ", "B"],
+  ["ड", "M"], ["ढ", "<"], ["त", "r"], ["द", "n"],
+  ["न", "u"], ["प", "i"], ["फ", "Q"], ["ब", "c"],
+  ["म", "e"], ["य", ";"], ["र", "j"], ["ल", "y"],
+  ["व", "o"], ["स", "l"], ["ह", "g"],
+  ["ओ", "vks"], ["औ", "vkS"], ["आ", "vk"], ["अ", "v"],
+  ["ई", "bZ"], ["इ", "b"], ["ऊ", "Å"], ["उ", "m"],
+  ["ऋ", "¿"],
+  ["ो", "ks"], ["ौ", "kS"],
+  ["ा", "k"], ["ी", "h"], ["ु", "q"], ["ू", "w"], ["ृ", "`"],
+  ["े", "s"], ["ै", "S"],
+  ["ं", "a"], ["ँ", "¡"], ["ः", "%"], ["्", "~"],
+  ["ि", "f"]
+ ];
+ for (let i = 0; i < revTable.length; i++) {
+  text = text.replace(new RegExp(revTable[i][0], 'g'), revTable[i][1]);
+ }
+ text = text.replace(/्र/g, "z");
+ return text;
+}
+let typeTimer=null,typeStartAt=0,typeDuration=300,typeRunning=false,typeExpected="",typeCompareExpected="",typeElapsed=0,typeProfileTarget=0,rssbLockedIndex=0,lastTypedValue="";
+const loadedTypingFonts={devlys:null,kruti:null};
+const examProfiles={
+ general:{minutes:5,target:0,backspace:"yes",label:"General Practice"},
+ rssb:{minutes:15,target:20,backspace:"rssb",label:"RSSB / Rajasthan IA-style"},
+ ssc:{minutes:10,target:0,backspace:"yes",label:"SSC-style Practice"},
+ custom:{minutes:5,target:0,backspace:"yes",label:"Custom Practice"}
+};
+function isLegacyTyping(){return $("typeLang").value==="hi" && $("typeLayout").value==="remington" && ["devlys","kruti"].includes($("typeFont").value)}
+function syncTypingModes(){
+ const en=$("typeLang").value==="en",legacyLayout=$("typeLayout").value==="remington";
+ $("typeLayout").disabled=en;$("typeFont").disabled=en;
+ Array.from($("typeFont").options).forEach(o=>{if(o.value!=="unicode")o.disabled=!legacyLayout});
+ if(!legacyLayout&&$("typeFont").value!=="unicode")$("typeFont").value="unicode";
+ if(en)$("typeFont").value="unicode";
+}
+function selectedTypingFont(){
+ const f=$("typeFont").value;
+ if(f==="devlys")return loadedTypingFonts.devlys||'"DevLys 010",DevLys010,"Devlys 010","Kruti Dev 010",serif';
+ if(f==="kruti")return loadedTypingFonts.kruti||'"Kruti Dev 010",KrutiDev010,"Kruti Dev",serif';
+ return '"Noto Sans Devanagari","Mangal","Nirmala UI",sans-serif';
+}
+function updateTypingFont(){
+ const family=$("typeLang").value==="en"?'"Courier New",monospace':selectedTypingFont();
+ $("typingPassage").style.fontFamily=family;
+ $("typingInput").style.fontFamily=family;
+}
+function applyExamProfile(){
+ const p=examProfiles[$("typeProfile").value]||examProfiles.general;
+ $("typeDuration").value=String(p.minutes);
+ if(p.backspace==="rssb")$("typeBackspace").value="rssb";
+ else if($("typeBackspace").value==="rssb")$("typeBackspace").value="yes";
+ typeProfileTarget=$("typeProfile").value==="ssc"?($("typeLang").value==="en"?35:30):p.target;
+ resetTyping();
+}
+function showPassage(){
+ const bank=passages[$("typeLang").value],start=+$("typePassage").value;
+ typeExpected=Array.from({length:12},(_,i)=>bank[(start+i)%bank.length]).join(" ");
+ typeCompareExpected=isLegacyTyping()?unicodeToLegacyTyping(typeExpected):typeExpected;
+ $("typingPassage").textContent=typeCompareExpected;
+ updateTypingFont();
+}
+function resetTyping(){
+ clearInterval(typeTimer);typeRunning=false;typeElapsed=0;rssbLockedIndex=0;lastTypedValue="";
+ $("typingInput").value="";$("typingInput").disabled=true;$("typeStart").disabled=false;
+ $("typeProgress").style.width="0%";
+ $("typeTime").textContent=String(+$("typeDuration").value).padStart(2,"0")+":00";
+ ["typeGross","typeNet","typeErrors","typeChars"].forEach(id=>$(id).textContent="0");
+ $("typeAccuracy").textContent="100%";$("typingResult").className="status";$("typingResult").textContent="";
+ showPassage();
+}
+function wordTokens(s){return s.trim().split(/\s+/u).filter(Boolean)}
+function scoreTyping(){
+ const raw=$("typingInput").value,expected=typeCompareExpected;
+ const a=Array.from(raw),b=Array.from(expected);let charCorrect=0,charErrors=0;
+ for(let i=0;i<a.length;i++){if(i<b.length&&a[i]===b[i])charCorrect++;else charErrors++}
+ const typedWords=wordTokens(raw),expectedWords=wordTokens(expected);let correctWords=0;
+ for(let i=0;i<typedWords.length;i++){if(typedWords[i]===expectedWords[i])correctWords++}
+ const wordErrors=Math.max(0,typedWords.length-correctWords);
+ const mins=Math.max(typeElapsed/60,1/60),gross=(a.length/5)/mins;
+ const netChars=Math.max(0,a.length-charErrors),netWords=netChars/5/mins;
+ const accuracy=a.length?charCorrect/a.length*100:100;
+ $("typeGross").textContent=gross.toFixed(1);$("typeNet").textContent=netWords.toFixed(1);
+ $("typeAccuracy").textContent=accuracy.toFixed(1)+"%";
+ $("typeErrors").textContent=String(charErrors);
+ $("typeChars").textContent=String(a.length);
+ $("typeProgress").style.width=Math.min(100,a.length/Math.max(1,b.length)*100)+"%";
+ return {gross,netWords,netChars,accuracy,correctWords,wordErrors,charErrors,typedWords:typedWords.length,expectedWords:expectedWords.length};
+}
+function insertAtCursor(el,text){
+ const s=el.selectionStart,e=el.selectionEnd,v=el.value;
+ el.value=v.slice(0,s)+text+v.slice(e);const p=s+text.length;el.setSelectionRange(p,p);lastTypedValue=el.value;if($("typeBackspace").value==="rssb"&&/\s$/u.test(el.value))rssbLockedIndex=p;
+}
+function legacyKeyToUnicode(e){
+ const normal={q:"फ",w:"ू",e:"म",r:"त",t:"ज",y:"ल",u:"न",i:"प",o:"व",p:"च","[":"ख्","]":"द्व","\\":"द्य",a:"ं",s:"े",d:"क",f:"ि",g:"ह",h:"ी",j:"र",k:"ा",l:"स",";":"य","'":"श्",z:"्र",x:"ग",c:"ब",v:"अ",b:"इ",n:"द",m:"उ",",":"ए",".":"ण्","/":"ध्"," ":" "};
+ const shifted={Q:"फ्",W:"ॅ",E:"म्",R:"त्",T:"ज्",Y:"ल्",U:"न्",I:"प्",O:"व्",P:"च्","{":"क्ष्","}":"द्व","|":"द्य",A:"।",S:"ै",D:"क्",F:"थ्",G:"श्",H:"भ्",J:"श्र",K:"ज्ञ",L:"स्",Z:"र्",X:"ग्",C:"ब्",V:"ट",B:"ठ",N:"छ",M:"ड","<":"ढ",">":"झ","?":"घ्"};
+ if(e.key===" ")return " ";if(e.key.length!==1)return null;return e.shiftKey?(shifted[e.key]??null):(normal[e.key]??null);
+}
+function physicalUSKey(e){
+ const code=e.code,shift=e.shiftKey;
+ if(/^Key[A-Z]$/.test(code))return shift?code.slice(3):code.slice(3).toLowerCase();
+ if(/^Digit[0-9]$/.test(code)){const n=code.slice(5);return shift?{0:")",1:"!",2:"@",3:"#",4:"$",5:"%",6:"^",7:"&",8:"*",9:"("}[n]:n}
+ const map={Space:shift?" ":" ",Backquote:shift?"~":"`",Minus:shift?"_":"-",Equal:shift?"+":"=",BracketLeft:shift?"{":"[",BracketRight:shift?"}":"]",Backslash:shift?"|":"\\",Semicolon:shift?":":";",Quote:shift?'"':"'",Comma:shift?"<":",",Period:shift?">":".",Slash:shift?"?":"/",Numpad0:"0",Numpad1:"1",Numpad2:"2",Numpad3:"3",Numpad4:"4",Numpad5:"5",Numpad6:"6",Numpad7:"7",Numpad8:"8",Numpad9:"9",NumpadDecimal:"."};
+ return Object.prototype.hasOwnProperty.call(map,code)?map[code]:null;
+}
+$("typingInput").addEventListener("keydown",e=>{
+ if(!typeRunning)return;
+ if($("typeBackspace").value==="no"&&e.key==="Backspace"){e.preventDefault();return}
+ if($("typeBackspace").value==="rssb"&&e.key==="Backspace"){
+  if($("typingInput").selectionStart<=$("typingInput").selectionEnd&&$("typingInput").selectionStart<=rssbLockedIndex){e.preventDefault();return}
+ }
+ if($("typeLang").value==="hi"&&$("typeLayout").value==="remington"){
+  if(e.ctrlKey||e.altKey||e.metaKey)return;
+  if(isLegacyTyping()){
+   const legacyChar=physicalUSKey(e);
+   if(legacyChar!==null){e.preventDefault();insertAtCursor($("typingInput"),legacyChar);scoreTyping()}
+  }else{
+   const mapped=legacyKeyToUnicode(e);
+   if(mapped!==null){e.preventDefault();insertAtCursor($("typingInput"),mapped);scoreTyping()}
+  }
+ }
+});
+$("typingInput").addEventListener("input",()=>{
+ if(!typeRunning)return;const current=$("typingInput").value;
+ if($("typeBackspace").value==="rssb"&&current.length>lastTypedValue.length&&/\s$/u.test(current))rssbLockedIndex=$("typingInput").selectionStart;
+ lastTypedValue=current;scoreTyping();
+});
+$("typeStart").onclick=()=>{
+ if(typeRunning)return;resetTyping();typeDuration=+$("typeDuration").value*60;typeRunning=true;typeStartAt=Date.now();
+ $("typingInput").disabled=false;$("typingInput").focus();$("typeStart").disabled=true;
+ typeTimer=setInterval(()=>{typeElapsed=(Date.now()-typeStartAt)/1000;const left=Math.max(0,typeDuration-Math.floor(typeElapsed));
+  $("typeTime").textContent=String(Math.floor(left/60)).padStart(2,"0")+":"+String(left%60).padStart(2,"0");scoreTyping();if(left<=0)finishTyping();},250);
+};
+function finishTyping(){
+ clearInterval(typeTimer);typeRunning=false;$("typingInput").disabled=true;$("typeStart").disabled=false;
+ const r=scoreTyping(),passed=typeProfileTarget>0?(r.netWords>=typeProfileTarget):true,p=examProfiles[$("typeProfile").value]||examProfiles.general;
+ msg("typingResult",`${p.label} पूरा। Gross: ${r.gross.toFixed(1)} WPM · सही शब्द: ${r.correctWords} · Net correct WPM: ${r.netWords.toFixed(1)} · Accuracy: ${r.accuracy.toFixed(1)}% · Character errors: ${r.charErrors} · Word mismatches: ${r.wordErrors} · ${typeProfileTarget?`${typeProfileTarget} WPM benchmark: ${passed?"Achieved":"Not achieved"}`:"अभ्यास स्कोर"}`,passed?"good":"bad");
+}
+$("typeProfile").onchange=applyExamProfile;
+$("typeLang").onchange=()=>{syncTypingModes();applyExamProfile()};
+$("typeLayout").onchange=()=>{syncTypingModes();resetTyping()};
+$("typeFont").onchange=resetTyping;
+$("typePassage").onchange=resetTyping;
+$("typeDuration").onchange=()=>{if($("typeProfile").value==="custom")resetTyping()};
+$("typeBackspace").onchange=()=>{rssbLockedIndex=0;lastTypedValue=$("typingInput").value};
+$("typeReset").onclick=resetTyping;$("typePrint").onclick=()=>window.print();
+function loadTypingFont(file,kind){
+ if(!file)return;const url=URL.createObjectURL(file),family=kind==="devlys"?"SVCDevLys010":"SVCKrutiDev010";
+ const style=document.createElement("style");style.textContent=`@font-face{font-family:"${family}";src:url("${url}") format("truetype");font-display:swap}`;document.head.appendChild(style);
+ loadedTypingFonts[kind]=`"${family}"`;document.fonts.load(`22px "${family}"`).then(()=>{updateTypingFont();$("fontStatus").textContent=kind==="devlys"?"DevLys 010 font ready.":"Kruti Dev 010 font ready.";});
+}
+$("loadDevlysFont").onclick=()=>$("devlysFont").click();$("loadKrutiFont").onclick=()=>$("krutiFont").click();
+$("devlysFont").onchange=()=>loadTypingFont($("devlysFont").files[0],"devlys");
+$("krutiFont").onchange=()=>loadTypingFont($("krutiFont").files[0],"kruti");
+function typingMappingSelfTest(){
+ const tests=[["भारत एक विशाल देश है।","Hkkjr ,d fo'kky ns'k gSA"],["हिन्दी","fgUnh"],["शिक्षा","f'k{kk"],["कार्य","dk;Z"],["स्","L"],["कि","fd"],["क्ष","{k"],["त्र","="],["श्री","Jh"],["द्वारा","}kjk"]];
+ return tests.every(([u,l])=>unicodeToLegacyTyping(u)===l);
+}
+$("typeStart").disabled=!typingMappingSelfTest();
+syncTypingModes();
+applyExamProfile();
+
+// Excel
+let workbook=null,activeSheet=null,sheetRows=[];
+function renderSheet(){const t=$("excelTable");t.innerHTML="";if(!sheetRows.length)return;const maxRows=Math.min(sheetRows.length,501),maxCols=Math.min(Math.max(...sheetRows.slice(0,maxRows).map(r=>r.length),0),30);for(let i=0;i<maxRows;i++){const tr=t.insertRow();for(let j=0;j<maxCols;j++){const cell=tr.insertCell();cell.contentEditable="true";cell.textContent=sheetRows[i][j]??"";cell.addEventListener("blur",()=>sheetRows[i][j]=cell.textContent);if(i===0){cell.style.fontWeight="bold";cell.style.background="#eff6ff"}}}}
+$("excelLoad").onclick=async()=>{try{const f=$("excelFile").files[0];if(!f)throw Error("Excel/CSV file चुनें।");const data=await f.arrayBuffer();workbook=XLSX.read(data,{type:"array",cellDates:true});$("excelSheet").innerHTML="";workbook.SheetNames.forEach(n=>{const o=document.createElement("option");o.value=n;o.textContent=n;$("excelSheet").appendChild(o)});$("excelSheet").disabled=false;activeSheet=workbook.SheetNames[0];loadSheet();msg("excelStatus",`${workbook.SheetNames.length} worksheet(s) loaded. Visible preview up to 500 rows × 30 columns.`,"good")}catch(e){msg("excelStatus",e.message,"bad")}};
+function loadSheet(){activeSheet=$("excelSheet").value||activeSheet;sheetRows=XLSX.utils.sheet_to_json(workbook.Sheets[activeSheet],{header:1,raw:false,defval:""});renderSheet()}
+$("excelSheet").onchange=()=>workbook&&loadSheet();
+$("excelSearchBtn").onclick=()=>{const q=$("excelSearch").value.toLowerCase();if(!q)return;const rows=[...$("excelTable").rows];let count=0;rows.forEach(r=>[...r.cells].forEach(c=>{if(c.textContent.toLowerCase().includes(q)){c.style.background="#fef3c7";count++}else c.style.background=""}));msg("excelStatus",`${count} matching cell(s) found in visible preview.`,"info")};
+$("excelReplaceBtn").onclick=()=>{const f=$("excelFind").value;if(!f)return;const r=$("excelReplace").value;sheetRows=sheetRows.map(row=>row.map(v=>String(v??"").split(f).join(r)));renderSheet();msg("excelStatus","Replace all complete.","good")};
+$("excelRemoveBlank").onclick=()=>{sheetRows=sheetRows.filter(r=>r.some(v=>String(v??"").trim()!==""));renderSheet();msg("excelStatus","Blank rows removed.","good")};
+$("excelRemoveDup").onclick=()=>{const seen=new Set();sheetRows=sheetRows.filter(r=>{const k=JSON.stringify(r);if(seen.has(k))return false;seen.add(k);return true});renderSheet();msg("excelStatus","Duplicate rows removed.","good")};
+$("excelSortBtn").onclick=()=>{const c=+$("excelSortCol").value-1;if(c<0) return;const head=sheetRows[0],body=sheetRows.slice(1).sort((a,b)=>String(a[c]??"").localeCompare(String(b[c]??""),undefined,{numeric:true})*($("excelSortOrder").value==="asc"?1:-1));sheetRows=[...(head?[head]:[]),...body];renderSheet();msg("excelStatus","Rows sorted.","good")};
+function exportSheet(){const ws=XLSX.utils.aoa_to_sheet(sheetRows);workbook=workbook||XLSX.utils.book_new();workbook.Sheets[activeSheet||"Sheet1"]=ws;if(!workbook.SheetNames.includes(activeSheet||"Sheet1"))workbook.SheetNames.push(activeSheet||"Sheet1");return ws}
+$("excelCsv").onclick=()=>{if(!sheetRows.length)return msg("excelStatus","पहले file load करें।","bad");downloadBlob(new Blob([XLSX.utils.sheet_to_csv(exportSheet())],{type:"text/csv;charset=utf-8"}),"sheet.csv")};
+$("excelXlsx").onclick=()=>{if(!sheetRows.length)return msg("excelStatus","पहले file load करें।","bad");exportSheet();XLSX.writeFile(workbook,"edited-workbook.xlsx")};
+
+// Calculators
+function localDate(d){const x=new Date();return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`}
+$("asOn").value=localDate();$("ageCalc").onclick=()=>{try{const a=new Date($("dob").value+"T00:00:00"),b=new Date($("asOn").value+"T00:00:00");if(isNaN(a)||isNaN(b)||a>b)throw Error("Valid dates दें; DOB भविष्य की नहीं हो सकती।");let y=b.getFullYear()-a.getFullYear(),m=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();if(d<0){m--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate()}if(m<0){y--;m+=12}msg("ageResult",`${y} वर्ष, ${m} माह, ${d} दिन`,"good")}catch(e){msg("ageResult",e.message,"bad")}};
+$("percentCalc").onclick=()=>{const a=+$("obtained").value,b=+$("totalMarks").value;if(!Number.isFinite(a)||!Number.isFinite(b)||b<=0||a<0){msg("percentResult","Valid marks और total marks > 0 दें।","bad");return}msg("percentResult",`${(a/b*100).toFixed(2)}%${a>b?" · Warning: obtained marks total से अधिक हैं":""}`,"good")};
+$("gstCalc").onclick=()=>{const a=+$("gstAmount").value,r=+$("gstRate").value/100;if(!Number.isFinite(a)||a<0){msg("gstResult","Valid amount दें।","bad");return}let base,tax;if($("gstMode").value==="exclusive"){base=a;tax=a*r}else{base=a/(1+r);tax=a-base}const t=$("gstType").value==="intra"?`CGST: ₹${(tax/2).toFixed(2)} · SGST: ₹${(tax/2).toFixed(2)}`:`IGST: ₹${tax.toFixed(2)}`;msg("gstResult",`Taxable value: ₹${base.toFixed(2)} · GST: ₹${tax.toFixed(2)} · ${t} · Total: ₹${(base+tax).toFixed(2)}`,"good")};
+$("tdsCalc").onclick=()=>{const a=+$("tdsAmount").value,r=+$("tdsRate").value;if(!Number.isFinite(a)||a<0||!Number.isFinite(r)||r<0){msg("tdsResult","Valid amount और rate दें।","bad");return}msg("tdsResult",`TDS (${r}%): ₹${(a*r/100).toFixed(2)} · Net payable: ₹${(a-a*r/100).toFixed(2)} · Section: ${$("tdsSection").value}`,"good")};
+
+// Number to words
+const enSmall=["Zero","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"],enTens=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+function enUnder(n){if(n<20)return enSmall[n];if(n<100)return enTens[Math.floor(n/10)]+(n%10?" "+enSmall[n%10]:"");return enSmall[Math.floor(n/100)]+" Hundred"+(n%100?" "+enUnder(n%100):"")}
+function enIndian(n){if(!n)return"Zero";const u=["","Thousand","Lakh","Crore","Arab","Kharab"];let out=[],i=0;while(n&&i<u.length){let c=i===0?n%1000:n%100;n=Math.floor(n/(i===0?1000:100));if(c)out.unshift(enUnder(c)+(u[i]?" "+u[i]:""));i++}if(n)throw Error("Number limit exceeded");return out.join(" ")}
+const hiNumbers=["शून्य","एक","दो","तीन","चार","पाँच","छह","सात","आठ","नौ","दस","ग्यारह","बारह","तेरह","चौदह","पंद्रह","सोलह","सत्रह","अठारह","उन्नीस","बीस","इक्कीस","बाईस","तेईस","चौबीस","पच्चीस","छब्बीस","सत्ताईस","अट्ठाईस","उनतीस","तीस","इकतीस","बत्तीस","तैंतीस","चौंतीस","पैंतीस","छत्तीस","सैंतीस","अड़तीस","उनतालीस","चालीस","इकतालीस","बयालीस","तैंतालीस","चवालीस","पैंतालीस","छियालीस","सैंतालीस","अड़तालीस","उनचास","पचास","इक्यावन","बावन","तिरपन","चौवन","पचपन","छप्पन","सत्तावन","अट्ठावन","उनसठ","साठ","इकसठ","बासठ","तिरसठ","चौंसठ","पैंसठ","छियासठ","सड़सठ","अड़सठ","उनहत्तर","सत्तर","इकहत्तर","बहत्तर","तिहत्तर","चौहत्तर","पचहत्तर","छिहत्तर","सतहत्तर","अठहत्तर","उनासी","अस्सी","इक्यासी","बयासी","तिरासी","चौरासी","पचासी","छियासी","सत्तासी","अट्ठासी","नवासी","नब्बे","इक्यानवे","बानवे","तिरानवे","चौरानवे","पचानवे","छियानवे","सत्तानवे","अट्ठानवे","निन्यानवे"];
+function hiUnder(n){
+ if(n<100)return hiNumbers[n];
+ if(n<1000)return hiNumbers[Math.floor(n/100)]+" सौ"+(n%100?" "+hiUnder(n%100):"");
+ return "";
+}
+function hiIndian(n){if(!n)return"शून्य";const u=["","हज़ार","लाख","करोड़","अरब","खरब"];let out=[],i=0;while(n&&i<u.length){let c=i===0?n%1000:n%100;n=Math.floor(n/(i===0?1000:100));if(c)out.unshift(hiUnder(c)+(u[i]?" "+u[i]:""));i++}if(n)throw Error("संख्या सीमा से अधिक है");return out.join(" ")}
+let numberResultText="";
+$("numberConvert").onclick=()=>{try{const raw=$("numberInput").value;if(raw==="")throw Error("Number लिखें।");const v=Number(raw);if(!Number.isFinite(v)||Math.abs(v)>99999999999999)throw Error("Valid number लिखें; अधिकतम supported सीमा 99,99,99,99,99,999.99 है।");const cents=Math.round(Math.abs(v)*100),whole=Math.floor(cents/100),paise=cents%100,hi=$("numberLang").value==="hi",fn=hi?hiIndian:enIndian;let s=fn(whole);if($("numberFormat").value==="currency"){s+=(hi?" रुपये":" Rupees");if(paise)s+=(hi?" और ":" and ")+fn(paise)+(hi?" पैसे":" Paise");s+=hi?" मात्र":" Only"}else if(paise)s+=(hi?" दशमलव ":" Point ")+String(paise);if(v<0)s=(hi?"ऋणात्मक ":"Minus ")+s;numberResultText=s;msg("numberResult",s,"good")}catch(e){msg("numberResult",e.message,"bad")}};
+$("numberCopy").onclick=async()=>{if(!numberResultText)return;try{await navigator.clipboard.writeText(numberResultText);msg("numberResult",numberResultText+"\nCopied.","good")}catch(e){msg("numberResult","Copy unavailable; text select करके copy करें।","info")}};
+</script>
+<!-- ================= SVC FINAL VERIFIED AI+ SUITE (STREAMING + FILE READER + GOOGLE-LENS TRANSLATOR) ================= -->
+<style>
+.panel#aidraft .card:before{background:linear-gradient(180deg,#155eef,#0ea5e9)}
+.panel#aitranslate .card:before{background:linear-gradient(180deg,#ea580c,#f59e0b)}
+.ai-badge{display:inline-block;background:linear-gradient(135deg,#0f172a,#1e3a8a);color:#fff;font-size:11px;font-weight:800;padding:3px 9px;border-radius:99px;letter-spacing:.4px}
+.ai-chat-window{background:#f8fafc;border:1px solid #cbd5e1;border-radius:12px;padding:14px;height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:12px;margin-bottom:10px}
+.ai-msg{max-width:86%;padding:12px 15px;border-radius:14px;font-size:15px;line-height:1.75;white-space:pre-wrap;word-wrap:break-word;position:relative}
+.ai-msg.user{align-self:flex-end;background:linear-gradient(135deg,#1d4ed8,#2563eb);color:#fff;border-bottom-right-radius:4px}
+.ai-msg.bot{align-self:flex-start;background:#ffffff;color:#1e293b;border:1px solid #dbe5f2;border-bottom-left-radius:4px;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+.ai-msg-actions{display:flex;gap:6px;margin-top:8px;padding-top:6px;border-top:1px solid #e2e8f0;flex-wrap:wrap;align-items:center}
+.ai-mini-btn{background:#f1f5f9;border:1px solid #cbd5e1;color:#334155;font-size:11px;font-weight:700;padding:3px 8px;border-radius:6px;cursor:pointer}
+.ai-mini-btn:hover{background:#e0f2fe;color:#0369a1;border-color:#7dd3fc}
+.ai-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.ai-chip{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;cursor:pointer}
+.ai-chip:hover{background:#dbeafe}
+.ai-attach-bar{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.ai-attach-pill{display:none;align-items:center;gap:6px;background:#e0f2fe;border:1px solid #7dd3fc;color:#0369a1;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px}
+.ai-input-bar{display:flex;gap:8px;align-items:flex-end}
+.ai-input-bar textarea{min-height:58px;max-height:170px;flex:1;border:2px solid #93c5fd;background:#fff;font-size:15px}
+.ai-doc-box{font-family:"Noto Sans Devanagari","Mangal",Arial,sans-serif;font-size:16px;line-height:1.85;min-height:290px;background:#fff}
+.ai-split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:780px){.ai-split{grid-template-columns:1fr}.ai-msg{max-width:95%}}
+.svc-ai-modal-bg{position:fixed;inset:0;background:rgba(11,37,69,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:1000000;padding:16px}
+.svc-ai-modal-card{background:#fff;max-width:480px;width:100%;border-radius:14px;border-top:5px solid #155eef;box-shadow:0 15px 40px rgba(0,0,0,.35);padding:22px 20px;color:#1e293b}
+</style>
+
+<!-- TAB 7: LIVE-STREAMING AI+ ASSISTANT & DOCUMENT DRAFTER -->
+<section class="panel" id="aidraft">
+  <div class="card">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px;gap:8px;flex-wrap:wrap">
+      <h2 style="margin:0">AI+ Assistant &amp; Smart Drafter <span class="ai-badge">AUTO-LATEST · LIVE STREAMING</span></h2>
+      <div class="row" style="gap:6px;flex-wrap:wrap">
+        <select id="aiModelSelect" style="padding:6px 10px;font-size:13px;font-weight:700;border-radius:8px;border:1px solid #93c5fd;background:#eff6ff;color:#1e3a8a">
+          <option value="auto_fast" selected>⚡ Fast AI (Auto-Latest Gemini)</option>
+          <option value="auto_pro">🧠 Pro AI (Auto-Latest GPT)</option>
+          <option value="auto_legal">⚖️ Legal AI (Auto-Latest Claude)</option>
+        </select>
+        <button type="button" class="btn danger" id="aiChatClearBtn">🗑️ नई चैट</button>
+        <button type="button" class="btn danger hidden" id="aiRevokeDraftBtn">🔒 अनुमति हटाएँ</button>
+<span id="aiLoggedUserBadge" class="small hidden" style="font-weight:700;color:#0f172a;background:#e0f2fe;padding:4px 9px;border-radius:8px;border:1px solid #7dd3fc"></span>
+        <button type="button" class="btn danger hidden" id="aiPuterLogoutBtn">🚪 Logout</button>
+        <button type="button" class="btn danger hidden" id="aiPuterDeleteAccBtn" title="Puter.com से अपना खाता स्थायी रूप से हटाएँ">⚠️ Delete Account</button>
+<button type="button" class="btn danger" id="aiPurgeAllBtn" title="इस ब्राउज़र से सारी चैट, सहमति और लॉगिन डेटा स्थायी रूप से मिटाएँ">🧹 सब डेटा साफ़ करें</button>
+      </div>
+    </div>
+    <p class="hint">सीधे प्रश्न पूछें, कोई PDF/Word पत्र जोड़कर उसका उत्तर ड्राफ़्ट करवाएँ, या सरकारी आदेश, लीगल नोटिस व आवेदन लिखवाएँ।</p>
+
+    <div id="aiChatWindow" class="ai-chat-window">
+      <div class="ai-msg bot">नमस्ते! मैं आपका <b>AI+ Assistant</b> हूँ। आप मुझसे किसी भी विषय पर प्रश्न पूछ सकते हैं, या नीचे <b>📎 फ़ाइल जोड़ें</b> से कोई PDF/Word पत्र लगाकर उसका जवाब या ड्राफ़्ट तैयार करवा सकते हैं।</div>
+    </div>
+
+    <div class="ai-chips">
+      <button type="button" class="ai-chip" data-preset="निम्नलिखित विवरण के आधार पर शुद्ध हिंदी प्रशासनिक भाषा में एक कार्यालय आदेश (Office Order) तैयार करें (सभी नाम, क्रमांक, दिनांक व राशि ज्यों-के-त्यों रखें):&#10;">📄 कार्यालय आदेश</button>
+      <button type="button" class="ai-chip" data-preset="निम्नलिखित विषय पर एक औपचारिक सरकारी/कार्यालयी पत्र (Official Letter) शुद्ध हिंदी में लिखें:&#10;">✉️ सरकारी पत्र</button>
+      <button type="button" class="ai-chip" data-preset="निम्नलिखित तथ्यों के आधार पर एक विधिक सूचना (Legal Notice) तैयार करें:&#10;">⚖️ लीगल नोटिस</button>
+      <button type="button" class="ai-chip" data-preset="संलग्न दस्तावेज़ / नीचे लिखे मैटर का संक्षिप्त सार और बिंदुवार उत्तर तैयार करें:&#10;">📑 पत्र का जवाब / सार</button>
+      <button type="button" class="ai-chip" data-preset="नीचे लिखे ड्राफ़्ट की हिंदी भाषा को शुद्ध प्रशासनिक शैली में सुधारें और दोहराव हटाएँ:&#10;">✨ भाषा सुधारें</button>
+    </div>
+
+    <div class="ai-attach-bar">
+      <input type="file" id="aiChatFileInput" accept=".pdf,.docx,.doc,.txt,image/*" class="hidden">
+      <button type="button" class="btn" id="aiAttachBtn" style="padding:5px 11px;font-size:12.5px">📎 फ़ाइल जोड़ें (PDF / Word / TXT)</button>
+      <span id="aiAttachPill" class="ai-attach-pill">
+        <span id="aiAttachName"></span>
+        <button type="button" id="aiAttachRemoveBtn" style="border:none;background:none;color:#0369a1;font-weight:900;cursor:pointer;padding:0 2px">✕</button>
+      </span>
+    </div>
+
+    <div class="ai-input-bar">
+      <textarea id="aiFreePrompt" placeholder="यहाँ अपना सवाल या ड्राफ़्ट का पूरा मैटर लिखें... (Enter से भेजें, नई लाइन के लिए Shift+Enter)"></textarea>
+      <button type="button" class="btn primary" id="aiSendChatBtn" style="height:58px;padding:0 22px;font-size:15px">भेजें ➤</button>
+    </div>
+
+    <div id="aiDraftStatus" class="status" role="status" aria-live="polite"></div>
+
+    <div class="small" style="margin-top:10px;color:#475569;background:#f1f5f9;padding:8px 10px;border-radius:6px;border-left:3px solid #64748b">
+      ⚠️ <b>गोपनीयता एवं सुरक्षा निर्देश:</b> यह AI सुविधा केवल सामान्य प्रारूपण (Drafting) एवं जानकारी सहायता हेतु है। कृपया इसमें किसी भी व्यक्ति का आधार नंबर, बैंक विवरण, पासवर्ड या अति-गोपनीय सरकारी रिकॉर्ड न डालें। बाहरी AI सेवा पर प्रेषित सामग्री की गोपनीयता की जिम्मेदारी स्वयं उपयोगकर्ता की होगी।
+    </div>
+  </div>
+</section>
+
+<!-- TAB 8: GOOGLE-LENS STYLE LAYOUT-PRESERVING SCANNER & TRANSLATOR -->
+<section class="panel" id="aitranslate">
+  <div class="card">
+    <h2>AI+ Visual &amp; Document Layout Translator <span class="ai-badge">SAME-FORMAT · GOOGLE LENS STYLE</span></h2>
+    <p class="hint">आप जिस फ़ॉर्मेट (<b>Photo JPG/PNG, PDF, या Word .docx</b>) में फ़ाइल अपलोड करेंगे, यह उसके मूल लेआउट, कॉलम और स्थान को सुरक्षित रखते हुए <b>ठीक उसी फ़ॉर्मेट में अनुवादित फ़ाइल</b> तैयार करके देगा।</p>
+
+    <div class="grid">
+      <div>
+        <label>दस्तावेज़ चुनें (Image JPG/PNG, PDF, या Word .docx)</label>
+        <input type="file" id="aiTransFile" accept=".pdf,.docx,.doc,image/*">
+        <div class="row" style="margin-top:7px">
+          <button type="button" class="btn danger" id="aiTransClearBtn">× Clear All</button>
+          <span class="small" id="aiTransFileInfo">कोई फ़ाइल चयनित नहीं</span>
+        </div>
+      </div>
+      <div>
+        <label>स्कैन गुणवत्ता सुधार (Old / Blurry Paper)</label>
+        <select id="aiTransMode">
+          <option value="hd_auto" selected>HD Auto-Enhance (पुराने/धुंधले कागज़ हेतु)</option>
+          <option value="high_contrast">Ultra B&amp;W Contrast (फीकी स्याही हेतु)</option>
+          <option value="normal">Standard Scan (साफ़ प्रिंटेड फ़ाइल हेतु)</option>
+        </select>
+      </div>
+      <div>
+        <label>अनुवाद शब्दावली सुधार</label>
+        <select id="aiTransDomain">
+          <option value="general_official" selected>सामान्य एवं प्रशासनिक हिंदी</option>
+          <option value="legal_court">विधिक एवं न्यायालयी शब्दावली</option>
+          <option value="engineering_tender">अभियांत्रिकी एवं संवेदक शब्दावली</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:12px;flex-wrap:wrap">
+      <button type="button" class="btn primary" id="aiLayoutTranslateBtn" style="background:linear-gradient(135deg,#c2410c,#ea580c);border-color:#ea580c">🌐 Scan &amp; Translate (Same Format)</button>
+      <button type="button" class="btn primary hidden" id="aiDownloadSameFmtBtn">⬇️ Download Translated File (Same Format)</button>
+      <button type="button" class="btn" id="aiSendToChatBtn" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🤖 Send Text to AI+ Assistant</button>
+      <button type="button" class="btn" id="aiTransCopyBtn">📄 Copy Hindi Text</button>
+      <button type="button" class="btn danger hidden" id="aiRevokeTransBtn">🔒 AI अनुमति हटाएँ</button>
+    </div>
+
+    <div id="aiTransStatus" class="status" role="status" aria-live="polite"></div>
+
+    <div id="aiVisualPreviewWrap" class="ai-split hidden" style="margin-top:14px">
+      <div>
+        <label>मूल दस्तावेज़ (Original Preview):</label>
+        <div id="aiOrigVisualBox" style="border:1px solid #cbd5e1;border-radius:10px;background:#f8fafc;padding:10px;max-height:560px;overflow:auto;text-align:center"></div>
+      </div>
+      <div>
+        <label>अनुवादित दस्तावेज़ (Same Layout Hindi Output):</label>
+        <div id="aiTransVisualBox" style="border:2px solid #93c5fd;border-radius:10px;background:#ffffff;padding:10px;max-height:560px;overflow:auto;text-align:center"></div>
+      </div>
+    </div>
+
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer;font-weight:700;color:#1e3a8a">📝 निकाला गया टेक्स्ट देखें / संपादित करें (Extracted &amp; Translated Text)</summary>
+      <div class="ai-split" style="margin-top:8px">
+        <div>
+          <label>मूल English टेक्स्ट:</label>
+          <textarea id="aiEnglishText" class="ai-doc-box" style="min-height:180px"></textarea>
+        </div>
+        <div>
+          <label>अनुवादित हिंदी टेक्स्ट:</label>
+          <textarea id="aiHindiText" class="ai-doc-box" style="min-height:180px"></textarea>
+        </div>
+      </div>
+    </details>
+
+    <div class="small" style="margin-top:10px;color:#475569;background:#f1f5f9;padding:8px 10px;border-radius:6px;border-left:3px solid #64748b">
+      ⚠️ <b>गोपनीयता एवं सुरक्षा निर्देश:</b> कृपया अनुवाद हेतु किसी भी व्यक्ति का आधार नंबर, बैंक विवरण या अति-गोपनीय सरकारी दस्तावेज़ अपलोड न करें।
+    </div>
+  </div>
+</section>
+
+<!-- Transparent Privacy Consent Modal -->
+<div id="svcAiConsentModal" class="svc-ai-modal-bg">
+  <div class="svc-ai-modal-card">
+    <h3 style="margin:0 0 10px;color:#003366">🤖 AI+ ऑनलाइन प्रोसेसिंग सूचना</h3>
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid #155eef;padding:12px;border-radius:8px;font-size:13.5px;line-height:1.65;margin-bottom:15px">
+      इस पोर्टल के <b>बाकी सभी टूल्स (PDF, फोटो, टाइपिंग, Excel, कैलकुलेटर और HD OCR स्कैनिंग) 100% ऑफ़लाइन</b> आपके ब्राउज़र में ही काम करते हैं।<br><br>
+      आपके मोबाइल या पीसी को धीमा होने से बचाने के लिए <b>AI+ Assistant और हिंदी अनुवाद फ़ीचर सुरक्षित ऑनलाइन AI</b> का उपयोग करते हैं। आप <b>'🔒 अनुमति हटाएँ'</b> बटन से कभी भी यह अनुमति वापस ले सकते हैं।
+    </div>
+    <div class="row" style="justify-content:flex-end">
+      <button type="button" class="btn" id="svcAiCancelBtn">✕ रद्द करें</button>
+      <button type="button" class="btn primary" id="svcAiAcceptBtn">✓ सहमत हूँ, AI+ चालू करें</button>
+    </div>
+  </div>
+</div>
+
+<script id="svc-ai-plus-engine">
+(function(){
+  "use strict";
+  const el = id => document.getElementById(id);
+  const AI_CONSENT_KEY = "svc_ai_hybrid_consent_v1";
+  const CHAT_STORE_KEY = "svc_ai_session_chat_v1";
+  let pendingAction = null;
+  let chatHistory = [];
+  let attachedDoc = null;
+  let isGenerating = false;
+  let stopRequested = false;
+
+  // Inject subtle styles for Tables, Voice Mic & Generated Images
+  if (!el("svcAiProStyles")) {
+    const st = document.createElement("style");
+    st.id = "svcAiProStyles";
+    st.textContent = `
+      .ai-mic-active { background:#dc2626 !important; color:#fff !important; border-color:#dc2626 !important; animation: svcPulse 1.2s infinite; }
+      @keyframes svcPulse { 0%,100%{opacity:1} 50%{opacity:0.65} }
+      .ai-rich-table { width:100%; border-collapse:collapse; margin:10px 0; font-size:0.9rem; background:#fff; }
+      .ai-rich-table th, .ai-rich-table td { border:1px solid #cbd5e1; padding:7px 10px; text-align:left; }
+      .ai-rich-table th { background:#e2e8f0; color:#0f172a; font-weight:700; }
+      .ai-gen-img { max-width:100%; max-height:420px; border-radius:10px; border:1px solid #cbd5e1; margin-top:8px; display:block; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+    `;
+    document.head.appendChild(st);
+  }
+
+  // 1. Ensure AI Tabs exist
+  const tabBar = el("tabs");
+  if (tabBar && !tabBar.querySelector('[data-tab="aidraft"]')) {
+    const b1 = document.createElement("button");
+    b1.dataset.tab = "aidraft";
+    b1.textContent = "🤖 AI+ Assistant";
+    const b2 = document.createElement("button");
+    b2.dataset.tab = "aitranslate";
+    b2.textContent = "🌐 AI+ Scan & Translate";
+    [b1, b2].forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("active", x === btn));
+        document.querySelectorAll(".panel").forEach(x => x.classList.toggle("active", x.id === btn.dataset.tab));
+      });
+      tabBar.appendChild(btn);
+    });
+  }
+
+  // 2. Preset Chips + Auto-inject Image & Table Preset Chips
+  const firstChip = document.querySelector(".ai-chip");
+  if (firstChip && firstChip.parentElement && !firstChip.parentElement.querySelector('[data-pro-chip="1"]')) {
+    const extraChips = [
+      { label: "🖼️ इमेज / पोस्टर बनाएं", preset: "एक आकर्षक पोस्टर की इमेज बनाएं: " },
+      { label: "📊 Excel तालिका बनाएं", preset: "निम्नलिखित जानकारी को एक स्पष्ट तालिका (Table) में तैयार करें: " }
+    ];
+    extraChips.forEach(c => {
+      const sp = document.createElement("span");
+      sp.className = firstChip.className;
+      sp.dataset.preset = c.preset;
+      sp.dataset.proChip = "1";
+      sp.textContent = c.label;
+      firstChip.parentElement.appendChild(sp);
+    });
+  }
+
+  document.querySelectorAll(".ai-chip").forEach(chip => {
+    chip.onclick = () => {
+      const box = el("aiFreePrompt");
+      if (!box) return;
+      box.value = chip.dataset.preset + box.value;
+      box.focus();
+    };
+  });
+
+  // 3. LIVE VOICE INPUT (Hindi + English Speech-to-Text)
+  const attachBtn = el("aiAttachBtn");
+  if (attachBtn && attachBtn.parentElement && !el("aiVoiceMicBtn")) {
+    const micBtn = document.createElement("button");
+    micBtn.type = "button";
+    micBtn.id = "aiVoiceMicBtn";
+    micBtn.className = attachBtn.className || "btn";
+    micBtn.title = "बोलकर हिंदी/अंग्रेज़ी में लिखें";
+    micBtn.textContent = "🎤 बोलें";
+    attachBtn.parentElement.insertBefore(micBtn, attachBtn.nextSibling);
+
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isListening = false;
+
+    if (!SpeechRec) {
+      micBtn.onclick = () => msg("aiDraftStatus", "⚠️ आपका ब्राउज़र वॉइस टाइपिंग सपोर्ट नहीं करता। कृपया Chrome या Edge का उपयोग करें।", "bad");
+    } else {
+      recognition = new SpeechRec();
+      recognition.lang = "hi-IN";
+      recognition.interimResults = true;
+      recognition.continuous = false;
+
+      let baseText = "";
+      recognition.onstart = () => {
+        isListening = true;
+        baseText = (el("aiFreePrompt").value || "").trim();
+        micBtn.classList.add("ai-mic-active");
+        micBtn.textContent = "⏹️ सुन रहा है…";
+        msg("aiDraftStatus", "🎤 अब हिंदी या अंग्रेज़ी में बोलें…", "info");
+      };
+      recognition.onresult = (event) => {
+        let transcript = "";
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        el("aiFreePrompt").value = (baseText ? baseText + " " : "") + transcript.trim();
+      };
+      recognition.onerror = (e) => {
+        msg("aiDraftStatus", "🎤 माइक त्रुटि: " + (e.error === "not-allowed" ? "कृपया ब्राउज़र में माइक की अनुमति दें।" : e.error), "bad");
+      };
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.classList.remove("ai-mic-active");
+        micBtn.textContent = "🎤 बोलें";
+        el("aiFreePrompt").focus();
+      };
+
+      micBtn.onclick = () => {
+        if (isListening) {
+          recognition.stop();
+        } else {
+          try { recognition.start(); } catch (e) {}
+        }
+      };
+    }
+  }
+
+  // 4. Consent Management
+  function hasAiConsent() {
+    try { return localStorage.getItem(AI_CONSENT_KEY) === "accepted"; } catch (e) { return false; }
+  }
+
+  function syncAiUIState() {
+    const ok = hasAiConsent();
+    ["aiRevokeDraftBtn", "aiRevokeTransBtn"].forEach(id => {
+      const b = el(id);
+      if (b) b.classList.toggle("hidden", !ok);
+    });
+  }
+  syncAiUIState();
+
+  function runWithAiConsent(fn) {
+    if (hasAiConsent()) {
+      fn();
+    } else {
+      pendingAction = fn;
+      const modal = el("svcAiConsentModal");
+      if (modal) modal.style.display = "flex";
+    }
+  }
+
+  if (el("svcAiCancelBtn")) {
+    el("svcAiCancelBtn").onclick = () => {
+      el("svcAiConsentModal").style.display = "none";
+      pendingAction = null;
+    };
+  }
+  if (el("svcAiAcceptBtn")) {
+    el("svcAiAcceptBtn").onclick = () => {
+      try { localStorage.setItem(AI_CONSENT_KEY, "accepted"); } catch (e) {}
+      el("svcAiConsentModal").style.display = "none";
+      syncAiUIState();
+      const fn = pendingAction;
+      pendingAction = null;
+      if (fn) fn();
+    };
+  }
+
+  function revokeAiConsent() {
+    try { localStorage.removeItem(AI_CONSENT_KEY); } catch (e) {}
+    syncAiUIState();
+    msg("aiDraftStatus", "🔒 AI ऑनलाइन अनुमति हटा दी गई है।", "info");
+    msg("aiTransStatus", "🔒 AI ऑनलाइन अनुमति हटा दी गई है।", "info");
+  }
+  if (el("aiRevokeDraftBtn")) el("aiRevokeDraftBtn").onclick = revokeAiConsent;
+  if (el("aiRevokeTransBtn")) el("aiRevokeTransBtn").onclick = revokeAiConsent;
+
+  // 5. Puter Auth Status, Logout, Delete & Purge
+  async function refreshPuterAuthUI() {
+    const badge = el("aiLoggedUserBadge");
+    const btnOut = el("aiPuterLogoutBtn");
+    const btnDel = el("aiPuterDeleteAccBtn");
+    if (!badge || !btnOut || !btnDel) return;
+
+    try {
+      if (window.puter && window.puter.auth && typeof window.puter.auth.isSignedIn === "function" && window.puter.auth.isSignedIn()) {
+        let uname = "Connected";
+        try {
+          const u = await window.puter.auth.getUser();
+          if (u && u.username) uname = u.username;
+        } catch (e) {}
+        badge.textContent = `👤 ${uname}`;
+        badge.classList.remove("hidden");
+        btnOut.classList.remove("hidden");
+        btnDel.classList.remove("hidden");
+        return;
+      }
+    } catch (e) {}
+
+    badge.classList.add("hidden");
+    btnOut.classList.add("hidden");
+    btnDel.classList.add("hidden");
+  }
+
+  setTimeout(refreshPuterAuthUI, 1200);
+  document.addEventListener("click", e => {
+    if (e.target && (e.target.dataset?.tab === "aidraft" || e.target.id === "aiSendChatBtn" || e.target.id === "aiLayoutTranslateBtn")) {
+      setTimeout(refreshPuterAuthUI, 1500);
+    }
+  });
+
+  if (el("aiPuterLogoutBtn")) {
+    el("aiPuterLogoutBtn").onclick = async () => {
+      try {
+        if (window.puter && window.puter.auth && typeof window.puter.auth.signOut === "function") {
+          await window.puter.auth.signOut();
+        }
+        Object.keys(localStorage).forEach(k => { if (k.toLowerCase().includes("puter")) localStorage.removeItem(k); });
+        Object.keys(sessionStorage).forEach(k => { if (k.toLowerCase().includes("puter")) sessionStorage.removeItem(k); });
+        await refreshPuterAuthUI();
+        msg("aiDraftStatus", "✓ आप अपने AI खाते से सुरक्षित रूप से लॉगआउट हो गए हैं।", "good");
+      } catch (e) {
+        msg("aiDraftStatus", "लॉगआउट त्रुटि: " + (e.message || String(e)), "bad");
+      }
+    };
+  }
+
+  if (el("aiPuterDeleteAccBtn")) {
+    el("aiPuterDeleteAccBtn").onclick = async () => {
+      const ok = confirm(
+        "⚠️ स्थायी खाता विलोपन (Permanent Account Deletion):\n\n" +
+        "आपका AI खाता तृतीय-पक्ष सेवा 'Puter.com' पर बना हुआ है। इसे स्थायी रूप से डिलीट करने के लिए आपको Puter.com की आधिकारिक खाता सेटिंग्स पर ले जाया जाएगा।\n\n" +
+        "वहाँ ऊपर दाईं ओर अपने प्रोफ़ाइल नाम पर क्लिक करें -> Settings -> Account -> 'Delete Account' चुनकर अपना खाता हमेशा के लिए डिलीट कर सकते हैं।\n\n" +
+        "क्या आप अभी Puter.com खाता सेटिंग्स खोलना चाहते हैं?"
+      );
+      if (!ok) return;
+      try {
+        if (window.puter && window.puter.auth && typeof window.puter.auth.signOut === "function") {
+          await window.puter.auth.signOut();
+        }
+      } catch (e) {}
+      await refreshPuterAuthUI();
+      window.open("https://puter.com", "_blank", "noopener,noreferrer");
+    };
+  }
+
+  if (el("aiPurgeAllBtn")) {
+    el("aiPurgeAllBtn").onclick = async () => {
+      if (!confirm("क्या आप इस ब्राउज़र से अपनी सारी AI चैट, सहमति और लॉगिन सत्र स्थायी रूप से मिटाना चाहते हैं?")) return;
+      try {
+        if (window.puter && window.puter.auth && typeof window.puter.auth.signOut === "function") {
+          await window.puter.auth.signOut();
+        }
+      } catch (e) {}
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      try { localStorage.clear(); } catch (e) {}
+      try { sessionStorage.clear(); } catch (e) {}
+      chatHistory = [];
+      attachedDoc = null;
+      if (el("aiAttachPill")) el("aiAttachPill").style.display = "none";
+      if (el("aiChatWindow")) {
+        el("aiChatWindow").innerHTML = `<div class="ai-msg bot">🧹 इस ब्राउज़र से आपका सारा डेटा, चैट और लॉगिन सत्र स्थायी रूप से साफ़ कर दिया गया है।</div>`;
+      }
+      syncAiUIState();
+      await refreshPuterAuthUI();
+      msg("aiDraftStatus", "✓ पूर्ण सुरक्षा सफ़ाई (Purge) सफल रही।", "good");
+    };
+  }
+
+  // 6. Rich Table Parser, Excel (.xlsx) Export, Official Word Letterhead & Print
+  function parseMarkdownTables(text) {
+    const lines = text.split("\n");
+    const tables = [];
+    let current = [];
+    for (const ln of lines) {
+      const trimmed = ln.trim();
+      if (trimmed.startsWith("|") && trimmed.endsWith("|") && trimmed.split("|").length >= 3) {
+        if (/^\|[\s\-:|]+\|$/.test(trimmed)) continue; // skip separator row
+        const cells = trimmed.slice(1, -1).split("|").map(c => c.trim());
+        current.push(cells);
+      } else {
+        if (current.length >= 2) tables.push(current);
+        current = [];
+      }
+    }
+    if (current.length >= 2) tables.push(current);
+    return tables;
+  }
+
+  async function exportTableToExcel(rows, filename) {
+    if (!rows || !rows.length) return;
+    if (!window.XLSX) {
+      await new Promise((res, rej) => {
+        const s = document.createElement("script");
+        s.src = "libs/xlsx.full.min.js";
+        s.onload = res;
+        s.onerror = () => rej(Error("libs/xlsx.full.min.js लोड नहीं हो सकी।"));
+        document.head.appendChild(s);
+      });
+    }
+    const wb = window.XLSX.utils.book_new();
+    const ws = window.XLSX.utils.aoa_to_sheet(rows);
+    window.XLSX.utils.book_append_sheet(wb, ws, "AI_Data");
+    window.XLSX.writeFile(wb, filename || "SVC-AI-Table.xlsx");
+  }
+
+  function renderRichBotContent(container, rawText) {
+    container.innerHTML = "";
+    const tables = parseMarkdownTables(rawText);
+    if (!tables.length) {
+      container.textContent = rawText;
+      return [];
+    }
+
+    const lines = rawText.split("\n");
+    let textBuf = [];
+    let tableRows = [];
+
+    const flushText = () => {
+      const s = textBuf.join("\n").trim();
+      if (s) {
+        const p = document.createElement("div");
+        p.style.whiteSpace = "pre-wrap";
+        p.textContent = s;
+        container.appendChild(p);
+      }
+      textBuf = [];
+    };
+
+    const flushTable = () => {
+      if (tableRows.length >= 2) {
+        const wrap = document.createElement("div");
+        wrap.style.overflowX = "auto";
+        const tbl = document.createElement("table");
+        tbl.className = "ai-rich-table";
+        tableRows.forEach((r, rIdx) => {
+          const tr = document.createElement("tr");
+          r.forEach(cell => {
+            const cellEl = document.createElement(rIdx === 0 ? "th" : "td");
+            cellEl.textContent = cell;
+            tr.appendChild(cellEl);
+          });
+          tbl.appendChild(tr);
+        });
+        wrap.appendChild(tbl);
+        container.appendChild(wrap);
+      } else {
+        tableRows.forEach(r => textBuf.push("| " + r.join(" | ") + " |"));
+      }
+      tableRows = [];
+    };
+
+    for (const ln of lines) {
+      const trimmed = ln.trim();
+      if (trimmed.startsWith("|") && trimmed.endsWith("|") && trimmed.split("|").length >= 3) {
+        flushText();
+        if (!/^\|[\s\-:|]+\|$/.test(trimmed)) {
+          tableRows.push(trimmed.slice(1, -1).split("|").map(c => c.trim()));
+        }
+      } else {
+        if (tableRows.length) flushTable();
+        textBuf.push(ln);
+      }
+    }
+    if (tableRows.length) flushTable();
+    flushText();
+    return tables;
+  }
+
+  function exportAsWordDoc(title, bodyText, filename, withLetterhead) {
+    if (!bodyText || !bodyText.trim()) return false;
+    const escaped = bodyText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+    const today = new Date().toLocaleDateString("hi-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const headerBlock = withLetterhead
+      ? `<div style="border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:16px;">
+           <div style="text-align:center;font-weight:bold;font-size:15pt;">कार्यालय / संस्था का नाम</div>
+           <table style="width:100%;margin-top:8px;font-size:12pt;"><tr>
+             <td style="text-align:left;">क्रमांक: __________________</td>
+             <td style="text-align:right;">दिनांक: ${today}</td>
+           </tr></table>
+         </div>`
+      : "";
+    const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+      <head><meta charset='utf-8'><title>${title}</title>
+      <style>body{font-family:'Mangal','Noto Sans Devanagari',Arial,sans-serif;font-size:13pt;line-height:1.75;margin:0.9in;}</style></head>
+      <body>${headerBlock}${escaped}</body></html>`;
+    downloadBlob(new Blob(["\ufeff", html], { type: "application/msword" }), filename);
+    return true;
+  }
+
+  function printFormattedText(title, bodyText) {
+    if (!bodyText || !bodyText.trim()) return false;
+    const w = window.open("", "_blank", "width=850,height=900");
+    if (!w) { window.print(); return true; }
+    const escaped = bodyText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title>
+      <style>body{font-family:"Mangal","Noto Sans Devanagari",Arial,sans-serif;font-size:14pt;line-height:1.8;padding:36px;color:#000}@media print{body{padding:0}}</style>
+      </head><body>${escaped}</body></html>`);
+    w.document.close();
+    w.focus();
+    setTimeout(() => { w.print(); }, 300);
+    return true;
+  }
+
+  // 7. Safety & PII Filters
+  function isUnsafeRequest(txt) {
+    const blocked = /(फर्जी|नकली\s*(?:दस्तावेज|सर्टिफिकेट|मार्कशीट|स्टांप|हस्ताक्षर|नोटिस)|fake\s*(?:document|certificate|marksheet|signature|stamp|notice)|forge|forgery|धमकी|ब्लैकमेल|blackmail|extortion|हफ्ता\s*वसूली|जालसाजी|fraud|scam|defam|अवैध\s*कब्जा)/i;
+    return blocked.test(txt);
+  }
+
+  function detectSensitivePII(txt) {
+    const aadhaar = /\b[2-9]{1}[0-9]{3}\s?[0-9]{4}\s?[0-9]{4}\b/;
+    const pan = /\b[A-Z]{5}[0-9]{4}[A-Z]{1}\b/;
+    if (aadhaar.test(txt)) return "आधार नंबर (Aadhaar Number)";
+    if (pan.test(txt)) return "पैन कार्ड नंबर (PAN Number)";
+    return null;
+  }
+
+  // 8. Multimodal Vision + Document Reader (PDF, Word, Text, JPG/PNG)
+  async function extractLocalDocumentOrVision(file) {
+    const ext = (file.name.split(".").pop() || "").toLowerCase();
+
+    if (ext === "txt") {
+      return { type: "text", text: (await file.text()).trim() };
+    }
+if (["xlsx", "xls", "csv"].includes(ext)) {
+      if (!window.XLSX) {
+        await new Promise((res, rej) => {
+          const s = document.createElement("script");
+          s.src = "libs/xlsx.full.min.js";
+          s.onload = res; s.onerror = () => rej(Error("libs/xlsx.full.min.js नहीं मिली।"));
+          document.head.appendChild(s);
+        });
+      }
+      const wb = window.XLSX.read(await file.arrayBuffer(), { type: "array" });
+      let combinedCsv = "";
+      wb.SheetNames.slice(0, 3).forEach(shName => {
+        const csv = window.XLSX.utils.sheet_to_csv(wb.Sheets[shName]).trim();
+        if (csv) combinedCsv += `[Sheet: ${shName}]\n${csv}\n\n`;
+      });
+      return { type: "text", text: combinedCsv.trim() };
+    }
+
+    if (ext === "docx" || ext === "doc") {
+      if (!window.mammoth) {
+        await new Promise((res, rej) => {
+          const s = document.createElement("script");
+          s.src = "libs/mammoth.browser.min.js";
+          s.onload = res; s.onerror = () => rej(Error("libs/mammoth.browser.min.js नहीं मिली।"));
+          document.head.appendChild(s);
+        });
+      }
+      const res = await window.mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+      return { type: "text", text: (res.value || "").trim() };
+    }
+
+    if ((file.type && file.type.startsWith("image/")) || ["jpg", "jpeg", "png", "webp"].includes(ext)) {
+      const url = URL.createObjectURL(file);
+      const img = await new Promise((res, rej) => {
+        const im = new Image();
+        im.onload = () => res(im);
+        im.onerror = () => rej(Error("इमेज फ़ाइल पढ़ी नहीं जा सकी।"));
+        im.src = url;
+      });
+      const maxW = 1600;
+      const scale = Math.min(1, maxW / (img.naturalWidth || img.width || 1));
+      const c = document.createElement("canvas");
+      c.width = Math.round((img.naturalWidth || img.width) * scale);
+      c.height = Math.round((img.naturalHeight || img.height) * scale);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      const dataUrl = c.toDataURL("image/jpeg", 0.88);
+      c.width = 1;
+      return { type: "vision", images: [dataUrl], label: "1 Image" };
+    }
+
+    if (ext === "pdf" || file.type === "application/pdf") {
+      pdfjsLib.GlobalWorkerOptions.workerSrc = "libs/pdf.worker.min.js";
+      const pdf = await pdfjsLib.getDocument({ data: await file.arrayBuffer() }).promise;
+      let fullText = "";
+      const maxTextPages = Math.min(pdf.numPages, 25);
+      for (let p = 1; p <= maxTextPages; p++) {
+        const page = await pdf.getPage(p);
+        const tc = await page.getTextContent();
+        const pageStr = tc.items.map(it => it.str).join(" ").trim();
+        fullText += (fullText ? "\n\n" : "") + pageStr;
+      }
+
+      if (fullText.replace(/\s+/g, "").length >= 40) {
+        return { type: "text", text: fullText.trim() };
+      }
+
+      // Turbo-compressed crisp images (70% smaller payload = 4x faster AI response)
+      const visionPages = Math.min(pdf.numPages, 4);
+      const images = [];
+      for (let p = 1; p <= visionPages; p++) {
+        const page = await pdf.getPage(p);
+        const rawVp = page.getViewport({ scale: 1.0 });
+        const targetScale = Math.min(1.3, 1200 / Math.max(rawVp.width, rawVp.height));
+        const vp = page.getViewport({ scale: targetScale });
+        const c = document.createElement("canvas");
+        c.width = Math.round(vp.width);
+        c.height = Math.round(vp.height);
+        await page.render({ canvasContext: c.getContext("2d"), viewport: vp }).promise;
+        images.push(c.toDataURL("image/jpeg", 0.72));
+        c.width = 1;
+      }
+      return { type: "vision", images, label: `${visionPages} Page(s) · Turbo` };
+    }
+
+    throw Error("कृपया PDF, Word (.docx), Image (JPG/PNG) या Text (.txt) फ़ाइल चुनें।");
+  }
+
+  const chatFileInput = el("aiChatFileInput");
+  if (chatFileInput) {
+    chatFileInput.setAttribute("accept", ".pdf,.docx,.doc,.txt,.xlsx,.xls,.csv,image/*");
+chatFileInput.setAttribute("multiple", "multiple");
+chatFileInput.onchange = async () => {
+      const files = Array.from(chatFileInput.files || []);
+      if (!files.length) return;
+      msg("aiDraftStatus", `📄 ${files.length} फ़ाइल(ें) तैयार की जा रही हैं…`, "info");
+      try {
+        let combinedText = "";
+        let combinedImages = [];
+        let names = [];
+        for (const f of files.slice(0, 4)) {
+          const parsed = await extractLocalDocumentOrVision(f);
+          names.push(f.name);
+          if (parsed.type === "text" && parsed.text) {
+            combinedText += `\n\n=== [फ़ाइल: ${f.name}] ===\n${parsed.text}`;
+          } else if (parsed.type === "vision" && parsed.images) {
+            combinedImages.push(...parsed.images);
+          }
+        }
+        if (!combinedText.trim() && !combinedImages.length) throw Error("फ़ाइलों में पढ़ने योग्य सामग्री नहीं मिली।");
+        attachedDoc = {
+          name: names.join(", "),
+          type: combinedImages.length ? "vision" : "text",
+          text: combinedText.trim().slice(0, 18000),
+          images: combinedImages.slice(0, 4)
+        };
+        if (el("aiAttachName")) el("aiAttachName").textContent = `📎 ${names.length} फ़ाइल(ें): ${names.join(", ").slice(0, 45)}`;
+        if (el("aiAttachPill")) el("aiAttachPill").style.display = "inline-flex";
+        msg("aiDraftStatus", `✓ ${names.length} फ़ाइल(ें) संलग्न हो गईं। अब अपना निर्देश भेजें।`, "good");
+      } catch (e) {
+        attachedDoc = null;
+        if (el("aiAttachPill")) el("aiAttachPill").style.display = "none";
+        msg("aiDraftStatus", e.message || String(e), "bad");
+      }
+    };
+  }
+
+  if (el("aiAttachBtn")) {
+    el("aiAttachBtn").onclick = () => {
+      const inp = el("aiChatFileInput");
+      if (inp) { inp.value = ""; inp.click(); }
+    };
+  }
+
+  if (el("aiAttachRemoveBtn")) {
+    el("aiAttachRemoveBtn").onclick = () => {
+      attachedDoc = null;
+      if (el("aiChatFileInput")) el("aiChatFileInput").value = "";
+      if (el("aiAttachPill")) el("aiAttachPill").style.display = "none";
+    };
+  }
+
+  // 9. Session Chat Storage & Bot Action Toolbar
+  function saveSessionChat() {
+    try {
+      const slim = chatHistory.slice(-12).map(m => ({ role: m.role, content: m.content, display: m.display }));
+      sessionStorage.setItem(CHAT_STORE_KEY, JSON.stringify(slim));
+    } catch (e) {}
+  }
+
+  function createBotBubble() {
+    const win = el("aiChatWindow");
+    const div = document.createElement("div");
+    div.className = "ai-msg bot";
+    const bodySpan = document.createElement("div");
+    bodySpan.textContent = "⏳ विचार कर रहा है…";
+    div.appendChild(bodySpan);
+    win.appendChild(div);
+    win.scrollTop = win.scrollHeight;
+    return { div, bodySpan, win };
+  }
+
+  function triggerFollowupPrompt(promptText) {
+    if (isGenerating) return;
+    const box = el("aiFreePrompt");
+    if (!box) return;
+    box.value = promptText;
+    runWithAiConsent(sendToPureAI);
+  }
+
+  function attachBotActions(div, finalText, elapsedSec, modelUsed, parsedTables) {
+    const bar = document.createElement("div");
+    bar.className = "ai-msg-actions";
+
+    const bCopy = document.createElement("button");
+    bCopy.className = "ai-mini-btn";
+    bCopy.textContent = "📄 Copy";
+    bCopy.onclick = async () => {
+      await navigator.clipboard.writeText(finalText);
+      bCopy.textContent = "✓ Copied";
+      setTimeout(() => bCopy.textContent = "📄 Copy", 1500);
+    };
+
+    const bSpeak = document.createElement("button");
+    bSpeak.className = "ai-mini-btn";
+    bSpeak.textContent = "🔊 सुनें";
+    bSpeak.onclick = () => {
+      if (!window.speechSynthesis) return;
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel();
+        bSpeak.textContent = "🔊 सुनें";
+        return;
+      }
+      const u = new SpeechSynthesisUtterance(finalText.replace(/\|/g, " "));
+      u.lang = /[\u0900-\u097F]/.test(finalText) ? "hi-IN" : "en-IN";
+      u.onend = () => { bSpeak.textContent = "🔊 सुनें"; };
+      bSpeak.textContent = "⏹️ रोकें";
+      window.speechSynthesis.speak(u);
+    };
+
+    const bWord = document.createElement("button");
+    bWord.className = "ai-mini-btn";
+    bWord.textContent = "📘 Word";
+    bWord.onclick = () => exportAsWordDoc("AI Response", finalText, "SVC-AI-Output.doc", false);
+
+    const bLetterhead = document.createElement("button");
+    bLetterhead.className = "ai-mini-btn";
+    bLetterhead.textContent = "📑 लेटरहेड Word";
+    bLetterhead.onclick = () => exportAsWordDoc("Official Letter", finalText, "SVC-Official-Letter.doc", true);
+
+    const bPrint = document.createElement("button");
+    bPrint.className = "ai-mini-btn";
+    bPrint.textContent = "🖨️ Print";
+    bPrint.onclick = () => printFormattedText("AI Response", finalText);
+
+    bar.append(bCopy, bSpeak, bWord, bLetterhead, bPrint);
+
+    // Excel export button if table detected
+    if (parsedTables && parsedTables.length > 0) {
+      const bExcel = document.createElement("button");
+      bExcel.className = "ai-mini-btn";
+      bExcel.style.background = "#dcfce7";
+      bExcel.style.borderColor = "#86efac";
+      bExcel.textContent = "📊 Excel (.xlsx)";
+      bExcel.onclick = () => exportTableToExcel(parsedTables[0], "SVC-AI-Table.xlsx");
+      bar.appendChild(bExcel);
+    }
+
+    // 1-Click Refine & Regenerate buttons
+    const bShort = document.createElement("button");
+    bShort.className = "ai-mini-btn";
+    bShort.textContent = "✂️ संक्षिप्त करें";
+    bShort.onclick = () => triggerFollowupPrompt("ऊपर दिए गए उत्तर को और अधिक संक्षिप्त व मुख्य बिंदुओं में लिखें।");
+
+    const bRegen = document.createElement("button");
+    bRegen.className = "ai-mini-btn";
+    bRegen.textContent = "🔄 फिर से लिखें";
+    bRegen.onclick = () => {
+      const lastUser = [...chatHistory].reverse().find(m => m.role === "user");
+      if (lastUser) triggerFollowupPrompt(lastUser.content);
+    };
+
+    bar.append(bShort, bRegen);
+
+    if (elapsedSec) {
+      const sp = document.createElement("span");
+      sp.className = "small";
+      sp.style.marginLeft = "auto";
+      sp.textContent = `⚡ ${elapsedSec}s · ${modelUsed || "Auto-AI"}`;
+      bar.appendChild(sp);
+    }
+    div.appendChild(bar);
+  }
+
+  (function restoreSessionChat(){
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(CHAT_STORE_KEY) || "[]");
+      if (Array.isArray(saved) && saved.length && el("aiChatWindow")) {
+        chatHistory = saved;
+        const win = el("aiChatWindow");
+        saved.forEach(m => {
+          const d = document.createElement("div");
+          d.className = `ai-msg ${m.role === "user" ? "user" : "bot"}`;
+          const sp = document.createElement("div");
+          if (m.role !== "user") {
+            const tbls = renderRichBotContent(sp, m.content);
+            d.appendChild(sp);
+            attachBotActions(d, m.content, "", "Saved", tbls);
+          } else {
+            sp.textContent = m.display || m.content;
+            d.appendChild(sp);
+          }
+          win.appendChild(d);
+        });
+        win.scrollTop = win.scrollHeight;
+      }
+    } catch (e) {}
+  })();
+
+  // 10. Dynamic AI Engine (Text + Multimodal Vision + Image Generation + Excel Tables)
+  async function ensurePuterLoaded() {
+    if (location.protocol === "file:") {
+      throw Error("आपने फ़ाइल सीधे कंप्यूटर फ़ोल्डर (file:///) से खोली है। इसे अपनी GitHub वेबसाइट पर खोलें।");
+    }
+    if (window.puter && window.puter.ai) return;
+    await new Promise((res, rej) => {
+      const s = document.createElement("script");
+      s.src = "https://js.puter.com/v2/";
+      s.onload = res;
+      s.onerror = () => rej(Error("AI इंजन लोड नहीं हो सका। इंटरनेट कनेक्शन जाँचें।"));
+      document.head.appendChild(s);
+    });
+  }
+
+  function setSendBtnMode(busy) {
+    const btn = el("aiSendChatBtn");
+    if (!btn) return;
+    isGenerating = busy;
+    if (busy) {
+      btn.textContent = "⏹️ रोकें";
+      btn.classList.remove("primary");
+      btn.classList.add("danger");
+    } else {
+      btn.textContent = "भेजें ➤";
+      btn.classList.remove("danger");
+      btn.classList.add("primary");
+    }
+  }
+
+  function isImageGenerationPrompt(txt) {
+    const clean = txt.trim();
+    const hasVisualNoun = /(?:इमेज|चित्र|फ़ोटो|फोटो|पोस्टर|बैनर|लोगो|तस्वीर|दृश्य|पेंटिंग|कार्टून|वॉलपेपर|थंबनेल|कार्ड|image|img|picture|pic|photo|poster|banner|logo|illustration|drawing|painting|wallpaper|thumbnail|card|art|tasveer|chitra|drishya)/i.test(clean);
+    const hasActionVerb = /(?:बना|जनरेट|तैयार|डिजाइन|डिज़ाइन|दिखा|खींच|रच|चाहिए|निकाल|दे\s*दो|कर\s*दो|क्रिएट|bna|bana|bnado|banado|bnao|banao|taiyar|tayyar|design|dikha|dikhao|chahiye|de\s*do|kr\s*do|kar\s*do|create|generate|draw|make|render|show)/i.test(clean);
+    const startsWithVisual = /^(?:एक\s+|ek\s+)?(?:सुंदर|आकर्षक|आधुनिक|बढ़िया|अच्छी|अच्छा|4k|hd|रियलिस्टिक|sundar|achhi|achi|badhiya|modern)?\s*(?:इमेज|चित्र|फ़ोटो|फोटो|पोस्टर|बैनर|लोगो|तस्वीर|image|img|photo|poster|banner|logo|tasveer)/i.test(clean);
+    return (hasVisualNoun && hasActionVerb) || startsWithVisual;
+  }
+
+  async function sendToPureAI() {
+    if (isGenerating) {
+      stopRequested = true;
+      return;
+    }
+    const inputEl = el("aiFreePrompt");
+    const rawPrompt = inputEl.value.trim();
+    if (!rawPrompt && !attachedDoc) return;
+
+    const userInstruction = rawPrompt || "संलग्न दस्तावेज़/फ़ोटो का पूरा विश्लेषण करें और मुख्य बिंदु हिंदी में बताएं।";
+    const hasVisionImages = attachedDoc && attachedDoc.type === "vision" && attachedDoc.images && attachedDoc.images.length > 0;
+    const fullUserContent = attachedDoc
+      ? (hasVisionImages
+          ? `[संलग्न विज़ुअल व टेक्स्ट दस्तावेज़: ${attachedDoc.name}]\n${attachedDoc.text ? attachedDoc.text + "\n\n" : ""}उपयोगकर्ता का प्रश्न/निर्देश: ${userInstruction}`
+          : `[संलग्न दस्तावेज़: ${attachedDoc.name}]\n${attachedDoc.text}\n\n[उपयोगकर्ता निर्देश]:\n${userInstruction}`)
+      : userInstruction;
+
+    if (isUnsafeRequest(fullUserContent)) {
+      return msg("aiDraftStatus", "⚠️ सुरक्षा नीति: फर्जी दस्तावेज़, धमकी, जालसाजी या गैर-कानूनी कार्य हेतु सहायता उपलब्ध नहीं है।", "bad");
+    }
+if (/(?:porn|xxx|nude|nudity|nsfw|erotic|sex|sexual|adult\s*(?:content|image|video|photo)|18\+|bikini|hentai|अश्लील|नग्न|सेक्स|कामुक|गंदी\s*(?:फोटो|फ़ोटो|इमेज|तस्वीर))/i.test(fullUserContent)) {
+      return msg("aiDraftStatus", "⚠️ कृपया केवल कार्यालयी, शैक्षणिक या रचनात्मक कार्यों से संबंधित निर्देश ही दर्ज करें।", "bad");
+    }
+
+    const piiFound = detectSensitivePII(fullUserContent);
+    if (piiFound) {
+      return msg("aiDraftStatus", `🛡️ सुरक्षा ब्लॉक: आपके मैटर में संवेदनशील ${piiFound} पाया गया है। गोपनीयता की रक्षा हेतु कृपया इसे हटाकर (जैसे XXXX लिखकर) पुनः भेजें।`, "bad");
+    }
+
+    el("aiDraftStatus").className = "status";
+    inputEl.value = "";
+
+    const displayBadge = attachedDoc ? `📎 ${attachedDoc.name}\n${userInstruction}` : userInstruction;
+    const currentImages = hasVisionImages ? attachedDoc.images.slice() : [];
+    const hadAttachment = !!attachedDoc;
+    attachedDoc = null;
+    if (el("aiChatFileInput")) el("aiChatFileInput").value = "";
+    if (el("aiAttachPill")) el("aiAttachPill").style.display = "none";
+
+    const win = el("aiChatWindow");
+    const uDiv = document.createElement("div");
+    uDiv.className = "ai-msg user";
+    uDiv.textContent = displayBadge;
+    win.appendChild(uDiv);
+    win.scrollTop = win.scrollHeight;
+
+    chatHistory.push({ role: "user", content: fullUserContent, display: displayBadge, images: currentImages });
+    saveSessionChat();
+
+    stopRequested = false;
+    setSendBtnMode(true);
+    const t0 = performance.now();
+    const botUI = createBotBubble();
+
+    try {
+      await ensurePuterLoaded();
+
+// BRANCH 1: AI IMAGE GENERATION (Auto-translates Hindi prompt to English & runs with fallback)
+      if (!hadAttachment && isImageGenerationPrompt(userInstruction)) {
+        botUI.bodySpan.textContent = "🎨 आपकी इमेज/पोस्टर तैयार की जा रही है (कृपया 5–10 सेकंड प्रतीक्षा करें)…";
+        let imgPrompt = userInstruction.replace(/^(?:एक\s+)?(?:आकर्षक|सुंदर)?\s*(?:इमेज|चित्र|फ़ोटो|फोटो|पोस्टर|बैनर|लोगो|तस्वीर)\s*(?:बनाओ|बनाएं|बनाइए|जनरेट\s*करें)\s*[:\-]?\s*/i, "").trim() || userInstruction;
+
+        if (/[\u0900-\u097F]/.test(imgPrompt)) {
+          try {
+            const trResp = await window.puter.ai.chat(
+              `Translate and expand this image request into a clear, detailed English image generation prompt (output ONLY the English prompt, nothing else): ${imgPrompt}`
+            );
+            const enTxt = typeof trResp === "string" ? trResp : (trResp?.message?.content || trResp?.text || "");
+            if (enTxt && enTxt.trim()) imgPrompt = enTxt.trim();
+          } catch (e) {}
+        }
+
+        let imgEl = null;
+        const imgModels = [undefined, "gpt-image-1", "dall-e-3", "flux-schnell"];
+        for (const imModel of imgModels) {
+          try {
+            imgEl = imModel
+              ? await window.puter.ai.txt2img(imgPrompt, { model: imModel })
+              : await window.puter.ai.txt2img(imgPrompt);
+            if (imgEl && imgEl.src) break;
+          } catch (err) {}
+        }
+
+        if (imgEl && imgEl.src) {
+          imgEl.className = "ai-gen-img";
+          botUI.bodySpan.innerHTML = "";
+          const cap = document.createElement("div");
+          cap.textContent = "🖼️ आपकी इमेज तैयार है:";
+          botUI.bodySpan.appendChild(cap);
+          botUI.bodySpan.appendChild(imgEl);
+
+          const sec = ((performance.now() - t0) / 1000).toFixed(1);
+          const bar = document.createElement("div");
+          bar.className = "ai-msg-actions";
+          const bDl = document.createElement("button");
+          bDl.className = "ai-mini-btn";
+          bDl.textContent = "⬇️ Download Image (PNG)";
+          bDl.onclick = async () => {
+            try {
+              const r = await fetch(imgEl.src);
+              const b = await r.blob();
+              downloadBlob(b, "SVC-AI-Generated.png");
+            } catch (err) {
+              const a = document.createElement("a");
+              a.href = imgEl.src;
+              a.download = "SVC-AI-Generated.png";
+              a.click();
+            }
+          };
+          const sp = document.createElement("span");
+          sp.className = "small";
+          sp.style.marginLeft = "auto";
+          sp.textContent = `⚡ ${sec}s · AI-Image`;
+          bar.append(bDl, sp);
+          botUI.div.appendChild(bar);
+          botUI.win.scrollTop = botUI.win.scrollHeight;
+          refreshPuterAuthUI();
+          return;
+        } else {
+          throw Error("इमेज जनरेशन सर्वर अभी व्यस्त है या आपके AI खाते की इमेज सीमा पूरी हो गई है। कृपया कुछ देर बाद पुनः प्रयास करें।");
+        }
+      }
+
+      // BRANCH 2: SELF-AWARE SYSTEM PROMPT (Knows all latest Portal & Admin upgrades)
+      const todayStr = new Date().toLocaleDateString("hi-IN", { day: "numeric", month: "long", year: "numeric" });
+      let adminLiveContext = "";
+      try {
+        const adm = JSON.parse(localStorage.getItem("svc_admin_config_v1") || "{}");
+        if (adm.orgName) {
+          adminLiveContext = `\nCurrent Admin Portal Profile: Organization = "${adm.orgName}" (${adm.orgSub || ""}), Signatory = "${adm.signName || ""}" (${adm.signDesig || ""}), Custom Saved Templates = ${(adm.templates || []).length}.`;
+        }
+if (adm.customRules) adminLiveContext += `\nIMPORTANT ADMIN CUSTOM INSTRUCTIONS (Always follow strictly):\n${adm.customRules}`;
+      } catch (e) {}
+
+      const systemPrompt = `Today's date is ${todayStr}. You are the upgraded AI+ Assistant on SHREE VAISHNAVI COMPUTERS portal (Bhilwara, Rajasthan, India).
+YOUR LATEST BUILT-IN PORTAL CAPABILITIES & RECENT UPGRADES (Always state these accurately if asked "what updates were made to you" or "what can you do"):
+1. Natural Hinglish, Hindi & English Understanding + Auto Image Generation: Understand natural conversational Hinglish (e.g. "ek poster bna do", "order taiyar kro", "shorting krke de do"), Hindi, and English seamlessly without requiring rigid commands. Automatically generate HD images whenever the user asks to create/draw/show any image, photo, poster, banner, or logo. NEVER tell the user that a specific command format is required.
+2. Multimodal Vision + Turbo PDF Reader: You can directly view and read scanned image PDFs, digital PDFs (up to 25 pages), Word (.docx), and photos (JPG/PNG) in Hindi & English with high accuracy.
+3. Live Voice Typing & Read Aloud: Users can speak in Hindi/English using the '🎤 बोलें' mic button and listen to your replies using '🔊 सुनें'.
+4. Auto Excel (.xlsx) Table Export: Whenever you output a Markdown pipe table (| Col 1 | Col 2 |), the portal automatically renders a clean table and provides a '📊 Excel (.xlsx)' download button.
+5. Official Letterhead Word Export & 1-Click Refine: Users can export drafts directly with official letterhead & signatory blocks ('📑 लेटरहेड Word'), shorten replies ('✂️ संक्षिप्त करें'), or regenerate ('🔄 फिर से लिखें').
+6. Quota Renewal Timer & Stealth Admin Panel: You show exact IST quota renewal times (05:30 AM IST) and support the Stealth Admin Control Panel (Ctrl+Shift+A) for custom letterheads, prompt templates, live banners, and backups.${adminLiveContext}
+
+STRICT OPERATING RULES:
+- Always provide answers aligned with the latest Indian laws, rules, GST provisions, and administrative procedures up to ${new Date().getFullYear()}.
+- When drafting letters, office orders (कार्यालय आदेश), notices, affidavits, or agreements, write directly in pure, natural, grammatically flawless Indian/Rajasthan Government administrative or legal Hindi (or English if requested). NEVER mix English letters inside Hindi words.
+- When presenting lists with numbers, budgets, schedules, or comparisons (or when asked for a table/Excel), format the data as a clean Markdown pipe table (| Column 1 | Column 2 |).
+- Preserve 100% of user-provided names, plot/house numbers, addresses, mobile numbers, dates, letter numbers, and amounts unaltered.
+- Refuse politely in one sentence if asked for fake/forged documents, threats, extortion, or illegal acts.
+- Output clean text without bold markdown asterisks (**) or hash headers (#).`;
+
+      let liveModels = [];
+      try {
+        if (typeof window.puter.ai.listModels === "function") {
+          const list = await window.puter.ai.listModels();
+          if (Array.isArray(list)) {
+            liveModels = list.map(x => typeof x === "string" ? x : (x?.id || x?.name || "")).filter(Boolean);
+          }
+        }
+      } catch (e) {}
+
+      const pickLatest = (keywords, staticFallbacks) => {
+        for (const kw of keywords) {
+          const matches = liveModels.filter(id => id.toLowerCase().includes(kw)).sort().reverse();
+          if (matches.length) return matches[0];
+        }
+        return staticFallbacks[0];
+      };
+
+      const mode = el("aiModelSelect") ? el("aiModelSelect").value : "auto_fast";
+      const resolvedFast = pickLatest(["gemini-3", "gemini-2.5-flash", "gemini-2"], ["gemini-2.5-flash"]);
+      const resolvedPro = pickLatest(["gpt-5", "gpt-4.1", "gpt-4o"], ["gpt-4o"]);
+      const resolvedLegal = pickLatest(["claude-4", "claude-3-7", "claude-3-5-sonnet"], ["claude-3-5-sonnet"]);
+
+      const primary = mode === "auto_pro" ? resolvedPro : (mode === "auto_legal" ? resolvedLegal : resolvedFast);
+      const fallbackOrder = [primary, resolvedFast, resolvedPro, resolvedLegal, ""].filter((v, i, a) => a.indexOf(v) === i);
+
+      const apiMessages = [
+        { role: "system", content: systemPrompt },
+        ...chatHistory.slice(-10).map(m => {
+          if (m.images && m.images.length) {
+            return {
+              role: m.role,
+              content: [
+                { type: "text", text: m.content },
+                ...m.images.map(url => ({ type: "image_url", image_url: { url } }))
+              ]
+            };
+          }
+          return { role: m.role, content: m.content };
+        })
+      ];
+
+      let fullReply = "";
+      let activeModel = primary || "Auto-AI";
+      let success = false;
+      let lastApiErr = "";
+
+      for (const m of fallbackOrder) {
+        if (stopRequested) break;
+        try {
+          activeModel = m || "Auto-Latest";
+          const chatOpts = m ? { model: m, stream: true, temperature: 0.2 } : { stream: true, temperature: 0.2 };
+          const resp = await window.puter.ai.chat(apiMessages, chatOpts);
+          if (resp && typeof resp[Symbol.asyncIterator] === "function") {
+            fullReply = "";
+            for await (const part of resp) {
+              if (stopRequested) break;
+              const chunk = part?.text || part?.choices?.[0]?.delta?.content || "";
+              if (chunk) {
+                fullReply += chunk;
+                botUI.bodySpan.textContent = fullReply.replace(/\*\*/g, "").replace(/^#+\s*/gm, "");
+                botUI.win.scrollTop = botUI.win.scrollHeight;
+              }
+            }
+          } else {
+            fullReply = typeof resp === "string"
+              ? resp
+              : (resp?.message?.content?.[0]?.text || resp?.message?.content || resp?.text || "");
+          }
+          if (fullReply && fullReply.trim()) {
+            success = true;
+            break;
+          }
+        } catch (err) {
+          lastApiErr = err?.message || err?.error?.message || String(err || "");
+        }
+      }
+
+      if (!success && !stopRequested) {
+        if (/fund|credit|quota|limit|balance|402|429|rate|payment/i.test(lastApiErr)) {
+          const now = new Date();
+          const nextResetUTC = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 0, 0, 0));
+          const diffMs = Math.max(60000, nextResetUTC - now);
+          const hrs = Math.floor(diffMs / 3600000);
+          const mins = Math.floor((diffMs % 3600000) / 60000);
+          const istTimeStr = nextResetUTC.toLocaleTimeString("hi-IN", {
+            timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: true
+          });
+          const istDateStr = nextResetUTC.toLocaleDateString("hi-IN", {
+            timeZone: "Asia/Kolkata", day: "numeric", month: "long"
+          });
+          throw Error(
+            `आपके AI खाते की आज की मुफ़्त उपयोग सीमा (Free Quota) समाप्त हो गई है।\n` +
+            `⏳ संभावित नवीनीकरण (Renewal Time): ${istDateStr} को सुबह ${istTimeStr} (IST) बजे तक (लगभग ${hrs} घंटे ${mins} मिनट शेष)।\n` +
+            `💡 तुरंत उपयोग जारी रखने के लिए: आप ऊपर '🚪 Logout' करके किसी दूसरे खाते से लॉगिन कर सकते हैं या अपने खाते में बैलेंस जोड़ सकते हैं।`
+          );
+        }
+        throw Error("AI से उत्तर प्राप्त नहीं हो सका। कृपया इंटरनेट जाँचें या पुनः प्रयास करें।");
+      }
+
+      chatHistory.forEach(m => { if (m.images) delete m.images; });
+
+      fullReply = (fullReply || "(उपयोगकर्ता द्वारा रोका गया)").replace(/\*\*/g, "").replace(/^#+\s*/gm, "").trim();
+      const parsedTables = renderRichBotContent(botUI.bodySpan, fullReply);
+      const sec = ((performance.now() - t0) / 1000).toFixed(1);
+      chatHistory.push({ role: "assistant", content: fullReply });
+      saveSessionChat();
+      attachBotActions(botUI.div, fullReply, sec, activeModel, parsedTables);
+      refreshPuterAuthUI();
+    } catch (e) {
+      botUI.bodySpan.textContent = "⚠️ " + (e.message || "कृपया इंटरनेट जाँचें और पुनः प्रयास करें।");
+    } finally {
+      stopRequested = false;
+      setSendBtnMode(false);
+      inputEl.focus();
+    }
+  }
+
+  if (el("aiSendChatBtn")) {
+    el("aiSendChatBtn").onclick = () => {
+      if (isGenerating) { stopRequested = true; return; }
+      runWithAiConsent(sendToPureAI);
+    };
+  }
+  if (el("aiFreePrompt")) {
+    el("aiFreePrompt").addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        if (!isGenerating) runWithAiConsent(sendToPureAI);
+      }
+    });
+  }
+
+  if (el("aiChatClearBtn")) {
+    el("aiChatClearBtn").onclick = () => {
+      if (isGenerating) stopRequested = true;
+      if (window.speechSynthesis) window.speechSynthesis.cancel();
+      chatHistory = [];
+      try { sessionStorage.removeItem(CHAT_STORE_KEY); } catch (e) {}
+      el("aiChatWindow").innerHTML = `<div class="ai-msg bot">नई चैट शुरू की गई है। बताइए, मैं आपकी क्या सहायता करूँ?</div>`;
+      el("aiDraftStatus").className = "status";
+    };
+  }
+
+  // 11. Same-Format Visual Translator
+  let translatedOutputBlob = null;
+  let translatedOutputName = "";
+
+  if (el("aiTransFile")) {
+    el("aiTransFile").onchange = () => {
+      const f = el("aiTransFile").files[0];
+      el("aiTransFileInfo").textContent = f ? `${f.name} (${prettyBytes(f.size)})` : "कोई फ़ाइल चयनित नहीं";
+      el("aiDownloadSameFmtBtn").classList.add("hidden");
+      translatedOutputBlob = null;
+    };
+  }
+
+  if (el("aiTransClearBtn")) {
+    el("aiTransClearBtn").onclick = () => {
+      el("aiTransFile").value = "";
+      el("aiTransFileInfo").textContent = "कोई फ़ाइल चयनित नहीं";
+      el("aiEnglishText").value = "";
+      el("aiHindiText").value = "";
+      el("aiOrigVisualBox").innerHTML = "";
+      el("aiTransVisualBox").innerHTML = "";
+      el("aiVisualPreviewWrap").classList.add("hidden");
+      el("aiDownloadSameFmtBtn").classList.add("hidden");
+      translatedOutputBlob = null;
+      el("aiTransStatus").className = "status";
+      el("aiTransStatus").textContent = "";
+    };
+  }
+
+  function buildEnhancedOcrCanvas(srcCanvas, mode) {
+    if (mode === "normal") return srcCanvas;
+    const w = srcCanvas.width, h = srcCanvas.height;
+    const c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    const ctx = c.getContext("2d");
+    ctx.drawImage(srcCanvas, 0, 0);
+    const img = ctx.getImageData(0, 0, w, h);
+    const d = img.data;
+    let minL = 255, maxL = 0;
+    const gray = new Uint8ClampedArray(w * h);
+
+    for (let i = 0, p = 0; i < d.length; i += 4, p++) {
+      const lum = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
+      gray[p] = lum;
+      if (lum < minL) minL = lum;
+      if (lum > maxL) maxL = lum;
+    }
+    const span = Math.max(1, maxL - minL);
+    const thr = mode === "high_contrast" ? 168 : 150;
+    for (let k = 0; k < gray.length; k++) {
+      let v = ((gray[k] - minL) / span) * 255;
+      v = (mode === "high_contrast")
+        ? (v < thr ? Math.max(0, v * 0.4) : 255)
+        : (v < thr ? Math.max(0, v * 0.6) : Math.min(255, v * 1.25));
+      const r = k * 4;
+      d[r] = v; d[r + 1] = v; d[r + 2] = v; d[r + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    return c;
+  }
+
+  function polishDomainHindi(hindiText, domain) {
+    let t = hindiText
+      .replace(/विषय\s*:/g, "विषय:-")
+      .replace(/संदर्भ\s*:/g, "संदर्भ:-")
+      .replace(/ईमानदारी से आपका,?/g, "भवदीय,")
+      .replace(/आपका विश्वासपात्र,?/g, "भवदीय,")
+      .replace(/आदरणीय महोदय,?/g, "महोदय,");
+
+    if (domain === "legal_court") {
+      t = t.replace(/कानूनी नोटिस/g, "विधिक सूचना (Legal Notice)")
+           .replace(/स्थगन आदेश/g, "स्थगन आदेश (Stay Order)")
+           .replace(/हलफनामा/g, "शपथ-पत्र (Affidavit)");
+    } else if (domain === "engineering_tender") {
+      t = t.replace(/ठेकेदार/g, "संवेदक (Contractor)")
+           .replace(/बयाना राशि/g, "धरोहर राशि (EMD)")
+           .replace(/कार्य आदेश/g, "कार्यादेश (Work Order)");
+    }
+    return t;
+  }
+
+  async function translateLinesBatch(linesArray, domain) {
+    const cleanLines = linesArray.map(s => s.replace(/\s+/g, " ").trim());
+    const resultLines = new Array(cleanLines.length).fill("");
+    const nonEmptyIdx = [];
+    cleanLines.forEach((txt, idx) => { if (txt) nonEmptyIdx.push(idx); });
+    if (!nonEmptyIdx.length) return resultLines;
+
+    const BATCH = 25;
+    for (let i = 0; i < nonEmptyIdx.length; i += BATCH) {
+      const sliceIdx = nonEmptyIdx.slice(i, i + BATCH);
+      const joinedQuery = sliceIdx.map(idx => cleanLines[idx]).join("\n");
+      const url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=hi&dt=t&q=" + encodeURIComponent(joinedQuery);
+      const resp = await fetch(url);
+      if (!resp.ok) throw Error("अनुवाद सर्वर से संपर्क नहीं हो सका।");
+      const data = await resp.json();
+      let combined = "";
+      if (Array.isArray(data) && Array.isArray(data[0])) {
+        data[0].forEach(seg => { if (seg && seg[0]) combined += seg[0]; });
+      }
+      const splitOut = combined.split("\n");
+      sliceIdx.forEach((origIdx, k) => {
+        const raw = (splitOut[k] !== undefined ? splitOut[k] : cleanLines[origIdx]).trim();
+        resultLines[origIdx] = polishDomainHindi(raw, domain);
+      });
+    }
+    return resultLines;
+  }
+
+  function sampleBoxBackground(ctx, x0, y0, x1, y1, canvasW, canvasH) {
+    const sx = Math.max(0, Math.min(canvasW - 1, Math.round(x0 - 2)));
+    const sy = Math.max(0, Math.min(canvasH - 1, Math.round(y0 - 2)));
+    const p = ctx.getImageData(sx, sy, 1, 1).data;
+    const lum = 0.299 * p[0] + 0.587 * p[1] + 0.114 * p[2];
+    return {
+      bg: `rgb(${p[0]},${p[1]},${p[2]})`,
+      fg: lum < 128 ? "#ffffff" : "#111827"
+    };
+  }
+
+  function renderTranslatedOverlayCanvas(origCanvas, linesData, hindiLines) {
+    const w = origCanvas.width, h = origCanvas.height;
+    const out = document.createElement("canvas");
+    out.width = w; out.height = h;
+    const ctx = out.getContext("2d");
+    ctx.drawImage(origCanvas, 0, 0);
+
+    linesData.forEach((ln, idx) => {
+      const hiText = hindiLines[idx];
+      if (!hiText || !ln.bbox) return;
+      const { x0, y0, x1, y1 } = ln.bbox;
+      const boxW = Math.max(12, x1 - x0);
+      const boxH = Math.max(10, y1 - y0);
+
+      const { bg, fg } = sampleBoxBackground(ctx, x0, y0, x1, y1, w, h);
+      ctx.fillStyle = bg;
+      ctx.fillRect(Math.max(0, x0 - 2), Math.max(0, y0 - 1), boxW + 4, boxH + 3);
+
+      let fontSize = Math.max(10, Math.round(boxH * 0.78));
+      ctx.font = `600 ${fontSize}px "Noto Sans Devanagari", "Mangal", Arial, sans-serif`;
+      let measured = ctx.measureText(hiText).width;
+      while (measured > boxW * 1.06 && fontSize > 8) {
+        fontSize -= 1;
+        ctx.font = `600 ${fontSize}px "Noto Sans Devanagari", "Mangal", Arial, sans-serif`;
+        measured = ctx.measureText(hiText).width;
+      }
+
+      ctx.fillStyle = fg;
+      ctx.textBaseline = "middle";
+      ctx.fillText(hiText, x0, y0 + boxH / 2, boxW * 1.08);
+    });
+
+    return out;
+  }
+
+  async function runSameFormatTranslation() {
+    const f = el("aiTransFile").files[0];
+    if (!f) return msg("aiTransStatus", "पहले कोई Image (JPG/PNG), PDF या Word (.docx) फ़ाइल चुनें।", "bad");
+
+    const mode = el("aiTransMode").value;
+    const domain = el("aiTransDomain").value;
+    const ext = (f.name.split(".").pop() || "").toLowerCase();
+    const baseName = f.name.replace(/\.[^.]+$/, "");
+
+    el("aiLayoutTranslateBtn").disabled = true;
+    el("aiDownloadSameFmtBtn").classList.add("hidden");
+    el("aiOrigVisualBox").innerHTML = "";
+    el("aiTransVisualBox").innerHTML = "";
+    translatedOutputBlob = null;
+
+    showPdfTask("Google-Lens Same-Format Translator", "मूल फ़ॉर्मेट और लेआउट का विश्लेषण हो रहा है…", false);
+
+    try {
+      if (ext === "docx" || ext === "doc") {
+        if (!window.mammoth) {
+          await new Promise((res, rej) => {
+            const s = document.createElement("script");
+            s.src = "libs/mammoth.browser.min.js";
+            s.onload = res; s.onerror = () => rej(Error("libs/mammoth.browser.min.js नहीं मिली।"));
+            document.head.appendChild(s);
+          });
+        }
+        const conv = await window.mammoth.convertToHtml({ arrayBuffer: await f.arrayBuffer() });
+        const origHtml = conv.value || "";
+        if (!origHtml.trim()) throw Error("Word फ़ाइल में पढ़ने योग्य सामग्री नहीं मिली।");
+
+        const tempDiv = document.createElement("div");
+        tempDiv.innerHTML = origHtml;
+
+        const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null);
+        const textNodes = [];
+        const rawTexts = [];
+        let node;
+        while ((node = walker.nextNode())) {
+          if (node.nodeValue && node.nodeValue.trim()) {
+            textNodes.push(node);
+            rawTexts.push(node.nodeValue.trim());
+          }
+        }
+
+        updatePdfTask(50, 100, "Word दस्तावेज़ की फ़ॉर्मेटिंग सहित अनुवाद जारी…");
+        const translatedTexts = await translateLinesBatch(rawTexts, domain);
+        textNodes.forEach((n, i) => { n.nodeValue = " " + translatedTexts[i] + " "; });
+
+        const finalHtml = tempDiv.innerHTML;
+        el("aiOrigVisualBox").innerHTML = `<div style="text-align:left;padding:12px;font-size:14px">${origHtml}</div>`;
+        el("aiTransVisualBox").innerHTML = `<div style="text-align:left;padding:12px;font-family:'Noto Sans Devanagari','Mangal',Arial,sans-serif;font-size:15px">${finalHtml}</div>`;
+        el("aiVisualPreviewWrap").classList.remove("hidden");
+
+        el("aiEnglishText").value = rawTexts.join("\n");
+        el("aiHindiText").value = translatedTexts.join("\n");
+
+        const wordDocHtml = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+          <head><meta charset='utf-8'><title>${baseName}-Hindi</title>
+          <style>body{font-family:'Mangal','Noto Sans Devanagari',Arial,sans-serif;font-size:12pt;line-height:1.6} table{border-collapse:collapse;width:100%} td,th{border:1px solid #444;padding:6px}</style></head>
+          <body>${finalHtml}</body></html>`;
+        translatedOutputBlob = new Blob(["\ufeff", wordDocHtml], { type: "application/msword" });
+        translatedOutputName = `${baseName}-Hindi.doc`;
+        el("aiDownloadSameFmtBtn").textContent = "📘 Download Translated Word (.doc)";
+        el("aiDownloadSameFmtBtn").classList.remove("hidden");
+        msg("aiTransStatus", "✓ Word फ़ाइल की मूल फ़ॉर्मेटिंग व टेबल सहित हिंदी अनुवाद तैयार है!", "good");
+      }
+
+      else if (ext === "pdf" || f.type === "application/pdf") {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "libs/pdf.worker.min.js";
+        const pdf = await pdfjsLib.getDocument({ data: await f.arrayBuffer() }).promise;
+        const worker = await Tesseract.createWorker("eng", 1, {
+          workerPath: new URL("libs/worker.min.js", location.href).href,
+          corePath: new URL("libs/", location.href).href,
+          langPath: new URL("libs", location.href).href,
+          workerBlobURL: false
+        });
+
+        const outPdf = await PDFLib.PDFDocument.create();
+        let allEng = [], allHi = [];
+
+        for (let p = 1; p <= pdf.numPages; p++) {
+          updatePdfTask(p - 1, pdf.numPages, `PDF लेआउट अनुवाद · पेज ${p}/${pdf.numPages}`);
+          const page = await pdf.getPage(p);
+          const vp = page.getViewport({ scale: 2.0 });
+          const origC = document.createElement("canvas");
+          origC.width = vp.width; origC.height = vp.height;
+          await page.render({ canvasContext: origC.getContext("2d"), viewport: vp }).promise;
+
+          const ocrC = buildEnhancedOcrCanvas(origC, mode);
+          const rec = await worker.recognize(ocrC);
+          const lines = (rec.data.lines || []).filter(l => l.text && l.text.trim());
+          const engLines = lines.map(l => l.text.trim());
+          const hiLines = await translateLinesBatch(engLines, domain);
+
+          allEng.push(...engLines);
+          allHi.push(...hiLines);
+
+          const transC = renderTranslatedOverlayCanvas(origC, lines, hiLines);
+
+          const img1 = document.createElement("img");
+          img1.src = origC.toDataURL("image/jpeg", 0.85);
+          img1.style.cssText = "max-width:100%;border:1px solid #cbd5e1;margin-bottom:10px;border-radius:6px";
+          el("aiOrigVisualBox").appendChild(img1);
+
+          const img2 = document.createElement("img");
+          img2.src = transC.toDataURL("image/jpeg", 0.92);
+          img2.style.cssText = "max-width:100%;border:1px solid #93c5fd;margin-bottom:10px;border-radius:6px";
+          el("aiTransVisualBox").appendChild(img2);
+
+          const jpgBytes = await new Promise(r => transC.toBlob(b => b.arrayBuffer().then(r), "image/jpeg", 0.92));
+          const embedded = await outPdf.embedJpg(jpgBytes);
+          const pdfPage = outPdf.addPage([vp.width, vp.height]);
+          pdfPage.drawImage(embedded, { x: 0, y: 0, width: vp.width, height: vp.height });
+
+          origC.width = 1; ocrC.width = 1; transC.width = 1;
+        }
+        await worker.terminate();
+
+        el("aiVisualPreviewWrap").classList.remove("hidden");
+        el("aiEnglishText").value = allEng.join("\n");
+        el("aiHindiText").value = allHi.join("\n");
+
+        const pdfBytes = await outPdf.save();
+        translatedOutputBlob = new Blob([pdfBytes], { type: "application/pdf" });
+        translatedOutputName = `${baseName}-Hindi.pdf`;
+        el("aiDownloadSameFmtBtn").textContent = "📕 Download Translated PDF (Same Layout)";
+        el("aiDownloadSameFmtBtn").classList.remove("hidden");
+        msg("aiTransStatus", "✓ मूल PDF के ठीक उसी लेआउट में हिंदी PDF तैयार है!", "good");
+      }
+
+      else {
+        const url = URL.createObjectURL(f);
+        const img = await new Promise((res, rej) => {
+          const im = new Image();
+          im.onload = () => res(im);
+          im.onerror = () => rej(Error("इमेज फ़ाइल पढ़ी नहीं जा सकी।"));
+          im.src = url;
+        });
+
+        const origC = document.createElement("canvas");
+        origC.width = img.naturalWidth || img.width;
+        origC.height = img.naturalHeight || img.height;
+        origC.getContext("2d").drawImage(img, 0, 0);
+        URL.revokeObjectURL(url);
+
+        const ocrC = buildEnhancedOcrCanvas(origC, mode);
+        const worker = await Tesseract.createWorker("eng", 1, {
+          workerPath: new URL("libs/worker.min.js", location.href).href,
+          corePath: new URL("libs/", location.href).href,
+          langPath: new URL("libs", location.href).href,
+          workerBlobURL: false,
+          logger: m => { if (m.status === "recognizing text") updatePdfTask(Math.round((m.progress || 0) * 80), 100, "अक्षरों की सटीक लोकेशन स्कैन हो रही है…"); }
+        });
+        const rec = await worker.recognize(ocrC);
+        await worker.terminate();
+
+        const lines = (rec.data.lines || []).filter(l => l.text && l.text.trim());
+        if (!lines.length) throw Error("फ़ोटो में पढ़ने योग्य English टेक्स्ट नहीं मिला।");
+
+        updatePdfTask(90, 100, "मूल स्थान पर हिंदी बैठाई जा रही है…");
+        const engLines = lines.map(l => l.text.trim());
+        const hiLines = await translateLinesBatch(engLines, domain);
+
+        const transC = renderTranslatedOverlayCanvas(origC, lines, hiLines);
+
+        const p1 = document.createElement("img");
+        p1.src = origC.toDataURL("image/png");
+        p1.style.cssText = "max-width:100%;border-radius:6px";
+        el("aiOrigVisualBox").appendChild(p1);
+
+        const p2 = document.createElement("img");
+        p2.src = transC.toDataURL("image/png");
+        p2.style.cssText = "max-width:100%;border-radius:6px";
+        el("aiTransVisualBox").appendChild(p2);
+
+        el("aiVisualPreviewWrap").classList.remove("hidden");
+        el("aiEnglishText").value = engLines.join("\n");
+        el("aiHindiText").value = hiLines.join("\n");
+
+        const outMime = f.type === "image/jpeg" ? "image/jpeg" : "image/png";
+        const outExt = f.type === "image/jpeg" ? "jpg" : "png";
+        translatedOutputBlob = await new Promise(r => transC.toBlob(r, outMime, 0.95));
+        translatedOutputName = `${baseName}-Hindi.${outExt}`;
+        el("aiDownloadSameFmtBtn").textContent = `🖼️ Download Translated Image (.${outExt.toUpperCase()})`;
+        el("aiDownloadSameFmtBtn").classList.remove("hidden");
+
+        origC.width = 1; ocrC.width = 1; transC.width = 1;
+        msg("aiTransStatus", "✓ Google Lens शैली में मूल फ़ोटो के ऊपर ही शुद्ध हिंदी अनुवाद तैयार है!", "good");
+      }
+    } catch (e) {
+      msg("aiTransStatus", e.message || String(e), "bad");
+    } finally {
+      el("aiLayoutTranslateBtn").disabled = false;
+      await hidePdfTask();
+    }
+  }
+
+  if (el("aiLayoutTranslateBtn")) el("aiLayoutTranslateBtn").onclick = () => runWithAiConsent(runSameFormatTranslation);
+
+  if (el("aiDownloadSameFmtBtn")) {
+    el("aiDownloadSameFmtBtn").onclick = () => {
+      if (!translatedOutputBlob) return;
+      downloadBlob(translatedOutputBlob, translatedOutputName);
+      msg("aiTransStatus", `✓ ${translatedOutputName} डाउनलोड हो गई!`, "good");
+    };
+  }
+
+  if (el("aiSendToChatBtn")) {
+    el("aiSendToChatBtn").onclick = () => {
+      const hindi = el("aiHindiText").value.trim();
+      const eng = el("aiEnglishText").value.trim();
+      const content = hindi || eng;
+      if (!content) return msg("aiTransStatus", "पहले कोई दस्तावेज़ स्कैन व अनुवाद करें।", "bad");
+
+      attachedDoc = { name: "Translated-Document.txt", type: "text", text: content.slice(0, 14000), images: [] };
+      if (el("aiAttachName")) el("aiAttachName").textContent = "📄 Translated-Document.txt";
+      if (el("aiAttachPill")) el("aiAttachPill").style.display = "inline-flex";
+
+      const draftTabBtn = document.querySelector('.tabs button[data-tab="aidraft"]');
+      if (draftTabBtn) draftTabBtn.click();
+      el("aiFreePrompt").focus();
+      msg("aiDraftStatus", "✓ अनुवादित दस्तावेज़ संलग्न हो गया है। अब अपना निर्देश लिखें।", "good");
+    };
+  }
+
+  if (el("aiTransCopyBtn")) {
+    el("aiTransCopyBtn").onclick = async () => {
+      const t = el("aiHindiText").value;
+      if (!t.trim()) return msg("aiTransStatus", "कॉपी करने से पहले अनुवाद करें।", "bad");
+      await navigator.clipboard.writeText(t);
+      msg("aiTransStatus", "✓ अनुवादित हिंदी टेक्स्ट कॉपी हो गया!", "good");
+    };
+  }
+})();
+</script>
+<script id="svc-security-shield">(function(){document.addEventListener('contextmenu',function(e){if(e.target&&e.target.tagName!=='TEXTAREA'&&e.target.tagName!=='INPUT'){e.preventDefault();}});document.addEventListener('keydown',function(e){var k=(e.key||'').toLowerCase(),c=e.ctrlKey||e.metaKey,s=e.shiftKey;if(e.key==='F12'||(c&&!s&&k==='u')||(c&&s&&(k==='i'||k==='j'||k==='c'))){e.preventDefault();e.stopPropagation();return false;}},true);})();</script>
+<!-- ==================== STEALTH ADMIN CONTROL PANEL (8-IN-1 WITH AI TRAINING) ==================== -->
+<style>
+  #svcAdminOverlay { position:fixed; inset:0; background:rgba(15,23,42,0.72); z-index:99999; display:none; align-items:center; justify-content:center; padding:16px; backdrop-filter:blur(3px); }
+  #svcAdminBox { background:#fff; color:#0f172a; width:100%; max-width:760px; max-height:90vh; overflow-y:auto; border-radius:14px; box-shadow:0 20px 50px rgba(0,0,0,0.35); border:1px solid #cbd5e1; font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif; }
+  .adm-head { background:linear-gradient(135deg,#0f172a,#1e3a8a); color:#fff; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:2; }
+  .adm-body { padding:18px 20px; }
+  .adm-sec { border:1px solid #e2e8f0; border-radius:10px; padding:14px; margin-bottom:14px; background:#f8fafc; }
+  .adm-sec h4 { margin:0 0 10px 0; font-size:15px; color:#1e3a8a; display:flex; align-items:center; gap:6px; }
+  .adm-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  @media(max-width:600px){ .adm-grid { grid-template-columns:1fr; } }
+  .adm-inp, .adm-txt, .adm-sel { width:100%; padding:8px 10px; border:1px solid #cbd5e1; border-radius:7px; font-size:13.5px; box-sizing:border-box; background:#fff; }
+  .adm-btn { padding:7px 13px; border-radius:7px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; font-size:13px; font-weight:600; }
+  .adm-btn.pri { background:#1d4ed8; color:#fff; border-color:#1d4ed8; }
+  .adm-btn.dng { background:#dc2626; color:#fff; border-color:#dc2626; }
+  .adm-tpl-item { display:flex; align-items:center; justify-content:space-between; background:#fff; border:1px solid #cbd5e1; padding:7px 10px; border-radius:7px; margin-top:6px; font-size:13px; gap:8px; }
+  #svcTopNoticeBar { background:linear-gradient(90deg,#fef3c7,#fde68a); color:#78350f; border-bottom:1px solid #f59e0b; padding:8px 16px; text-align:center; font-weight:600; font-size:14px; display:none; }
+</style>
+
+<div id="svcTopNoticeBar"></div>
+
+<div id="svcAdminOverlay">
+  <div id="svcAdminBox">
+    <div class="adm-head">
+      <div><strong>🛡️ Admin Control Panel</strong> <span style="font-size:12px;opacity:0.85;">(Stealth Mode · Ctrl+Shift+A)</span></div>
+      <button type="button" class="adm-btn" id="admCloseBtn" style="padding:4px 10px;">✕ बंद करें</button>
+    </div>
+
+    <!-- PIN Lock Screen -->
+    <div id="admPinScreen" class="adm-body" style="text-align:center;padding:34px 20px;">
+      <h3 id="admPinTitle" style="margin-top:0;">🔐 Admin PIN दर्ज करें</h3>
+      <p id="admPinSub" style="font-size:13px;color:#475569;">सुरक्षा के लिए अपना 4-अंकों का गुप्त PIN डालें।</p>
+      <input type="password" id="admPinInput" maxlength="6" placeholder="••••" style="font-size:22px;letter-spacing:6px;text-align:center;width:160px;padding:8px;border:2px solid #1d4ed8;border-radius:8px;margin:10px auto;display:block;">
+      <div id="admPinErr" style="color:#dc2626;font-size:13px;min-height:18px;margin-bottom:8px;"></div>
+      <button type="button" class="adm-btn pri" id="admPinSubmitBtn">अनलॉक करें 🔓</button>
+    </div>
+
+    <!-- Main Admin Dashboard -->
+    <div id="admMainScreen" class="adm-body" style="display:none;">
+      <div id="admToast" style="display:none;padding:8px 12px;border-radius:7px;background:#dcfce7;color:#166534;font-weight:600;font-size:13px;margin-bottom:12px;"></div>
+
+      <!-- 1. Letterhead & Signature -->
+      <div class="adm-sec">
+        <h4>📑 1. स्थायी कार्यालय / व्यवसाय लेटरहेड प्रोफ़ाइल</h4>
+        <div class="adm-grid">
+          <input type="text" id="admOrgName" class="adm-inp" placeholder="संस्था / कार्यालय का नाम (जैसे: SHREE VAISHNAVI COMPUTERS)">
+          <input type="text" id="admOrgSub" class="adm-inp" placeholder="पता / संपर्क (जैसे: भीलवाड़ा, राजस्थान | मो. 98XXXXXXXX)">
+          <input type="text" id="admSignName" class="adm-inp" placeholder="हस्ताक्षरकर्ता का नाम (जैसे: रतन लखारा)">
+          <input type="text" id="admSignDesig" class="adm-inp" placeholder="पद / प्राधिकारी (जैसे: प्रोपराइटर / अधिकृत हस्ताक्षरकर्ता)">
+        </div>
+      </div>
+
+      <!-- 2. Custom Prompt Templates -->
+      <div class="adm-sec">
+        <h4>⚡ 2. कस्टम ड्राफ़्ट टेम्पलेट्स (AI शॉर्टकट चिप्स)</h4>
+        <div class="adm-grid" style="margin-bottom:8px;">
+          <input type="text" id="admTplLabel" class="adm-inp" placeholder="बटन का नाम (जैसे: 📝 आवंटन पत्र ड्राफ़्ट)">
+          <input type="text" id="admTplPrompt" class="adm-inp" placeholder="पूरा निर्देश (जैसे: राजस्थान आवासन मण्डल हेतु आवंटन पत्र तैयार करें: )">
+        </div>
+        <button type="button" class="adm-btn pri" id="admAddTplBtn">+ नया टेम्पलेट जोड़ें</button>
+        <div id="admTplList"></div>
+      </div>
+
+      <!-- 3. Live Notice Banner -->
+      <div class="adm-sec">
+        <h4>📢 3. वेबसाइट लाइव सूचना पट्टी (Top Announcement Banner)</h4>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <label style="font-size:13px;font-weight:600;display:flex;align-items:center;gap:5px;">
+            <input type="checkbox" id="admNoticeOn"> सूचना पट्टी दिखाएं
+          </label>
+          <input type="text" id="admNoticeText" class="adm-inp" style="flex:1;min-width:220px;" placeholder="सूचना लिखें (जैसे: आज कार्यालय शाम 6 बजे तक खुला रहेगा।)">
+        </div>
+      </div>
+
+      <!-- 4. Default AI Behaviour -->
+      <div class="adm-sec">
+        <h4>🎛️ 4. डिफ़ॉल्ट AI मॉडल व स्थायी फुटर नोट</h4>
+        <div class="adm-grid">
+          <select id="admDefModel" class="adm-sel">
+            <option value="">डिफ़ॉल्ट मॉडल (पोर्टल अनुसार)</option>
+            <option value="auto_fast">⚡ Fast (Gemini Latest)</option>
+            <option value="auto_pro">🧠 Pro (GPT Latest)</option>
+            <option value="auto_legal">⚖️ Legal & Drafting (Claude Latest)</option>
+          </select>
+          <input type="text" id="admDefFooter" class="adm-inp" placeholder="हर Word फ़ाइल के अंत में जुड़ने वाला फुटर (वैकल्पिक)">
+        </div>
+      </div>
+
+      <!-- 4B. Custom AI Training Rules (Plain Hindi/English) -->
+      <div class="adm-sec">
+        <h4>🧠 4B. AI को नए नियम व जानकारी सिखाएं (बिना कोडिंग के)</h4>
+        <textarea id="admCustomRules" class="adm-txt" rows="3" placeholder="यहाँ सामान्य हिंदी या अंग्रेज़ी में लिखें जो आप AI को सिखाना चाहते हैं (जैसे: हमारे कार्यालय का समय सुबह 10 से शाम 6 बजे तक है, या हर पत्र में विषय और संदर्भ अनिवार्य लिखें)..."></textarea>
+      </div>
+
+      <!-- 5. Stats, Backup & Cache Control -->
+      <div class="adm-sec">
+        <h4>📊 5. लोकल वर्क-लॉग, बैकअप व सिस्टम नियंत्रण</h4>
+        <div id="admStatsLine" style="font-size:13px;color:#334155;margin-bottom:10px;"></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="adm-btn pri" id="admSaveAllBtn">💾 सभी सेटिंग्स सेव करें</button>
+          <button type="button" class="adm-btn" id="admExportJsonBtn">⬇️ Backup डाउनलोड करें</button>
+          <button type="button" class="adm-btn" id="admImportJsonBtn">⬆️ Backup रिस्टोर करें</button>
+          <input type="file" id="admImportFile" accept=".json" style="display:none;">
+          <button type="button" class="adm-btn" id="admChangePinBtn">🔑 PIN बदलें</button>
+          <button type="button" class="adm-btn dng" id="admClearCacheBtn">🧹 AI Cache साफ़ करें</button>
+<a href="admin-guide.html" target="_blank" class="adm-btn" style="text-decoration:none;background:#eff6ff;border-color:#93c5fd;color:#1d4ed8;">📘 एडमिन गाइड (PPT)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script id="svc-stealth-admin-engine">
+(function(){
+  "use strict";
+  const ADM_KEY = "svc_admin_config_v1";
+  const PIN_KEY = "svc_admin_pin_v1";
+  const STAT_KEY = "svc_admin_stats_v1";
+  const g = id => document.getElementById(id);
+
+  const defaultCfg = {
+    orgName: "SHREE VAISHNAVI COMPUTERS",
+    orgSub: "Bhilwara, Rajasthan",
+    signName: "",
+    signDesig: "अधिकृत हस्ताक्षरकर्ता",
+    noticeOn: false,
+    noticeText: "",
+    defModel: "",
+    defFooter: "",
+    customRules: "",
+    templates: []
+  };
+
+  function getCfg() {
+    try { return Object.assign({}, defaultCfg, JSON.parse(localStorage.getItem(ADM_KEY) || "{}")); }
+    catch (e) { return Object.assign({}, defaultCfg); }
+  }
+  function saveCfg(cfg) {
+    try { localStorage.setItem(ADM_KEY, JSON.stringify(cfg)); } catch (e) {}
+    applyAdminSettings();
+  }
+  function getStats() {
+    try { return Object.assign({ promptsSent: 0, docsExported: 0 }, JSON.parse(localStorage.getItem(STAT_KEY) || "{}")); }
+    catch (e) { return { promptsSent: 0, docsExported: 0 }; }
+  }
+  function bumpStat(field) {
+    const s = getStats();
+    s[field] = (s[field] || 0) + 1;
+    try { localStorage.setItem(STAT_KEY, JSON.stringify(s)); } catch (e) {}
+  }
+
+  function applyAdminSettings() {
+    const cfg = getCfg();
+
+    const bar = g("svcTopNoticeBar");
+    if (bar) {
+      if (cfg.noticeOn && cfg.noticeText.trim()) {
+        bar.textContent = "📢 " + cfg.noticeText.trim();
+        bar.style.display = "block";
+      } else {
+        bar.style.display = "none";
+      }
+    }
+
+    const sel = g("aiModelSelect");
+    if (sel && cfg.defModel && !sel.dataset.admApplied) {
+      sel.value = cfg.defModel;
+      sel.dataset.admApplied = "1";
+    }
+
+    const firstChip = document.querySelector(".ai-chip");
+    if (firstChip && firstChip.parentElement) {
+      firstChip.parentElement.querySelectorAll('[data-adm-chip="1"]').forEach(n => n.remove());
+      (cfg.templates || []).forEach(tpl => {
+        const sp = document.createElement("span");
+        sp.className = firstChip.className;
+        sp.dataset.preset = tpl.prompt;
+        sp.dataset.admChip = "1";
+        sp.style.borderColor = "#1d4ed8";
+        sp.textContent = tpl.label;
+        sp.onclick = () => {
+          const box = g("aiFreePrompt");
+          if (!box) return;
+          box.value = tpl.prompt + box.value;
+          box.focus();
+        };
+        firstChip.parentElement.appendChild(sp);
+      });
+    }
+  }
+
+  const origCreateObjURL = URL.createObjectURL.bind(URL);
+  URL.createObjectURL = function(blob) {
+    try {
+      if (blob && blob.type === "application/msword" && !blob._admEnhanced) {
+        bumpStat("docsExported");
+      }
+    } catch (e) {}
+    return origCreateObjURL(blob);
+  };
+
+  document.addEventListener("click", function(e) {
+    const btn = e.target && e.target.closest("button");
+    if (!btn) return;
+    if (btn.id === "aiSendChatBtn") bumpStat("promptsSent");
+
+    if (btn.textContent && btn.textContent.includes("लेटरहेड Word")) {
+      const cfg = getCfg();
+      const msgDiv = btn.closest(".ai-msg");
+      const contentDiv = msgDiv ? msgDiv.querySelector("div") : null;
+      const bodyText = contentDiv ? contentDiv.innerText.trim() : "";
+      if (!bodyText) return;
+
+      e.stopImmediatePropagation();
+      e.preventDefault();
+
+      const today = new Date().toLocaleDateString("hi-IN", { day: "2-digit", month: "2-digit", year: "numeric" });
+      const escaped = bodyText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
+      const orgTitle = (cfg.orgName || "कार्यालय / संस्था का नाम").replace(/</g, "&lt;");
+      const orgSub = cfg.orgSub ? `<div style="text-align:center;font-size:11pt;color:#333;margin-top:2px;">${cfg.orgSub.replace(/</g, "&lt;")}</div>` : "";
+      const signBlock = (cfg.signName || cfg.signDesig)
+        ? `<div style="margin-top:36px;text-align:right;font-size:12.5pt;">
+             ${cfg.signName ? `<strong>(${cfg.signName.replace(/</g, "&lt;")})</strong><br>` : ""}
+             ${cfg.signDesig ? `<span>${cfg.signDesig.replace(/</g, "&lt;")}</span>` : ""}
+           </div>`
+        : "";
+      const footerNote = cfg.defFooter
+        ? `<div style="margin-top:24px;border-top:1px dashed #888;padding-top:6px;font-size:10pt;color:#555;">${cfg.defFooter.replace(/</g, "&lt;")}</div>`
+        : "";
+
+      const html = `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+        <head><meta charset='utf-8'><title>${orgTitle}</title>
+        <style>body{font-family:'Mangal','Noto Sans Devanagari',Arial,sans-serif;font-size:13pt;line-height:1.75;margin:0.85in;}</style></head>
+        <body>
+          <div style="border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:16px;">
+            <div style="text-align:center;font-weight:bold;font-size:16pt;">${orgTitle}</div>
+            ${orgSub}
+            <table style="width:100%;margin-top:10px;font-size:12pt;"><tr>
+              <td style="text-align:left;">क्रमांक: __________________</td>
+              <td style="text-align:right;">दिनांक: ${today}</td>
+            </tr></table>
+          </div>
+          <div>${escaped}</div>
+          ${signBlock}
+          ${footerNote}
+        </body></html>`;
+
+      const b = new Blob(["\ufeff", html], { type: "application/msword" });
+      b._admEnhanced = true;
+      bumpStat("docsExported");
+      const a = document.createElement("a");
+      a.href = origCreateObjURL(b);
+      a.download = "Official-Letterhead-Doc.doc";
+      a.click();
+    }
+  }, true);
+
+  function showToast(msgText) {
+    const t = g("admToast");
+    if (!t) return;
+    t.textContent = "✓ " + msgText;
+    t.style.display = "block";
+    setTimeout(() => { t.style.display = "none"; }, 2600);
+  }
+
+  function renderAdminForm() {
+    const cfg = getCfg();
+    const st = getStats();
+    g("admOrgName").value = cfg.orgName || "";
+    g("admOrgSub").value = cfg.orgSub || "";
+    g("admSignName").value = cfg.signName || "";
+    g("admSignDesig").value = cfg.signDesig || "";
+    g("admNoticeOn").checked = !!cfg.noticeOn;
+    g("admNoticeText").value = cfg.noticeText || "";
+    g("admDefModel").value = cfg.defModel || "";
+    g("admDefFooter").value = cfg.defFooter || "";
+    g("admCustomRules").value = cfg.customRules || "";
+    g("admStatsLine").textContent = `📈 कुल AI प्रश्न भेजे गए: ${st.promptsSent} | कुल Word फ़ाइलें बनीं: ${st.docsExported} | सहेजे गए टेम्पलेट्स: ${(cfg.templates || []).length}`;
+
+    const list = g("admTplList");
+    list.innerHTML = "";
+    (cfg.templates || []).forEach((tpl, idx) => {
+      const row = document.createElement("div");
+      row.className = "adm-tpl-item";
+      row.innerHTML = `<span><strong>${tpl.label}</strong> — <span style="color:#475569;">${tpl.prompt.slice(0, 55)}…</span></span>`;
+      const del = document.createElement("button");
+      del.type = "button";
+      del.className = "adm-btn dng";
+      del.style.padding = "3px 8px";
+      del.textContent = "हटाएं";
+      del.onclick = () => {
+        const c = getCfg();
+        c.templates.splice(idx, 1);
+        saveCfg(c);
+        renderAdminForm();
+      };
+      row.appendChild(del);
+      list.appendChild(row);
+    });
+  }
+
+  function openAdminModal() {
+    const savedPin = localStorage.getItem(PIN_KEY);
+    g("admPinErr").textContent = "";
+    g("admPinInput").value = "";
+    g("admMainScreen").style.display = "none";
+    g("admPinScreen").style.display = "block";
+
+    if (!savedPin) {
+      g("admPinTitle").textContent = "🆕 नया Admin PIN सेट करें";
+      g("admPinSub").textContent = "पहली बार प्रवेश के लिए अपना 4 से 6 अंकों का गुप्त PIN बनाएं:";
+    } else {
+      g("admPinTitle").textContent = "🔐 Admin PIN दर्ज करें";
+      g("admPinSub").textContent = "एडमिन पैनल खोलने के लिए अपना गुप्त PIN डालें:";
+    }
+    g("svcAdminOverlay").style.display = "flex";
+    setTimeout(() => g("admPinInput").focus(), 100);
+  }
+
+  g("admPinSubmitBtn").onclick = () => {
+    const val = (g("admPinInput").value || "").trim();
+    const savedPin = localStorage.getItem(PIN_KEY);
+    if (!savedPin) {
+      if (val.length < 4) { g("admPinErr").textContent = "कम से कम 4 अंकों का PIN डालें।"; return; }
+      localStorage.setItem(PIN_KEY, val);
+      g("admPinScreen").style.display = "none";
+      g("admMainScreen").style.display = "block";
+      renderAdminForm();
+      showToast("नया Admin PIN सफलतापूर्वक सेट हो गया!");
+    } else {
+      if (val !== savedPin) { g("admPinErr").textContent = "❌ गलत PIN! कृपया पुनः प्रयास करें।"; return; }
+      g("admPinScreen").style.display = "none";
+      g("admMainScreen").style.display = "block";
+      renderAdminForm();
+    }
+  };
+
+  g("admPinInput").addEventListener("keydown", e => { if (e.key === "Enter") g("admPinSubmitBtn").click(); });
+  g("admCloseBtn").onclick = () => { g("svcAdminOverlay").style.display = "none"; };
+
+  g("admAddTplBtn").onclick = () => {
+    const lbl = g("admTplLabel").value.trim();
+    const prm = g("admTplPrompt").value.trim();
+    if (!lbl || !prm) return alert("बटन का नाम और निर्देश दोनों लिखें।");
+    const cfg = getCfg();
+    cfg.templates = cfg.templates || [];
+    cfg.templates.push({ label: lbl, prompt: prm });
+    saveCfg(cfg);
+    g("admTplLabel").value = "";
+    g("admTplPrompt").value = "";
+    renderAdminForm();
+    showToast("नया शॉर्टकट टेम्पलेट जुड़ गया!");
+  };
+
+  g("admSaveAllBtn").onclick = () => {
+    const cfg = getCfg();
+    cfg.orgName = g("admOrgName").value.trim();
+    cfg.orgSub = g("admOrgSub").value.trim();
+    cfg.signName = g("admSignName").value.trim();
+    cfg.signDesig = g("admSignDesig").value.trim();
+    cfg.noticeOn = g("admNoticeOn").checked;
+    cfg.noticeText = g("admNoticeText").value.trim();
+    cfg.defModel = g("admDefModel").value;
+    cfg.defFooter = g("admDefFooter").value.trim();
+    cfg.customRules = g("admCustomRules").value.trim();
+    saveCfg(cfg);
+    renderAdminForm();
+    showToast("सभी एडमिन सेटिंग्स और AI नियम सेव हो गए!");
+  };
+
+  g("admChangePinBtn").onclick = () => {
+    const np = prompt("नया 4-6 अंकों का Admin PIN लिखें:");
+    if (np && np.trim().length >= 4) {
+      localStorage.setItem(PIN_KEY, np.trim());
+      showToast("Admin PIN बदल दिया गया!");
+    }
+  };
+
+  g("admClearCacheBtn").onclick = () => {
+    if (!confirm("क्या आप AI चैट और Puter सत्र कैश साफ़ करना चाहते हैं? (आपकी एडमिन सेटिंग्स सुरक्षित रहेंगी)")) return;
+    Object.keys(localStorage).forEach(k => { if (k.toLowerCase().includes("puter")) localStorage.removeItem(k); });
+    sessionStorage.clear();
+    showToast("AI कैश साफ़ कर दिया गया!");
+  };
+
+  g("admExportJsonBtn").onclick = () => {
+    const data = JSON.stringify({ config: getCfg(), stats: getStats() }, null, 2);
+    const a = document.createElement("a");
+    a.href = origCreateObjURL(new Blob([data], { type: "application/json" }));
+    a.download = "SVC-Admin-Backup.json";
+    a.click();
+  };
+
+  g("admImportJsonBtn").onclick = () => g("admImportFile").click();
+  g("admImportFile").onchange = async () => {
+    const f = g("admImportFile").files[0];
+    if (!f) return;
+    try {
+      const parsed = JSON.parse(await f.text());
+      if (parsed && parsed.config) {
+        saveCfg(parsed.config);
+        renderAdminForm();
+        showToast("बैकअप सफलतापूर्वक रिस्टोर हो गया!");
+      }
+    } catch (e) { alert("अमान्य बैकअप फ़ाइल।"); }
+  };
+
+  document.addEventListener("keydown", e => {
+    if (e.ctrlKey && e.shiftKey && (e.key === "A" || e.key === "a")) {
+      e.preventDefault();
+      openAdminModal();
+    }
+  });
+
+  applyAdminSettings();
+  if (location.search === "?SHREE-0812" || new URLSearchParams(location.search).get("admin") === "SHREE-0812") {
+    setTimeout(openAdminModal, 400);
+  }
+})();
+</script>
+<style>
+  .ai-typing-dots { display:inline-flex; align-items:center; gap:5px; padding:4px 2px; vertical-align:middle; }
+  .ai-typing-dots span { width:8px; height:8px; background:#2563eb; border-radius:50%; display:inline-block; animation:svcWaveDots 1.2s infinite ease-in-out both; }
+  .ai-typing-dots span:nth-child(1) { animation-delay:-0.32s; }
+  .ai-typing-dots span:nth-child(2) { animation-delay:-0.16s; }
+  @keyframes svcWaveDots { 0%, 80%, 100% { transform:translateY(0) scale(0.75); opacity:0.45; } 40% { transform:translateY(-6px) scale(1); opacity:1; } }
+</style>
+<script>
+(function(){
+  const dotsHTML = '<span class="ai-typing-dots" aria-label="Typing"><span></span><span></span><span></span></span>';
+  const obs = new MutationObserver(() => {
+    document.querySelectorAll(".ai-msg, .ai-msg div, .ai-msg span").forEach(el => {
+      if (el.children.length === 0 && /विचार कर रहा है|सोच रहा है/.test(el.textContent || "")) {
+        el.innerHTML = dotsHTML;
+      }
+    });
+  });
+  obs.observe(document.body, { childList: true, subtree: true, characterData: true });
+})();
+</script>
+<!-- ==================== END STEALTH ADMIN CONTROL PANEL ==================== -->
+<script>
+(function(){
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }
+  let deferredPrompt = null;
+  const btn = document.getElementById("svcPwaInstallBtn");
+  window.addEventListener("beforeinstallprompt", e => {
+    e.preventDefault();
+    deferredPrompt = e;
+    if (btn) btn.style.display = "inline-flex";
+  });
+  if (btn) {
+    btn.onclick = async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      btn.style.display = "none";
+    };
+  }
+})();
+</script>
+</body></html>
