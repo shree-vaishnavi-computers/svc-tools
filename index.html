@@ -38,7 +38,7 @@ table{border-collapse:collapse;width:100%;font-size:13px}td,th{border:1px solid 
 @media(max-width:600px){.wrap{padding:10px}.card{padding:12px}.tabs{top:0}#typingPassage,#typingInput{font-size:19px}}
 
 <style>
-/* --- SVC Mobile CamScanner Home & 4-Corner Pro Scanner UI --- */
+/* --- SVC CamScanner Studio (4-Corner Quad + Real Device Folder Sync) --- */
 #svcMobScanCard, #svcMobScanFab { display: none; }
 
 html.svc-mobile-device #svcMobScanCard {
@@ -74,7 +74,6 @@ html.svc-mobile-device #svcMobScanFab {
   cursor: pointer;
 }
 
-/* CamScanner Home Modal */
 #svcCsHomeModal {
   display: none;
   position: fixed;
@@ -125,6 +124,16 @@ html.svc-mobile-device #svcMobScanFab {
   cursor: pointer;
   flex-shrink: 0;
 }
+.csh-folder-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: #1c1c1f;
+  border-bottom: 1px solid #27272a;
+  font-size: 11.5px;
+  color: #a1a1aa;
+}
 .csh-quick-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -156,7 +165,7 @@ html.svc-mobile-device #svcMobScanFab {
 .csh-recents-list {
   flex: 1;
   overflow-y: auto;
-  padding: 4px 14px 90px 14px;
+  padding: 4px 14px 95px 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -190,7 +199,7 @@ html.svc-mobile-device #svcMobScanFab {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.csh-doc-sub { font-size: 11.5px; color: #a1a1aa; margin-top: 4px; display: flex; align-items: center; gap: 8px; }
+.csh-doc-sub { font-size: 11.5px; color: #a1a1aa; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .csh-doc-chk { width: 20px; height: 20px; accent-color: #14b8a6; cursor: pointer; }
 .csh-doc-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .csh-doc-act-btn {
@@ -223,7 +232,7 @@ html.svc-mobile-device #svcMobScanFab {
 }
 .csh-bottom-nav {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   background: #18181b;
   border-top: 1px solid #27272a;
   padding: 7px 0 10px 0;
@@ -242,7 +251,6 @@ html.svc-mobile-device #svcMobScanFab {
 }
 .csh-nav-btn.active { color: #14b8a6; }
 
-/* --- Fullscreen Camera & Editor Modal --- */
 #svcScannerModal {
   display: none;
   position: fixed;
@@ -578,1454 +586,1677 @@ html.svc-mobile-device #svcMobScanFab {
 
 <script>
 (function(){
-  const isTouchOrMobile = (navigator.maxTouchPoints > 0) || ('ontouchstart' in window) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-  if (!isTouchOrMobile) return;
+  try {
+    const isTouchOrMobile = (navigator.maxTouchPoints > 0) || ('ontouchstart' in window) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+    if (!isTouchOrMobile) return;
 
-  document.documentElement.classList.add("svc-mobile-device");
+    document.documentElement.classList.add("svc-mobile-device");
 
-  function playShutterClickSound() {
-    try {
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(950, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.065);
-      gain.gain.setValueAtTime(0.32, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start();
-      osc.stop(ctx.currentTime + 0.075);
-    } catch (e) {}
-  }
-
-  function makeCamScannerDefaultName() {
-    const now = new Date();
-    const pad = n => String(n).padStart(2, "0");
-    return `SVC Scanner ${pad(now.getMonth() + 1)}-${pad(now.getDate())}-${now.getFullYear()} ${pad(now.getHours())}.${pad(now.getMinutes())}`;
-  }
-
-  function formatDisplayTimestamp(ts) {
-    const d = new Date(ts || Date.now());
-    const pad = n => String(n).padStart(2, "0");
-    return `${pad(d.getMonth() + 1)}/${pad(d.getDate())}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-
-  function getSafeFileName() {
-    const inp = document.getElementById("scsDocNameInp");
-    const raw = (inp ? inp.value : "").trim() || makeCamScannerDefaultName();
-    return raw.replace(/[\\/:*?"<>|]+/g, "_");
-  }
-
-  function mountMobileScannerUI() {
-    if (document.getElementById("svcMobScanFab")) return;
-    const dashGrid = document.getElementById("svcHomeDashboard");
-    if (dashGrid && dashGrid.parentNode && !document.getElementById("svcMobScanCard")) {
-      const scanBanner = document.createElement("div");
-      scanBanner.id = "svcMobScanCard";
-      scanBanner.innerHTML = `
-        <div>
-          <div style="font-size:11px;font-weight:800;color:#5eead4;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · CamScanner Studio</div>
-          <div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div>
-          <div style="font-size:12px;color:#cbd5e1;margin-top:3px;">4-Corner Auto Detect, ID Cards & Instant PDF</div>
-        </div>
-        <div style="background:#14b8a6;color:#042f2e;padding:9px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Open ↗</div>
-      `;
-      scanBanner.onclick = () => openCsHome();
-      dashGrid.parentNode.insertBefore(scanBanner, dashGrid);
-    }
-
-    const fab = document.createElement("button");
-    fab.id = "svcMobScanFab";
-    fab.type = "button";
-    fab.innerHTML = `📷`;
-    fab.title = "Open SVC Document Scanner";
-    fab.onclick = () => openCsHome();
-    document.body.appendChild(fab);
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mountMobileScannerUI);
-  } else {
-    mountMobileScannerUI();
-  }
-
-  // --- 1. CAMSCANNER DARK HOME SCREEN MODAL ---
-  const csHome = document.createElement("div");
-  csHome.id = "svcCsHomeModal";
-  csHome.innerHTML = `
-    <div class="csh-top-search">
-      <button type="button" class="csh-top-icon" id="cshExitToSuiteBtn" title="Back to SVC Tools" style="color:#f4f4f5;font-size:14px;">←</button>
-      <div class="csh-search-wrap">
-        <span>🔍</span>
-        <input type="text" id="cshSearchInp" placeholder="Search">
-      </div>
-      <button type="button" class="csh-top-icon" id="cshDeleteSelectedDocsBtn" title="Delete Selected Documents" style="color:#f87171;display:none;">🗑️</button>
-      <div class="csh-top-icon" title="100% Offline Local Storage">☁️</div>
-    </div>
-
-    <div class="csh-quick-grid">
-      <div class="csh-q-item" id="cshActSmartScan">
-        <div class="csh-q-circle" style="color:#2dd4bf;">⛶</div>
-        <span class="csh-q-label">Smart Scan</span>
-      </div>
-      <div class="csh-q-item" id="cshActPdfTools">
-        <div class="csh-q-circle" style="color:#f87171;">📕</div>
-        <span class="csh-q-label">PDF Tools</span>
-      </div>
-      <div class="csh-q-item" id="cshActImportImg">
-        <div class="csh-q-circle" style="color:#60a5fa;">🖼️</div>
-        <span class="csh-q-label">Import Images</span>
-      </div>
-      <div class="csh-q-item" id="cshActImportFiles">
-        <div class="csh-q-circle" style="color:#38bdf8;">📂</div>
-        <span class="csh-q-label">Import Files</span>
-      </div>
-      <div class="csh-q-item" id="cshActIdCard">
-        <div class="csh-q-circle" style="color:#34d399;">🪪</div>
-        <span class="csh-q-label">ID Cards</span>
-      </div>
-      <div class="csh-q-item" id="cshActOcr">
-        <div class="csh-q-circle" style="color:#2dd4bf;">🅃</div>
-        <span class="csh-q-label">Extract Text</span>
-      </div>
-      <div class="csh-q-item" id="cshActAiDraft">
-        <div class="csh-q-circle" style="color:#34d399;">✨</div>
-        <span class="csh-q-label">Solver AI</span>
-      </div>
-      <div class="csh-q-item" id="cshActAllTools">
-        <div class="csh-q-circle" style="color:#2dd4bf;">❖</div>
-        <span class="csh-q-label">All</span>
-      </div>
-    </div>
-
-    <div class="csh-recents-head">
-      <h3>Recents</h3>
-      <span id="cshTotalDocsLabel" style="font-size:12.5px;color:#a1a1aa;font-weight:600;">0 Docs ›</span>
-    </div>
-
-    <div class="csh-recents-list" id="cshRecentsList"></div>
-
-    <button type="button" class="csh-cam-fab" id="cshFloatingCamBtn" title="Scan New Document">📷</button>
-
-    <div class="csh-bottom-nav">
-      <button type="button" class="csh-nav-btn active" id="cshNavHome">
-        <span style="font-size:18px;">🏠</span>
-        <span>Home</span>
-      </button>
-      <button type="button" class="csh-nav-btn" id="cshNavFiles">
-        <span style="font-size:18px;">📄</span>
-        <span>Files</span>
-      </button>
-      <button type="button" class="csh-nav-btn" id="cshNavTools">
-        <span style="font-size:18px;">⊞</span>
-        <span>Tools</span>
-      </button>
-    </div>
-  `;
-  document.body.appendChild(csHome);
-
-  // --- 2. FULLSCREEN CAMERA & EDITOR MODAL ---
-  const modal = document.createElement("div");
-  modal.id = "svcScannerModal";
-  modal.innerHTML = `
-    <div class="scs-topbar">
-      <button type="button" class="scs-btn-icon" id="scsCloseBtn">← Home</button>
-      <div style="display:flex;align-items:center;gap:5px;">
-        <button type="button" class="scs-btn-icon" id="scsFlashBtn">⚡ Flash</button>
-        <button type="button" class="scs-btn-icon active" id="scsAutoEdgeBtn">🔲 4-Corner</button>
-        <select id="scsResSelect" class="scs-select" title="HD Resolution">
-          <option value="1280">SD</option>
-          <option value="1920" selected>HD</option>
-          <option value="3840">4K</option>
-        </select>
-      </div>
-      <button type="button" class="scs-btn-icon" id="scsSwitchViewBtn" style="background:#14b8a6;color:#042f2e;border-color:#14b8a6;">Pages (<span id="scsTopCount">0</span>)</button>
-    </div>
-
-    <div id="scsCameraView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
-      <div class="scs-view-area">
-        <video id="scsVideo" autoplay playsinline muted></video>
-        <canvas id="scsOverlayCanvas"></canvas>
-        <div id="scsFlashEffect"></div>
-        <div id="scsCaptureToast">✅ Page Captured!</div>
-        <div class="scs-detect-pill" id="scsDetectStatus">🔍 Detecting 4 Page Corners...</div>
-      </div>
-      <div class="scs-cam-controls">
-        <div class="scs-mode-switch">
-          <button type="button" class="scs-mode-pill" data-scanmode="single">Single Page</button>
-          <button type="button" class="scs-mode-pill active" data-scanmode="batch">Batch Mode</button>
-          <button type="button" class="scs-mode-pill" data-scanmode="idcard">ID Card (2-Side)</button>
-        </div>
-        <div class="scs-shutter-row">
-          <label class="scs-btn-icon" style="cursor:pointer;">
-            🖼️ Gallery
-            <input type="file" id="scsGalleryInp" accept="image/*" multiple style="display:none;">
-          </label>
-          <button type="button" class="scs-shutter-btn" id="scsCaptureBtn" title="Capture Page"></button>
-          <input type="file" id="scsNativeCamFallback" accept="image/*" capture="environment" style="display:none;">
-          <div class="scs-batch-badge" id="scsReviewThumbBtn" title="Review Scanned Pages">
-            <span style="font-size:18px;">📄</span>
-            <span class="scs-batch-count" id="scsBadgeCount">0</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div id="scsCropView">
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#1e293b;font-size:12.5px;">
-        <button type="button" class="scs-btn-icon" id="scsCropCancelBtn">← Back</button>
-        <span style="font-weight:700;color:#5eead4;">Drag 4 Corners of Page</span>
-        <button type="button" class="scs-btn-icon" id="scsCropApplyBtn" style="background:#14b8a6;color:#042f2e;border-color:#14b8a6;">✓ Straighten</button>
-      </div>
-      <div class="scs-canvas-wrap">
-        <canvas id="scsCropCanvas"></canvas>
-      </div>
-    </div>
-
-    <div id="scsEditorView">
-      <div class="scs-rename-bar">
-        <span style="font-size:14px;">✏️</span>
-        <input type="text" id="scsDocNameInp" placeholder="Document name...">
-        <select id="scsPdfQualitySel" class="scs-select" title="PDF Size & Quality">
-          <option value="0.62">Low KB</option>
-          <option value="0.82" selected>Balanced</option>
-          <option value="0.95">HD PDF</option>
-        </select>
-        <button type="button" class="scs-btn-icon" id="scsSaveDocHomeBtn" style="background:#14b8a6;color:#042f2e;border-color:#14b8a6;">✓ Done</button>
-      </div>
-      <div class="scs-tool-strip">
-        <button type="button" class="scs-btn-icon" id="scsAddMoreCamBtn">+ Scan</button>
-        <button type="button" class="scs-btn-icon" id="scsFullViewBtn">🔍 Full</button>
-        <button type="button" class="scs-btn-icon" id="scsOpenCropBtn">✂️ Crop</button>
-        <button type="button" class="scs-btn-icon" id="scsRotLeftBtn">↺ Left</button>
-        <button type="button" class="scs-btn-icon" id="scsRotRightBtn">↻ Right</button>
-        <button type="button" class="scs-btn-icon" id="scsSelectModeBtn">☑️ Select</button>
-        <button type="button" class="scs-btn-icon" id="scsDelPageBtn" style="color:#fca5a5;">🗑️</button>
-      </div>
-      <div class="scs-canvas-wrap">
-        <canvas id="scsPreviewCanvas" title="Tap for Full Screen View"></canvas>
-      </div>
-      <div class="scs-adjust-bar">
-        <label>☀️ <input type="range" id="scsBrightRange" min="-50" max="60" value="0"></label>
-        <label>◐ <input type="range" id="scsContrastRange" min="-40" max="70" value="0"></label>
-        <button type="button" class="scs-btn-icon" id="scsResetAdjBtn" style="padding:3px 7px;font-size:10.5px;">Reset</button>
-      </div>
-      <div class="scs-page-strip" id="scsPageStrip"></div>
-      <div class="scs-filter-bar" id="scsFilterBar">
-        <button type="button" class="scs-filter-chip" data-filter="original">Original</button>
-        <button type="button" class="scs-filter-chip" data-filter="lighten">Lighten</button>
-        <button type="button" class="scs-filter-chip active" data-filter="magic">Magic Color</button>
-        <button type="button" class="scs-filter-chip" data-filter="magicpro">Magic Pro</button>
-        <button type="button" class="scs-filter-chip" data-filter="noshadow">No Shadow</button>
-        <button type="button" class="scs-filter-chip" data-filter="nohandwriting">No Handwriting</button>
-        <button type="button" class="scs-filter-chip" data-filter="bw">B&amp;W</button>
-        <button type="button" class="scs-filter-chip" data-filter="eco">Eco</button>
-        <button type="button" class="scs-filter-chip" id="scsGrayToggle">Grayscale: OFF</button>
-      </div>
-      <div class="scs-action-grid">
-        <button type="button" class="scs-act-btn" id="scsSaveImgBtn" style="background:#1e293b;color:#ffffff;border:1px solid #475569;">💾 Save Image</button>
-        <button type="button" class="scs-act-btn" id="scsShareImgBtn" style="background:#0284c7;color:#ffffff;">📤 Share Image</button>
-        <button type="button" class="scs-act-btn" id="scsSavePdfBtn" style="background:#16a34a;color:#ffffff;">📥 Save Full PDF</button>
-        <button type="button" class="scs-act-btn" id="scsSharePdfBtn" style="background:#f59e0b;color:#0f172a;">📑 Share Full PDF</button>
-      </div>
-    </div>
-
-    <div id="scsFullViewModal">
-      <div class="scs-fv-top">
-        <button type="button" class="scs-btn-icon" id="scsFvCloseBtn">← Back</button>
-        <span id="scsFvTitle" style="font-size:13px;font-weight:700;">Page 1</span>
-        <div style="display:flex;gap:6px;">
-          <button type="button" class="scs-btn-icon" id="scsFvPrevBtn">◀</button>
-          <button type="button" class="scs-btn-icon" id="scsFvZoomBtn">🔍 2x</button>
-          <button type="button" class="scs-btn-icon" id="scsFvNextBtn">▶</button>
-        </div>
-      </div>
-      <div class="scs-fv-body">
-        <img id="scsFullViewImg" alt="Full Page Preview">
-      </div>
-    </div>
-  `;
-  document.body.appendChild(modal);
-
-  // --- 3. OFFLINE INDEXEDDB DOCUMENTS LIBRARY ---
-  const DB_NAME = "svc_camscanner_library_v1";
-  let savedDocs = [];
-  let selectedDocIds = new Set();
-  let currentDocId = null;
-  let pages = [];
-  let docTitle = makeCamScannerDefaultName();
-  let activeIdx = 0;
-  let scanMode = "batch";
-  let flashOn = false;
-  let autoEdgeOn = true;
-  let mediaStream = null;
-  let detectTimer = null;
-  let lastQuadNorm = {
-    tl: { x: 0.12, y: 0.10 },
-    tr: { x: 0.88, y: 0.10 },
-    br: { x: 0.88, y: 0.90 },
-    bl: { x: 0.12, y: 0.90 },
-    confident: false
-  };
-  let fvZoomed = false;
-  let selectedForDelete = new Set();
-  let multiSelectMode = false;
-
-  function openLibraryDB(cb) {
-    const req = indexedDB.open(DB_NAME, 1);
-    req.onupgradeneeded = e => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains("docs")) db.createObjectStore("docs", { keyPath: "docId" });
-    };
-    req.onsuccess = e => cb(e.target.result);
-    req.onerror = () => cb(null);
-  }
-
-  function loadAllDocsFromDB(cb) {
-    openLibraryDB(db => {
-      if (!db) { if (cb) cb(); return; }
-      const tx = db.transaction("docs", "readonly");
-      const req = tx.objectStore("docs").getAll();
-      req.onsuccess = () => {
-        savedDocs = (req.result || []).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
-        if (cb) cb();
-      };
-    });
-  }
-
-  function persistCurrentDocToDB(cb) {
-    if (!pages.length) { if (cb) cb(); return; }
-    if (!currentDocId) currentDocId = "doc_" + Date.now();
-    const record = {
-      docId: currentDocId,
-      title: (docTitle || "").trim() || makeCamScannerDefaultName(),
-      updatedAt: Date.now(),
-      pages: pages
-    };
-    openLibraryDB(db => {
-      if (!db) { if (cb) cb(); return; }
-      const tx = db.transaction("docs", "readwrite");
-      tx.objectStore("docs").put(record);
-      tx.oncomplete = () => loadAllDocsFromDB(cb);
-    });
-  }
-
-  function deleteDocsFromDB(ids, cb) {
-    openLibraryDB(db => {
-      if (!db) { if (cb) cb(); return; }
-      const tx = db.transaction("docs", "readwrite");
-      const store = tx.objectStore("docs");
-      ids.forEach(id => store.delete(id));
-      tx.oncomplete = () => loadAllDocsFromDB(cb);
-    });
-  }
-
-  function renderRecentsList() {
-    const listEl = document.getElementById("cshRecentsList");
-    const q = (document.getElementById("cshSearchInp").value || "").trim().toLowerCase();
-    const filtered = savedDocs.filter(d => !q || (d.title || "").toLowerCase().includes(q));
-    document.getElementById("cshTotalDocsLabel").textContent = `${filtered.length} Docs ›`;
-
-    const delTopBtn = document.getElementById("cshDeleteSelectedDocsBtn");
-    delTopBtn.style.display = selectedDocIds.size > 0 ? "grid" : "none";
-
-    if (!filtered.length) {
-      listEl.innerHTML = `
-        <div style="text-align:center;padding:42px 18px;color:#71717a;">
-          <div style="font-size:38px;margin-bottom:8px;">📄</div>
-          <div style="font-size:14px;font-weight:700;color:#d4d4d8;">No Scanned Documents Yet</div>
-          <div style="font-size:12px;margin-top:4px;">Tap the green camera button below to scan your first document offline.</div>
-        </div>
-      `;
-      return;
-    }
-
-    listEl.innerHTML = "";
-    filtered.forEach(doc => {
-      const thumbSrc = doc.pages && doc.pages[0] ? doc.pages[0].rawDataUrl : "";
-      const pageCnt = doc.pages ? doc.pages.length : 0;
-      const card = document.createElement("div");
-      card.className = "csh-doc-card";
-      card.innerHTML = `
-        <div class="csh-doc-row">
-          <img class="csh-doc-thumb" src="${thumbSrc}" alt="Thumb">
-          <div class="csh-doc-meta">
-            <div class="csh-doc-title">${doc.title}</div>
-            <div class="csh-doc-sub">
-              <span>${formatDisplayTimestamp(doc.updatedAt)}</span>
-              <span>|</span>
-              <span>📄 ${pageCnt}</span>
-            </div>
-          </div>
-          <input type="checkbox" class="csh-doc-chk" ${selectedDocIds.has(doc.docId) ? "checked" : ""}>
-        </div>
-        <div class="csh-doc-actions">
-          <button type="button" class="csh-doc-act-btn" data-act="share">Share</button>
-          <button type="button" class="csh-doc-act-btn" data-act="pdf">To PDF</button>
-          <button type="button" class="csh-doc-act-btn" data-act="view">View</button>
-        </div>
-      `;
-
-      const openDocInEditor = () => {
-        currentDocId = doc.docId;
-        docTitle = doc.title;
-        pages = JSON.parse(JSON.stringify(doc.pages || []));
-        activeIdx = 0;
-        selectedForDelete.clear();
-        multiSelectMode = false;
-        document.getElementById("scsDocNameInp").value = docTitle;
-        updateCounters();
-        csHome.style.display = "none";
-        modal.style.display = "flex";
-        switchToEditor();
-      };
-
-      card.querySelector(".csh-doc-thumb").onclick = openDocInEditor;
-      card.querySelector(".csh-doc-meta").onclick = openDocInEditor;
-      card.querySelector('[data-act="view"]').onclick = openDocInEditor;
-
-      card.querySelector(".csh-doc-chk").onchange = e => {
-        if (e.target.checked) selectedDocIds.add(doc.docId);
-        else selectedDocIds.delete(doc.docId);
-        renderRecentsList();
-      };
-
-      card.querySelector('[data-act="pdf"]').onclick = async () => {
-        const btn = card.querySelector('[data-act="pdf"]');
-        btn.textContent = "⏳...";
-        const blob = await buildPdfBlobForPages(doc.pages);
-        triggerDownload(blob, `${doc.title.replace(/[\\/:*?"<>|]+/g, "_")}.pdf`);
-        btn.textContent = "To PDF";
-      };
-
-      card.querySelector('[data-act="share"]').onclick = async () => {
-        const btn = card.querySelector('[data-act="share"]');
-        btn.textContent = "⏳...";
-        const blob = await buildPdfBlobForPages(doc.pages);
-        await shareFileOrFallback(blob, `${doc.title.replace(/[\\/:*?"<>|]+/g, "_")}.pdf`, doc.title);
-        btn.textContent = "Share";
-      };
-
-      listEl.appendChild(card);
-    });
-  }
-
-  window.openCsHome = function() {
-    csHome.style.display = "flex";
-    loadAllDocsFromDB(renderRecentsList);
-  };
-
-  function startNewScanSession(mode) {
-    currentDocId = "doc_" + Date.now();
-    docTitle = makeCamScannerDefaultName();
-    pages = [];
-    activeIdx = 0;
-    selectedForDelete.clear();
-    multiSelectMode = false;
-    scanMode = mode || "batch";
-    document.querySelectorAll(".scs-mode-pill").forEach(b => b.classList.toggle("active", b.dataset.scanmode === scanMode));
-    document.getElementById("scsDocNameInp").value = docTitle;
-    updateCounters();
-    csHome.style.display = "none";
-    modal.style.display = "flex";
-    switchToCamera();
-  }
-
-  document.getElementById("cshExitToSuiteBtn").onclick = () => { csHome.style.display = "none"; };
-  document.getElementById("cshNavTools").onclick = () => { csHome.style.display = "none"; };
-  document.getElementById("cshActAllTools").onclick = () => { csHome.style.display = "none"; };
-  document.getElementById("cshFloatingCamBtn").onclick = () => startNewScanSession("batch");
-  document.getElementById("cshActSmartScan").onclick = () => startNewScanSession("batch");
-  document.getElementById("cshActIdCard").onclick = () => startNewScanSession("idcard");
-  document.getElementById("cshSearchInp").addEventListener("input", renderRecentsList);
-
-  document.getElementById("cshDeleteSelectedDocsBtn").onclick = () => {
-    if (!selectedDocIds.size) return;
-    if (!confirm(`Delete ${selectedDocIds.size} selected document(s) from device?`)) return;
-    deleteDocsFromDB(Array.from(selectedDocIds), () => {
-      selectedDocIds.clear();
-      renderRecentsList();
-    });
-  };
-
-  document.getElementById("cshActImportImg").onclick = () => {
-    startNewScanSession("batch");
-    setTimeout(() => document.getElementById("scsGalleryInp").click(), 120);
-  };
-  document.getElementById("cshActImportFiles").onclick = () => {
-    startNewScanSession("batch");
-    setTimeout(() => document.getElementById("scsGalleryInp").click(), 120);
-  };
-  document.getElementById("cshActPdfTools").onclick = () => {
-    csHome.style.display = "none";
-    const tabBtn = document.querySelector('#tabs button[data-tab="pdf"]');
-    if (tabBtn) tabBtn.click();
-  };
-  document.getElementById("cshActOcr").onclick = () => {
-    csHome.style.display = "none";
-    const tabBtn = document.querySelector('#tabs button[data-tab="pdf"]');
-    if (tabBtn) tabBtn.click();
-  };
-  document.getElementById("cshActAiDraft").onclick = () => {
-    csHome.style.display = "none";
-    const tabBtn = document.querySelector('#tabs button[data-tab="aidraft"]');
-    if (tabBtn) tabBtn.click();
-  };
-
-  // --- 4. TRUE 4-CORNER QUAD PAGE DETECTOR (Morphological Closing + Flood-Fill + Extreme Corners) ---
-  function detectFourPageCorners(sourceEl, srcW, srcH) {
-    const W = 140;
-    const H = Math.max(100, Math.round((srcH / srcW) * W));
-    const c = document.createElement("canvas");
-    c.width = W;
-    c.height = H;
-    const ctx = c.getContext("2d");
-    ctx.drawImage(sourceEl, 0, 0, W, H);
-    const d = ctx.getImageData(0, 0, W, H).data;
-
-    // 1. Sample central paper color (middle 20% box) & outer frame background color
-    let pR = 0, pG = 0, pB = 0, pCnt = 0;
-    const cx0 = Math.floor(W * 0.40), cx1 = Math.floor(W * 0.60);
-    const cy0 = Math.floor(H * 0.40), cy1 = Math.floor(H * 0.60);
-    for (let y = cy0; y < cy1; y++) {
-      for (let x = cx0; x < cx1; x++) {
-        const i = (y * W + x) * 4;
-        pR += d[i]; pG += d[i + 1]; pB += d[i + 2];
-        pCnt++;
-      }
-    }
-    pR /= pCnt; pG /= pCnt; pB /= pCnt;
-
-    let bgR = 0, bgG = 0, bgB = 0, bgCnt = 0;
-    for (let x = 0; x < W; x += 2) {
-      for (const y of [1, 2, H - 2, H - 3]) {
-        const i = (y * W + x) * 4;
-        bgR += d[i]; bgG += d[i + 1]; bgB += d[i + 2];
-        bgCnt++;
-      }
-    }
-    bgR /= bgCnt; bgG /= bgCnt; bgB /= bgCnt;
-
-    // 2. Build raw binary mask: 1 = belongs to sheet, 0 = outside background
-    const mask = new Uint8Array(W * H);
-    const paperLum = 0.299 * pR + 0.587 * pG + 0.114 * pB;
-    const bgLum = 0.299 * bgR + 0.587 * bgG + 0.114 * bgB;
-    const lumThresh = Math.max(95, (paperLum + bgLum) * 0.52);
-
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        const i = (y * W + x) * 4;
-        const r = d[i], g = d[i + 1], b = d[i + 2];
-        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-        const distPaper = Math.hypot(r - pR, g - pG, b - pB);
-        const distBg = Math.hypot(r - bgR, g - bgG, b - bgB);
-        if ((distPaper < distBg * 0.92 && distPaper < 85) || (lum > lumThresh && distPaper < 95)) {
-          mask[y * W + x] = 1;
-        }
-      }
-    }
-
-    // 3. Morphological Closing (Dilate R=4 then Erode R=4) -> fills all dark text, photos & tables inside the page!
-    const R = 4;
-    const dil = new Uint8Array(W * H);
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        let on = 0;
-        for (let dy = -R; dy <= R && !on; dy++) {
-          const ny = y + dy;
-          if (ny < 0 || ny >= H) continue;
-          for (let dx = -R; dx <= R; dx++) {
-            const nx = x + dx;
-            if (nx >= 0 && nx < W && mask[ny * W + nx]) { on = 1; break; }
-          }
-        }
-        dil[y * W + x] = on;
-      }
-    }
-    const closed = new Uint8Array(W * H);
-    for (let y = 0; y < H; y++) {
-      for (let x = 0; x < W; x++) {
-        let allOn = 1;
-        for (let dy = -R; dy <= R && allOn; dy++) {
-          const ny = y + dy;
-          if (ny < 0 || ny >= H) { allOn = 0; break; }
-          for (let dx = -R; dx <= R; dx++) {
-            const nx = x + dx;
-            if (nx < 0 || nx >= W || !dil[ny * W + nx]) { allOn = 0; break; }
-          }
-        }
-        closed[y * W + x] = allOn;
-      }
-    }
-
-    // 4. Flood-Fill from center pixel to isolate ONLY the main central sheet
-    const startX = Math.floor(W / 2), startY = Math.floor(H / 2);
-    const visited = new Uint8Array(W * H);
-    const queue = [startY * W + startX];
-    visited[startY * W + startX] = 1;
-
-    let minSum = 1e9, maxSum = -1e9, minDiff = 1e9, maxDiff = -1e9;
-    let tl = { x: startX, y: startY }, br = { x: startX, y: startY };
-    let tr = { x: startX, y: startY }, bl = { x: startX, y: startY };
-    let area = 0;
-
-    let head = 0;
-    while (head < queue.length) {
-      const idx = queue[head++];
-      const x = idx % W;
-      const y = (idx - x) / W;
-      area++;
-
-      // Track 4 extreme corners of the polygon:
-      // TL minimizes (x + y), BR maximizes (x + y), TR maximizes (x - y), BL minimizes (x - y)
-      const s = x + y;
-      const df = x - y;
-      if (s < minSum) { minSum = s; tl = { x, y }; }
-      if (s > maxSum) { maxSum = s; br = { x, y }; }
-      if (df > maxDiff) { maxDiff = df; tr = { x, y }; }
-      if (df < minDiff) { minDiff = df; bl = { x, y }; }
-
-      const neighbors = [
-        x > 0 ? idx - 1 : -1,
-        x < W - 1 ? idx + 1 : -1,
-        y > 0 ? idx - W : -1,
-        y < H - 1 ? idx + W : -1
-      ];
-      for (const nIdx of neighbors) {
-        if (nIdx >= 0 && !visited[nIdx] && closed[nIdx]) {
-          visited[nIdx] = 1;
-          queue.push(nIdx);
-        }
-      }
-    }
-
-    const areaRatio = area / (W * H);
-    if (areaRatio < 0.14 || areaRatio > 0.96) {
-      return {
-        tl: { x: 0.08, y: 0.08 },
-        tr: { x: 0.92, y: 0.08 },
-        br: { x: 0.92, y: 0.92 },
-        bl: { x: 0.08, y: 0.92 },
-        confident: false
-      };
-    }
-
-    const clamp = v => Math.min(0.99, Math.max(0.01, v));
-    return {
-      tl: { x: clamp(tl.x / W), y: clamp(tl.y / H) },
-      tr: { x: clamp(tr.x / W), y: clamp(tr.y / H) },
-      br: { x: clamp(br.x / W), y: clamp(br.y / H) },
-      bl: { x: clamp(bl.x / W), y: clamp(bl.y / H) },
-      confident: true
-    };
-  }
-
-  // Maps normalized point (0..1) from camera frame onto object-fit:cover overlay
-  function mapNormPointToOverlay(pt, vidW, vidH, ovW, ovH) {
-    const vidRatio = vidW / vidH;
-    const ovRatio = ovW / ovH;
-    let renderW, renderH, offsetX, offsetY;
-    if (vidRatio > ovRatio) {
-      renderH = ovH; renderW = ovH * vidRatio;
-      offsetX = (ovW - renderW) / 2; offsetY = 0;
-    } else {
-      renderW = ovW; renderH = ovW / vidRatio;
-      offsetX = 0; offsetY = (ovH - renderH) / 2;
-    }
-    return {
-      x: Math.min(ovW - 6, Math.max(6, offsetX + pt.x * renderW)),
-      y: Math.min(ovH - 6, Math.max(6, offsetY + pt.y * renderH))
-    };
-  }
-
-  // --- PERSPECTIVE / BILINEAR QUAD-TO-RECTANGLE UNWARPING ---
-  // Straightens tilted 4-corner documents into a flat upright rectangle!
-  function warpQuadToRectangleDataUrl(fullDataUrl, quad, cb) {
-    const img = new Image();
-    img.onload = () => {
-      const W = img.width, H = img.height;
-      const pTL = { x: quad.tl.x * W, y: quad.tl.y * H };
-      const pTR = { x: quad.tr.x * W, y: quad.tr.y * H };
-      const pBR = { x: quad.br.x * W, y: quad.br.y * H };
-      const pBL = { x: quad.bl.x * W, y: quad.bl.y * H };
-
-      const topW = Math.hypot(pTR.x - pTL.x, pTR.y - pTL.y);
-      const botW = Math.hypot(pBR.x - pBL.x, pBR.y - pBL.y);
-      const leftH = Math.hypot(pBL.x - pTL.x, pBL.y - pTL.y);
-      const rightH = Math.hypot(pBR.x - pTR.x, pBR.y - pTR.y);
-
-      const outW = Math.max(120, Math.round((topW + botW) / 2));
-      const outH = Math.max(120, Math.round((leftH + rightH) / 2));
-
-      const srcC = document.createElement("canvas");
-      srcC.width = W; srcC.height = H;
-      const srcCtx = srcC.getContext("2d");
-      srcCtx.drawImage(img, 0, 0);
-      const srcData = srcCtx.getImageData(0, 0, W, H).data;
-
-      const dstC = document.createElement("canvas");
-      dstC.width = outW; dstC.height = outH;
-      const dstCtx = dstC.getContext("2d");
-      const dstImg = dstCtx.createImageData(outW, outH);
-      const dstData = dstImg.data;
-
-      for (let y = 0; y < outH; y++) {
-        const v = y / (outH - 1 || 1);
-        const lx = pTL.x + (pBL.x - pTL.x) * v;
-        const ly = pTL.y + (pBL.y - pTL.y) * v;
-        const rx = pTR.x + (pBR.x - pTR.x) * v;
-        const ry = pTR.y + (pBR.y - pTR.y) * v;
-
-        for (let x = 0; x < outW; x++) {
-          const u = x / (outW - 1 || 1);
-          const sx = Math.min(W - 1, Math.max(0, Math.round(lx + (rx - lx) * u)));
-          const sy = Math.min(H - 1, Math.max(0, Math.round(ly + (ry - ly) * u)));
-          const sIdx = (sy * W + sx) * 4;
-          const dIdx = (y * outW + x) * 4;
-          dstData[dIdx] = srcData[sIdx];
-          dstData[dIdx + 1] = srcData[sIdx + 1];
-          dstData[dIdx + 2] = srcData[sIdx + 2];
-          dstData[dIdx + 3] = 255;
-        }
-      }
-      dstCtx.putImageData(dstImg, 0, 0);
-      cb(dstC.toDataURL("image/jpeg", 0.94));
-    };
-    img.src = fullDataUrl;
-  }
-
-  function startLiveEdgeDetector() {
-    stopLiveEdgeDetector();
-    detectTimer = setInterval(() => {
-      const vid = document.getElementById("scsVideo");
-      const ov = document.getElementById("scsOverlayCanvas");
-      const pill = document.getElementById("scsDetectStatus");
-      if (!vid || !ov || !vid.videoWidth || document.getElementById("scsCameraView").style.display === "none") return;
-
-      const rect = ov.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      ov.width = rect.width;
-      ov.height = rect.height;
-      const ctx = ov.getContext("2d");
-      ctx.clearRect(0, 0, ov.width, ov.height);
-
-      if (!autoEdgeOn) {
-        pill.textContent = "📷 Full Frame Mode";
-        return;
-      }
-
-      const q = detectFourPageCorners(vid, vid.videoWidth, vid.videoHeight);
-      const lerp = (a, b) => a * 0.45 + b * 0.55;
-      lastQuadNorm.tl = { x: lerp(lastQuadNorm.tl.x, q.tl.x), y: lerp(lastQuadNorm.tl.y, q.tl.y) };
-      lastQuadNorm.tr = { x: lerp(lastQuadNorm.tr.x, q.tr.x), y: lerp(lastQuadNorm.tr.y, q.tr.y) };
-      lastQuadNorm.br = { x: lerp(lastQuadNorm.br.x, q.br.x), y: lerp(lastQuadNorm.br.y, q.br.y) };
-      lastQuadNorm.bl = { x: lerp(lastQuadNorm.bl.x, q.bl.x), y: lerp(lastQuadNorm.bl.y, q.bl.y) };
-      lastQuadNorm.confident = q.confident;
-
-      const p1 = mapNormPointToOverlay(lastQuadNorm.tl, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
-      const p2 = mapNormPointToOverlay(lastQuadNorm.tr, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
-      const p3 = mapNormPointToOverlay(lastQuadNorm.br, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
-      const p4 = mapNormPointToOverlay(lastQuadNorm.bl, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
-
-      // Draw translucent teal quad fill + crisp 4-corner border
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.lineTo(p3.x, p3.y);
-      ctx.lineTo(p4.x, p4.y);
-      ctx.closePath();
-
-      ctx.fillStyle = q.confident ? "rgba(20, 184, 166, 0.16)" : "rgba(56, 189, 248, 0.10)";
-      ctx.fill();
-      ctx.strokeStyle = q.confident ? "#14b8a6" : "#38bdf8";
-      ctx.lineWidth = 3;
-      ctx.stroke();
-
-      // Draw 4 corner circles so user clearly sees all 4 detected corners
-      [p1, p2, p3, p4].forEach(pt => {
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 7, 0, Math.PI * 2);
-        ctx.fillStyle = q.confident ? "#14b8a6" : "#38bdf8";
-        ctx.fill();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "#ffffff";
-        ctx.stroke();
-      });
-
-      pill.textContent = q.confident ? "✅ All 4 Corners Locked!" : "🔍 Show All 4 Corners of Page";
-    }, 260);
-  }
-
-  function stopLiveEdgeDetector() {
-    if (detectTimer) { clearInterval(detectTimer); detectTimer = null; }
-  }
-
-  document.getElementById("scsDocNameInp").addEventListener("input", function() {
-    docTitle = this.value;
-    persistCurrentDocToDB();
-  });
-
-  async function startCamera() {
-    stopCamera();
-    const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
-    const vid = document.getElementById("scsVideo");
-    const constraintList = [
-      { video: { facingMode: { ideal: "environment" }, width: { ideal: targetW }, height: { ideal: Math.round(targetW * 0.75) } }, audio: false },
-      { video: { facingMode: "environment" }, audio: false },
-      { video: true, audio: false }
-    ];
-    for (const c of constraintList) {
+    function playShutterClickSound() {
       try {
-        mediaStream = await navigator.mediaDevices.getUserMedia(c);
-        vid.srcObject = mediaStream;
-        await vid.play();
-        flashOn = false;
-        updateFlashBtn();
-        startLiveEdgeDetector();
-        return;
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(950, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.065);
+        gain.gain.setValueAtTime(0.32, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.075);
       } catch (e) {}
     }
-    document.getElementById("scsDetectStatus").textContent = "📷 Tap Shutter or Gallery to Capture";
-  }
 
-  function stopCamera() {
-    stopLiveEdgeDetector();
-    if (mediaStream) {
-      mediaStream.getTracks().forEach(t => t.stop());
-      mediaStream = null;
+    function makeCamScannerDefaultName() {
+      const now = new Date();
+      const pad = n => String(n).padStart(2, "0");
+      return "SVC Scanner " + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + "-" + now.getFullYear() + " " + pad(now.getHours()) + "." + pad(now.getMinutes());
     }
-  }
 
-  function updateFlashBtn() {
-    const btn = document.getElementById("scsFlashBtn");
-    btn.textContent = flashOn ? "⚡ Flash: ON" : "⚡ Flash";
-    btn.classList.toggle("active", flashOn);
-  }
-
-  document.getElementById("scsFlashBtn").onclick = async () => {
-    if (!mediaStream) return;
-    const track = mediaStream.getVideoTracks()[0];
-    const caps = track.getCapabilities ? track.getCapabilities() : {};
-    if (!caps.torch) { alert("Torch/Flash is not supported on this browser camera."); return; }
-    flashOn = !flashOn;
-    try {
-      await track.applyConstraints({ advanced: [{ torch: flashOn }] });
-      updateFlashBtn();
-    } catch (e) { flashOn = false; updateFlashBtn(); }
-  };
-
-  document.getElementById("scsAutoEdgeBtn").onclick = function() {
-    autoEdgeOn = !autoEdgeOn;
-    this.textContent = autoEdgeOn ? "🔲 4-Corner" : "⬜ Full Frame";
-    this.classList.toggle("active", autoEdgeOn);
-  };
-
-  document.getElementById("scsResSelect").onchange = () => {
-    if (document.getElementById("scsCameraView").style.display !== "none") startCamera();
-  };
-
-  document.querySelectorAll(".scs-mode-pill").forEach(btn => {
-    btn.onclick = () => {
-      scanMode = btn.dataset.scanmode;
-      document.querySelectorAll(".scs-mode-pill").forEach(b => b.classList.toggle("active", b === btn));
-    };
-  });
-
-  function showCaptureFeedback(pageNum) {
-    playShutterClickSound();
-    if (navigator.vibrate) navigator.vibrate(50);
-    const fl = document.getElementById("scsFlashEffect");
-    fl.style.opacity = "0.9";
-    setTimeout(() => { fl.style.opacity = "0"; }, 140);
-    const toast = document.getElementById("scsCaptureToast");
-    toast.textContent = `✅ Page ${pageNum} Captured!`;
-    toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 1300);
-  }
-
-  function processCapturedFullDataUrl(fullDataUrl, goEditorAfter) {
-    const img = new Image();
-    img.onload = () => {
-      const quad = autoEdgeOn ? detectFourPageCorners(img, img.width, img.height) : {
-        tl: { x: 0, y: 0 }, tr: { x: 1, y: 0 }, br: { x: 1, y: 1 }, bl: { x: 0, y: 1 }
-      };
-      warpQuadToRectangleDataUrl(fullDataUrl, quad, straightenedUrl => {
-        pages.push({
-          id: Date.now() + Math.random(),
-          fullDataUrl,
-          rawDataUrl: straightenedUrl,
-          quad: JSON.parse(JSON.stringify(quad)),
-          filter: "magic",
-          grayscale: false,
-          rotation: 0,
-          brightness: 0,
-          contrast: 0
-        });
-        activeIdx = pages.length - 1;
-        updateCounters();
-        persistCurrentDocToDB();
-        showCaptureFeedback(pages.length);
-
-        const shouldOpenEditor = goEditorAfter || scanMode === "single" || (scanMode === "idcard" && pages.length >= 2);
-        if (shouldOpenEditor) setTimeout(switchToEditor, 220);
-      });
-    };
-    img.src = fullDataUrl;
-  }
-
-  document.getElementById("scsCaptureBtn").addEventListener("click", function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const vid = document.getElementById("scsVideo");
-    const vw = vid ? (vid.videoWidth || vid.clientWidth) : 0;
-    const vh = vid ? (vid.videoHeight || vid.clientHeight) : 0;
-    if (!vid || !mediaStream || vid.readyState < 2 || !vw || !vh) {
-      document.getElementById("scsNativeCamFallback").click();
-      return;
+    function formatDisplayTimestamp(ts) {
+      const d = new Date(ts || Date.now());
+      const pad = n => String(n).padStart(2, "0");
+      return pad(d.getMonth() + 1) + "/" + pad(d.getDate()) + "/" + d.getFullYear() + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
     }
-    const c = document.createElement("canvas");
-    c.width = vid.videoWidth;
-    c.height = vid.videoHeight;
-    c.getContext("2d").drawImage(vid, 0, 0, c.width, c.height);
-    processCapturedFullDataUrl(c.toDataURL("image/jpeg", 0.94), false);
-  });
 
-  document.getElementById("scsNativeCamFallback").onchange = e => {
-    const file = e.target.files && e.target.files[0];
-    if (!file) return;
-    const r = new FileReader();
-    r.onload = ev => processCapturedFullDataUrl(ev.target.result, true);
-    r.readAsDataURL(file);
-    e.target.value = "";
-  };
+    function getSafeFileName() {
+      const inp = document.getElementById("scsDocNameInp");
+      const raw = (inp ? inp.value : "").trim() || makeCamScannerDefaultName();
+      return raw.replace(/[\\/:*?"<>|]+/g, "_");
+    }
 
-  document.getElementById("scsGalleryInp").onchange = e => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-    let done = 0;
-    files.forEach(f => {
-      const r = new FileReader();
-      r.onload = ev => processCapturedFullDataUrl(ev.target.result, (++done === files.length));
-      r.readAsDataURL(f);
-    });
-    e.target.value = "";
-  };
+    function mountMobileScannerUI() {
+      if (document.getElementById("svcMobScanFab")) return;
+      const dashGrid = document.getElementById("svcHomeDashboard");
+      if (dashGrid && dashGrid.parentNode && !document.getElementById("svcMobScanCard")) {
+        const scanBanner = document.createElement("div");
+        scanBanner.id = "svcMobScanCard";
+        scanBanner.innerHTML = '<div><div style="font-size:11px;font-weight:800;color:#5eead4;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · CamScanner Studio</div><div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div><div style="font-size:12px;color:#cbd5e1;margin-top:3px;">4-Corner Auto Detect, SVC Documents Folder & PDF</div></div><div style="background:#14b8a6;color:#042f2e;padding:9px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Open ↗</div>';
+        scanBanner.onclick = () => openCsHome(true);
+        dashGrid.parentNode.insertBefore(scanBanner, dashGrid);
+      }
 
-  function updateCounters() {
-    document.getElementById("scsBadgeCount").textContent = pages.length;
-    document.getElementById("scsTopCount").textContent = pages.length;
-    const thumbBox = document.getElementById("scsReviewThumbBtn");
-    if (pages.length > 0) {
-      thumbBox.innerHTML = `<img src="${pages[pages.length - 1].rawDataUrl}"><span class="scs-batch-count">${pages.length}</span>`;
+      const fab = document.createElement("button");
+      fab.id = "svcMobScanFab";
+      fab.type = "button";
+      fab.innerHTML = "📷";
+      fab.title = "Open SVC Document Scanner";
+      fab.onclick = () => openCsHome(true);
+      document.body.appendChild(fab);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", mountMobileScannerUI);
     } else {
-      thumbBox.innerHTML = `<span style="font-size:18px;">📄</span><span class="scs-batch-count">0</span>`;
+      mountMobileScannerUI();
     }
-  }
 
-  // --- INDEPENDENT 4-CORNER DRAGGABLE CROP & STRAIGHTEN TOOL ---
-  let tempQuad = { tl: { x: 0.08, y: 0.08 }, tr: { x: 0.92, y: 0.08 }, br: { x: 0.92, y: 0.92 }, bl: { x: 0.08, y: 0.92 } };
-  let draggingCornerKey = null;
+    // --- 1. CAMSCANNER EXACT HOME SCREEN MODAL ---
+    const csHome = document.createElement("div");
+    csHome.id = "svcCsHomeModal";
+    csHome.innerHTML = `
+      <div class="csh-top-search">
+        <button type="button" class="csh-top-icon" id="cshExitToSuiteBtn" title="Back to SVC Tools" style="color:#f4f4f5;font-size:14px;">←</button>
+        <div class="csh-search-wrap">
+          <span>🔍</span>
+          <input type="text" id="cshSearchInp" placeholder="Search">
+        </div>
+        <button type="button" class="csh-top-icon" id="cshDeleteSelectedDocsBtn" title="Delete Selected" style="color:#f87171;display:none;">🗑️</button>
+        <button type="button" class="csh-top-icon" id="cshFolderSetupBtn" title="Connect SVC Documents Folder" style="color:#38bdf8;">📁</button>
+        <div class="csh-top-icon" style="color:#f59e0b;" title="100% Offline Pro">👑</div>
+      </div>
 
-  document.getElementById("scsOpenCropBtn").onclick = () => {
-    const cur = pages[activeIdx];
-    if (!cur) return;
-    tempQuad = JSON.parse(JSON.stringify(cur.quad || {
-      tl: { x: 0.06, y: 0.06 }, tr: { x: 0.94, y: 0.06 }, br: { x: 0.94, y: 0.94 }, bl: { x: 0.06, y: 0.94 }
-    }));
-    document.getElementById("scsEditorView").style.display = "none";
-    document.getElementById("scsCropView").style.display = "flex";
-    drawCropWorkspace();
-  };
-  document.getElementById("scsCropCancelBtn").onclick = () => {
-    document.getElementById("scsCropView").style.display = "none";
-    document.getElementById("scsEditorView").style.display = "flex";
-  };
-  document.getElementById("scsCropApplyBtn").onclick = () => {
-    const cur = pages[activeIdx];
-    if (!cur) return;
-    cur.quad = JSON.parse(JSON.stringify(tempQuad));
-    warpQuadToRectangleDataUrl(cur.fullDataUrl || cur.rawDataUrl, cur.quad, newUrl => {
-      cur.rawDataUrl = newUrl;
-      persistCurrentDocToDB();
-      document.getElementById("scsCropView").style.display = "none";
-      document.getElementById("scsEditorView").style.display = "flex";
-      refreshEditorUI();
+      <div class="csh-folder-bar">
+        <span id="cshFolderStatusTxt">📁 Storage: Tap 📁 to link "SVC Documents" folder</span>
+        <button type="button" id="cshSyncNowBtn" style="background:#27272a;color:#5eead4;border:1px solid #3f3f46;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;">↻ Sync</button>
+      </div>
+
+      <div class="csh-quick-grid">
+        <div class="csh-q-item" id="cshActSmartScan">
+          <div class="csh-q-circle" style="color:#2dd4bf;">⛶</div>
+          <span class="csh-q-label">Smart Scan</span>
+        </div>
+        <div class="csh-q-item" id="cshActPdfTools">
+          <div class="csh-q-circle" style="color:#f87171;">📕</div>
+          <span class="csh-q-label">PDF Tools</span>
+        </div>
+        <div class="csh-q-item" id="cshActImportImg">
+          <div class="csh-q-circle" style="color:#60a5fa;">🖼️</div>
+          <span class="csh-q-label">Import Images</span>
+        </div>
+        <div class="csh-q-item" id="cshActImportFiles">
+          <div class="csh-q-circle" style="color:#38bdf8;">📂</div>
+          <span class="csh-q-label">Import Files</span>
+        </div>
+        <div class="csh-q-item" id="cshActIdCard">
+          <div class="csh-q-circle" style="color:#34d399;">🪪</div>
+          <span class="csh-q-label">ID Cards</span>
+        </div>
+        <div class="csh-q-item" id="cshActOcr">
+          <div class="csh-q-circle" style="color:#2dd4bf;">🅃</div>
+          <span class="csh-q-label">Extract Text</span>
+        </div>
+        <div class="csh-q-item" id="cshActAiDraft">
+          <div class="csh-q-circle" style="color:#34d399;">✨</div>
+          <span class="csh-q-label">Solver AI</span>
+        </div>
+        <div class="csh-q-item" id="cshActAllTools">
+          <div class="csh-q-circle" style="color:#2dd4bf;">❖</div>
+          <span class="csh-q-label">All</span>
+        </div>
+      </div>
+
+      <div class="csh-recents-head">
+        <h3>Recents</h3>
+        <span id="cshTotalDocsLabel" style="font-size:12.5px;color:#a1a1aa;font-weight:600;">View All ›</span>
+      </div>
+
+      <div class="csh-recents-list" id="cshRecentsList"></div>
+
+      <button type="button" class="csh-cam-fab" id="cshFloatingCamBtn" title="Scan New Document">📷</button>
+
+      <div class="csh-bottom-nav">
+        <button type="button" class="csh-nav-btn active" id="cshNavHome">
+          <span style="font-size:18px;">🏠</span>
+          <span>Home</span>
+        </button>
+        <button type="button" class="csh-nav-btn" id="cshNavFiles">
+          <span style="font-size:18px;">📄</span>
+          <span>Files</span>
+        </button>
+        <button type="button" class="csh-nav-btn" id="cshNavTools">
+          <span style="font-size:18px;">⊞</span>
+          <span>Tools</span>
+        </button>
+        <button type="button" class="csh-nav-btn" id="cshNavMe">
+          <span style="font-size:18px;">👤</span>
+          <span>Me</span>
+        </button>
+      </div>
+    `;
+    document.body.appendChild(csHome);
+
+    // --- 2. FULLSCREEN CAMERA & EDITOR MODAL ---
+    const modal = document.createElement("div");
+    modal.id = "svcScannerModal";
+    modal.innerHTML = `
+      <div class="scs-topbar">
+        <button type="button" class="scs-btn-icon" id="scsCloseBtn">← Home</button>
+        <div style="display:flex;align-items:center;gap:5px;">
+          <button type="button" class="scs-btn-icon" id="scsFlashBtn">⚡ Flash</button>
+          <button type="button" class="scs-btn-icon active" id="scsAutoEdgeBtn">🔲 4-Corner</button>
+          <select id="scsResSelect" class="scs-select" title="HD Resolution">
+            <option value="1280">SD</option>
+            <option value="1920" selected>HD</option>
+            <option value="3840">4K</option>
+          </select>
+        </div>
+        <button type="button" class="scs-btn-icon" id="scsSwitchViewBtn" style="background:#14b8a6;color:#042f2e;border-color:#14b8a6;">Pages (<span id="scsTopCount">0</span>)</button>
+      </div>
+
+      <div id="scsCameraView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+        <div class="scs-view-area">
+          <video id="scsVideo" autoplay playsinline muted></video>
+          <canvas id="scsOverlayCanvas"></canvas>
+          <div id="scsFlashEffect"></div>
+          <div id="scsCaptureToast">✅ Page Captured!</div>
+          <div class="scs-detect-pill" id="scsDetectStatus">🔍 Detecting 4 Page Corners...</div>
+        </div>
+        <div class="scs-cam-controls">
+          <div class="scs-mode-switch">
+            <button type="button" class="scs-mode-pill" data-scanmode="single">Single Page</button>
+            <button type="button" class="scs-mode-pill active" data-scanmode="batch">Batch Mode</button>
+            <button type="button" class="scs-mode-pill" data-scanmode="idcard">ID Card (2-Side)</button>
+          </div>
+          <div class="scs-shutter-row">
+            <label class="scs-btn-icon" style="cursor:pointer;">
+              🖼️ Gallery
+              <input type="file" id="scsGalleryInp" accept="image/*" multiple style="display:none;">
+            </label>
+            <button type="button" class="scs-shutter-btn" id="scsCaptureBtn" title="Capture Page"></button>
+            <input type="file" id="scsNativeCamFallback" accept="image/*" capture="environment" style="display:none;">
+            <div class="scs-batch-badge" id="scsReviewThumbBtn" title="Review Scanned Pages">
+              <span style="font-size:18px;">📄</span>
+              <span class="scs-batch-count" id="scsBadgeCount">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="scsCropView">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#1e293b;font-size:12.5px;">
+          <button type="button" class="scs-btn-icon" id="scsCropCancelBtn">← Back</button>
+          <span style="font-weight:700;color:#5eead4;">Drag 4 Corners of Page</span>
+          <button type="button" class="scs-btn-icon" id="scsCropApplyBtn" style="background:#14b8a6;color:#042f2e;border-color:#14b8a6;">✓ Straighten</button>
+        </div>
+        <div class="scs-canvas-wrap">
+          <canvas id="scsCropCanvas"></canvas>
+        </div>
+      </div>
+
+      <div id="scsEditorView">
+        <div class="scs-rename-bar">
+          <span style="font-size:14px;">✏️</span>
+          <input type="text" id="scsDocNameInp" placeholder="Document name...">
+          <select id="scsPdfQualitySel" class="scs-select" title="PDF Size & Quality">
+            <option value="0.62">Low KB</option>
+            <option value="0.82" selected>Balanced</option>
+            <option value="0.95">HD PDF</option>
+          </select>
+          <button type="button" class="scs-btn-icon" id="scsSaveDocHomeBtn" style="background:#14b8a6;color:#042f2e;border-color:#14b8a6;">✓ Done</button>
+        </div>
+        <div class="scs-tool-strip">
+          <button type="button" class="scs-btn-icon" id="scsAddMoreCamBtn">+ Scan</button>
+          <button type="button" class="scs-btn-icon" id="scsFullViewBtn">🔍 Full</button>
+          <button type="button" class="scs-btn-icon" id="scsOpenCropBtn">✂️ Crop</button>
+          <button type="button" class="scs-btn-icon" id="scsRotLeftBtn">↺ Left</button>
+          <button type="button" class="scs-btn-icon" id="scsRotRightBtn">↻ Right</button>
+          <button type="button" class="scs-btn-icon" id="scsSelectModeBtn">☑️ Select</button>
+          <button type="button" class="scs-btn-icon" id="scsDelPageBtn" style="color:#fca5a5;">🗑️</button>
+        </div>
+        <div class="scs-canvas-wrap">
+          <canvas id="scsPreviewCanvas" title="Tap for Full Screen View"></canvas>
+        </div>
+        <div class="scs-adjust-bar">
+          <label>☀️ <input type="range" id="scsBrightRange" min="-50" max="60" value="0"></label>
+          <label>◐ <input type="range" id="scsContrastRange" min="-40" max="70" value="0"></label>
+          <button type="button" class="scs-btn-icon" id="scsResetAdjBtn" style="padding:3px 7px;font-size:10.5px;">Reset</button>
+        </div>
+        <div class="scs-page-strip" id="scsPageStrip"></div>
+        <div class="scs-filter-bar" id="scsFilterBar">
+          <button type="button" class="scs-filter-chip" data-filter="original">Original</button>
+          <button type="button" class="scs-filter-chip" data-filter="lighten">Lighten</button>
+          <button type="button" class="scs-filter-chip active" data-filter="magic">Magic Color</button>
+          <button type="button" class="scs-filter-chip" data-filter="magicpro">Magic Pro</button>
+          <button type="button" class="scs-filter-chip" data-filter="noshadow">No Shadow</button>
+          <button type="button" class="scs-filter-chip" data-filter="nohandwriting">No Handwriting</button>
+          <button type="button" class="scs-filter-chip" data-filter="bw">B&amp;W</button>
+          <button type="button" class="scs-filter-chip" data-filter="eco">Eco</button>
+          <button type="button" class="scs-filter-chip" id="scsGrayToggle">Grayscale: OFF</button>
+        </div>
+        <div class="scs-action-grid">
+          <button type="button" class="scs-act-btn" id="scsSaveImgBtn" style="background:#1e293b;color:#ffffff;border:1px solid #475569;">💾 Save Image</button>
+          <button type="button" class="scs-act-btn" id="scsShareImgBtn" style="background:#0284c7;color:#ffffff;">📤 Share Image</button>
+          <button type="button" class="scs-act-btn" id="scsSavePdfBtn" style="background:#16a34a;color:#ffffff;">📥 Save Full PDF</button>
+          <button type="button" class="scs-act-btn" id="scsSharePdfBtn" style="background:#f59e0b;color:#0f172a;">📑 Share Full PDF</button>
+        </div>
+      </div>
+
+      <div id="scsFullViewModal">
+        <div class="scs-fv-top">
+          <button type="button" class="scs-btn-icon" id="scsFvCloseBtn">← Back</button>
+          <span id="scsFvTitle" style="font-size:13px;font-weight:700;">Page 1</span>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="scs-btn-icon" id="scsFvPrevBtn">◀</button>
+            <button type="button" class="scs-btn-icon" id="scsFvZoomBtn">🔍 2x</button>
+            <button type="button" class="scs-btn-icon" id="scsFvNextBtn">▶</button>
+          </div>
+        </div>
+        <div class="scs-fv-body">
+          <img id="scsFullViewImg" alt="Full Page Preview">
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    // --- 3. STATE, INDEXEDDB & REAL DEVICE "SVC Documents" FOLDER SYNC ---
+    const DB_NAME = "svc_camscanner_library_v2";
+    let savedDocs = []; // { docId, title, updatedAt, pages, savedFiles: [] }
+    let selectedDocIds = new Set();
+    let currentDocId = null;
+    let currentSavedFiles = [];
+    let pages = [];
+    let docTitle = makeCamScannerDefaultName();
+    let activeIdx = 0;
+    let scanMode = "batch";
+    let flashOn = false;
+    let autoEdgeOn = true;
+    let mediaStream = null;
+    let detectTimer = null;
+    let lastQuadNorm = {
+      tl: { x: 0.10, y: 0.08 },
+      tr: { x: 0.90, y: 0.08 },
+      br: { x: 0.90, y: 0.92 },
+      bl: { x: 0.10, y: 0.92 },
+      confident: false
+    };
+    let fvZoomed = false;
+    let selectedForDelete = new Set();
+    let multiSelectMode = false;
+    let isHandlingPopState = false;
+    let svcDirHandle = null;
+
+    function pushNavState(stage) {
+      if (isHandlingPopState) return;
+      try {
+        if (history.state && history.state.svcStage === stage) return;
+        history.pushState({ svcStage: stage }, "");
+      } catch (e) {}
+    }
+
+    window.addEventListener("popstate", function() {
+      isHandlingPopState = true;
+      try {
+        if (document.getElementById("scsFullViewModal").style.display === "flex") {
+          document.getElementById("scsFullViewModal").style.display = "none";
+          refreshEditorUI();
+        } else if (document.getElementById("scsCropView").style.display === "flex") {
+          document.getElementById("scsCropView").style.display = "none";
+          document.getElementById("scsEditorView").style.display = "flex";
+        } else if (modal.style.display === "flex") {
+          stopCamera();
+          if (pages.length > 0) {
+            persistCurrentDocToDB(() => {
+              modal.style.display = "none";
+              openCsHome(false);
+            });
+          } else {
+            if (currentDocId) deleteDocsFromDB([currentDocId]);
+            currentDocId = null;
+            modal.style.display = "none";
+            openCsHome(false);
+          }
+        } else if (csHome.style.display === "flex") {
+          csHome.style.display = "none";
+        }
+      } finally {
+        setTimeout(() => { isHandlingPopState = false; }, 60);
+      }
     });
-  };
 
-  function drawCropWorkspace() {
-    const cur = pages[activeIdx];
-    if (!cur) return;
-    const canvas = document.getElementById("scsCropCanvas");
-    const img = new Image();
-    img.onload = () => {
-      const maxW = Math.min(window.innerWidth - 28, 520);
-      const scale = maxW / img.width;
-      canvas.width = Math.round(img.width * scale);
-      canvas.height = Math.round(img.height * scale);
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    function openLibraryDB(cb) {
+      try {
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = e => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains("docs")) db.createObjectStore("docs", { keyPath: "docId" });
+          if (!db.objectStoreNames.contains("settings")) db.createObjectStore("settings", { keyPath: "key" });
+        };
+        req.onsuccess = e => cb(e.target.result);
+        req.onerror = () => cb(null);
+      } catch (e) { cb(null); }
+    }
 
-      const p1 = { x: tempQuad.tl.x * canvas.width, y: tempQuad.tl.y * canvas.height };
-      const p2 = { x: tempQuad.tr.x * canvas.width, y: tempQuad.tr.y * canvas.height };
-      const p3 = { x: tempQuad.br.x * canvas.width, y: tempQuad.br.y * canvas.height };
-      const p4 = { x: tempQuad.bl.x * canvas.width, y: tempQuad.bl.y * canvas.height };
+    // Store & Retrieve Real Device "SVC Documents" Directory Handle
+    function saveDirHandleToDB(handle, cb) {
+      openLibraryDB(db => {
+        if (!db) { if (cb) cb(); return; }
+        const tx = db.transaction("settings", "readwrite");
+        tx.objectStore("settings").put({ key: "svc_docs_dir", handle });
+        tx.oncomplete = () => { if (cb) cb(); };
+      });
+    }
 
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.lineTo(p3.x, p3.y);
-      ctx.lineTo(p4.x, p4.y);
-      ctx.closePath();
-      ctx.fillStyle = "rgba(20, 184, 166, 0.18)";
-      ctx.fill();
-      ctx.strokeStyle = "#14b8a6";
-      ctx.lineWidth = 3;
-      ctx.stroke();
+    function loadDirHandleFromDB(cb) {
+      openLibraryDB(db => {
+        if (!db) { if (cb) cb(null); return; }
+        const tx = db.transaction("settings", "readonly");
+        const req = tx.objectStore("settings").get("svc_docs_dir");
+        req.onsuccess = () => cb(req.result ? req.result.handle : null);
+        req.onerror = () => cb(null);
+      });
+    }
 
-      [p1, p2, p3, p4].forEach(pt => {
-        ctx.beginPath();
-        ctx.arc(pt.x, pt.y, 14, 0, Math.PI * 2);
-        ctx.fillStyle = "#14b8a6";
-        ctx.fill();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = "#ffffff";
-        ctx.stroke();
+    async function ensureSvcDocumentsFolder(promptIfMissing) {
+      if (!window.showDirectoryPicker) return null;
+      if (!svcDirHandle) {
+        await new Promise(res => loadDirHandleFromDB(h => { svcDirHandle = h; res(); }));
+      }
+      if (svcDirHandle) {
+        try {
+          let perm = await svcDirHandle.queryPermission({ mode: "readwrite" });
+          if (perm !== "granted" && promptIfMissing) {
+            perm = await svcDirHandle.requestPermission({ mode: "readwrite" });
+          }
+          if (perm === "granted") {
+            updateFolderStatusBadge("📁 Linked: " + svcDirHandle.name + " (Auto-Sync Active)");
+            return svcDirHandle;
+          }
+        } catch (e) {
+          svcDirHandle = null;
+        }
+      }
+      if (!promptIfMissing) return null;
+
+      try {
+        alert("Select or create a folder named 'SVC Documents' on your phone storage. All scanned PDFs and Images will save directly inside it.");
+        const picked = await window.showDirectoryPicker({ mode: "readwrite" });
+        let targetDir = picked;
+        if (!/svc\s*documents/i.test(picked.name)) {
+          targetDir = await picked.getDirectoryHandle("SVC Documents", { create: true });
+        }
+        svcDirHandle = targetDir;
+        saveDirHandleToDB(targetDir);
+        updateFolderStatusBadge("📁 Linked: " + targetDir.name + " (Auto-Sync Active)");
+        return targetDir;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function updateFolderStatusBadge(txt) {
+      const el = document.getElementById("cshFolderStatusTxt");
+      if (el) el.textContent = txt;
+    }
+
+    // Two-Way Sync: If user deleted file from device's "SVC Documents" folder, remove it from App Recents!
+    async function syncDeletedFilesFromFolder(cb) {
+      const dir = await ensureSvcDocumentsFolder(false);
+      if (!dir) {
+        updateFolderStatusBadge("📁 Tap 📁 to connect 'SVC Documents' folder");
+        if (cb) cb();
+        return;
+      }
+      updateFolderStatusBadge("📁 Folder: " + dir.name + " · Synced");
+      const toRemoveDocIds = [];
+      for (const doc of savedDocs) {
+        if (Array.isArray(doc.savedFiles) && doc.savedFiles.length > 0) {
+          let anyExists = false;
+          for (const fname of doc.savedFiles) {
+            try {
+              await dir.getFileHandle(fname);
+              anyExists = true;
+              break;
+            } catch (err) {
+              // File was deleted from phone storage!
+            }
+          }
+          if (!anyExists) {
+            toRemoveDocIds.push(doc.docId);
+          }
+        }
+      }
+      if (toRemoveDocIds.length > 0) {
+        deleteDocsFromDB(toRemoveDocIds, cb);
+      } else if (cb) {
+        cb();
+      }
+    }
+
+    async function saveBlobToSvcDocumentsFolder(blob, filename) {
+      const dir = await ensureSvcDocumentsFolder(true);
+      if (dir) {
+        try {
+          const fh = await dir.getFileHandle(filename, { create: true });
+          const writable = await fh.createWritable();
+          await writable.write(blob);
+          await writable.close();
+          if (!currentSavedFiles.includes(filename)) currentSavedFiles.push(filename);
+          persistCurrentDocToDB();
+          alert("✅ Saved directly to '" + dir.name + "/" + filename + "'");
+          return true;
+        } catch (err) {}
+      }
+      // Fallback if browser blocks folder picker
+      triggerDownload(blob, filename);
+      return false;
+    }
+
+    document.getElementById("cshFolderSetupBtn").onclick = async () => {
+      const d = await ensureSvcDocumentsFolder(true);
+      if (d) syncDeletedFilesFromFolder(renderRecentsList);
+    };
+    document.getElementById("cshSyncNowBtn").onclick = () => {
+      loadAllDocsFromDB(() => syncDeletedFilesFromFolder(renderRecentsList));
+    };
+
+    function loadAllDocsFromDB(cb) {
+      openLibraryDB(db => {
+        if (!db) { if (cb) cb(); return; }
+        const tx = db.transaction("docs", "readonly");
+        const req = tx.objectStore("docs").getAll();
+        req.onsuccess = () => {
+          savedDocs = (req.result || []).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+          if (cb) cb();
+        };
+        req.onerror = () => { if (cb) cb(); };
+      });
+    }
+
+    function persistCurrentDocToDB(cb) {
+      if (!pages.length) {
+        if (currentDocId) {
+          deleteDocsFromDB([currentDocId], () => {
+            currentDocId = null;
+            if (cb) cb();
+          });
+        } else if (cb) cb();
+        return;
+      }
+      if (!currentDocId) currentDocId = "doc_" + Date.now();
+      const record = {
+        docId: currentDocId,
+        title: (docTitle || "").trim() || makeCamScannerDefaultName(),
+        updatedAt: Date.now(),
+        pages: pages,
+        savedFiles: currentSavedFiles.slice()
+      };
+      openLibraryDB(db => {
+        if (!db) { if (cb) cb(); return; }
+        const tx = db.transaction("docs", "readwrite");
+        tx.objectStore("docs").put(record);
+        tx.oncomplete = () => loadAllDocsFromDB(cb);
+        tx.onerror = () => { if (cb) cb(); };
+      });
+    }
+
+    function deleteDocsFromDB(ids, cb) {
+      openLibraryDB(db => {
+        if (!db) { if (cb) cb(); return; }
+        const tx = db.transaction("docs", "readwrite");
+        const store = tx.objectStore("docs");
+        ids.forEach(id => store.delete(id));
+        tx.oncomplete = () => loadAllDocsFromDB(cb);
+        tx.onerror = () => { if (cb) cb(); };
+      });
+    }
+
+    function renderRecentsList() {
+      const listEl = document.getElementById("cshRecentsList");
+      const q = (document.getElementById("cshSearchInp").value || "").trim().toLowerCase();
+      const filtered = savedDocs.filter(d => !q || (d.title || "").toLowerCase().includes(q));
+      document.getElementById("cshTotalDocsLabel").textContent = (filtered.length ? filtered.length + " Docs ›" : "View All ›");
+
+      const delTopBtn = document.getElementById("cshDeleteSelectedDocsBtn");
+      delTopBtn.style.display = selectedDocIds.size > 0 ? "grid" : "none";
+
+      if (!filtered.length) {
+        listEl.innerHTML = '<div style="text-align:center;padding:42px 18px;color:#71717a;"><div style="font-size:38px;margin-bottom:8px;">📄</div><div style="font-size:14px;font-weight:700;color:#d4d4d8;">No Scanned Documents</div><div style="font-size:12px;margin-top:4px;">Tap the green camera button below to scan into SVC Documents.</div></div>';
+        return;
+      }
+
+      listEl.innerHTML = "";
+      filtered.forEach(doc => {
+        const thumbSrc = doc.pages && doc.pages[0] ? doc.pages[0].rawDataUrl : "";
+        const pageCnt = doc.pages ? doc.pages.length : 0;
+        const isSavedInFolder = Array.isArray(doc.savedFiles) && doc.savedFiles.length > 0;
+        const card = document.createElement("div");
+        card.className = "csh-doc-card";
+        card.innerHTML = '<div class="csh-doc-row"><img class="csh-doc-thumb" src="' + thumbSrc + '" alt="Thumb"><div class="csh-doc-meta"><div class="csh-doc-title">' + doc.title + '</div><div class="csh-doc-sub"><span>' + formatDisplayTimestamp(doc.updatedAt) + '</span><span>|</span><span>📄 ' + pageCnt + '</span>' + (isSavedInFolder ? '<span style="color:#5eead4;">· 📁 Saved</span>' : '') + '</div></div><input type="checkbox" class="csh-doc-chk" ' + (selectedDocIds.has(doc.docId) ? "checked" : "") + '></div><div class="csh-doc-actions"><button type="button" class="csh-doc-act-btn" data-act="share">Share</button><button type="button" class="csh-doc-act-btn" data-act="pdf">To PDF</button><button type="button" class="csh-doc-act-btn" data-act="view">View</button></div>';
+
+        const openDocInEditor = () => {
+          currentDocId = doc.docId;
+          docTitle = doc.title;
+          currentSavedFiles = Array.isArray(doc.savedFiles) ? doc.savedFiles.slice() : [];
+          pages = JSON.parse(JSON.stringify(doc.pages || []));
+          activeIdx = 0;
+          selectedForDelete.clear();
+          multiSelectMode = false;
+          document.getElementById("scsDocNameInp").value = docTitle;
+          updateCounters();
+          csHome.style.display = "none";
+          modal.style.display = "flex";
+          switchToEditor(true);
+        };
+
+        card.querySelector(".csh-doc-thumb").onclick = openDocInEditor;
+        card.querySelector(".csh-doc-meta").onclick = openDocInEditor;
+        card.querySelector('[data-act="view"]').onclick = openDocInEditor;
+
+        card.querySelector(".csh-doc-chk").onchange = e => {
+          if (e.target.checked) selectedDocIds.add(doc.docId);
+          else selectedDocIds.delete(doc.docId);
+          renderRecentsList();
+        };
+
+        card.querySelector('[data-act="pdf"]').onclick = async () => {
+          const btn = card.querySelector('[data-act="pdf"]');
+          btn.textContent = "⏳...";
+          const blob = await buildPdfBlobForPages(doc.pages);
+          currentDocId = doc.docId;
+          docTitle = doc.title;
+          pages = doc.pages;
+          currentSavedFiles = Array.isArray(doc.savedFiles) ? doc.savedFiles.slice() : [];
+          await saveBlobToSvcDocumentsFolder(blob, doc.title.replace(/[\\/:*?"<>|]+/g, "_") + ".pdf");
+          btn.textContent = "To PDF";
+          renderRecentsList();
+        };
+
+        card.querySelector('[data-act="share"]').onclick = async () => {
+          const btn = card.querySelector('[data-act="share"]');
+          btn.textContent = "⏳...";
+          const blob = await buildPdfBlobForPages(doc.pages);
+          await shareFileOrFallback(blob, doc.title.replace(/[\\/:*?"<>|]+/g, "_") + ".pdf", doc.title);
+          btn.textContent = "Share";
+        };
+
+        listEl.appendChild(card);
+      });
+    }
+
+    window.openCsHome = function(shouldPushState) {
+      csHome.style.display = "flex";
+      if (shouldPushState !== false) pushNavState("cs-home");
+      loadAllDocsFromDB(() => {
+        syncDeletedFilesFromFolder(renderRecentsList);
       });
     };
-    img.src = cur.fullDataUrl || cur.rawDataUrl;
-  }
 
-  const cropCanvas = document.getElementById("scsCropCanvas");
-  function getCanvasNormPos(evt) {
-    const rect = cropCanvas.getBoundingClientRect();
-    const touch = evt.touches ? evt.touches[0] : evt;
-    return {
-      nx: Math.min(0.99, Math.max(0.01, (touch.clientX - rect.left) / rect.width)),
-      ny: Math.min(0.99, Math.max(0.01, (touch.clientY - rect.top) / rect.height))
-    };
-  }
-  cropCanvas.addEventListener("pointerdown", e => {
-    const { nx, ny } = getCanvasNormPos(e);
-    let best = null, minD = 0.16;
-    for (const k of ["tl", "tr", "br", "bl"]) {
-      const dist = Math.hypot(nx - tempQuad[k].x, ny - tempQuad[k].y);
-      if (dist < minD) { minD = dist; best = k; }
-    }
-    draggingCornerKey = best;
-  });
-  cropCanvas.addEventListener("pointermove", e => {
-    if (!draggingCornerKey) return;
-    const { nx, ny } = getCanvasNormPos(e);
-    tempQuad[draggingCornerKey] = { x: nx, y: ny };
-    drawCropWorkspace();
-  });
-  window.addEventListener("pointerup", () => { draggingCornerKey = null; });
-
-  // --- IMAGE PROCESSING ENGINE + "SVC Scanner" WATERMARK ---
-  function renderProcessedPage(pageObj, targetCanvas, callback) {
-    const img = new Image();
-    img.onload = () => {
-      const rot = ((pageObj.rotation || 0) % 360 + 360) % 360;
-      const swap = rot === 90 || rot === 270;
-      const w = swap ? img.height : img.width;
-      const h = swap ? img.width : img.height;
-      targetCanvas.width = w;
-      targetCanvas.height = h;
-      const ctx = targetCanvas.getContext("2d");
-
-      ctx.save();
-      ctx.translate(w / 2, h / 2);
-      ctx.rotate((rot * Math.PI) / 180);
-      ctx.drawImage(img, -img.width / 2, -img.height / 2);
-      ctx.restore();
-
-      const imgData = ctx.getImageData(0, 0, w, h);
-      const d = imgData.data;
-      const mode = pageObj.filter || "magic";
-      const forceGray = !!pageObj.grayscale;
-      const bright = Number(pageObj.brightness || 0);
-      const cont = Number(pageObj.contrast || 0);
-      const cFactor = (259 * (cont + 255)) / (255 * (259 - cont));
-
-      let avgLum = 180;
-      if (mode === "noshadow" || mode === "magicpro" || mode === "nohandwriting") {
-        let sum = 0, cnt = 0;
-        for (let i = 0; i < d.length; i += 40) {
-          sum += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
-          cnt++;
-        }
-        avgLum = Math.max(110, sum / Math.max(1, cnt));
-      }
-
-      for (let i = 0; i < d.length; i += 4) {
-        let r = d[i], g = d[i + 1], b = d[i + 2];
-        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
-
-        if (mode === "lighten") {
-          r = Math.min(255, r * 1.18 + 18);
-          g = Math.min(255, g * 1.18 + 18);
-          b = Math.min(255, b * 1.18 + 18);
-        } else if (mode === "magic") {
-          const norm = lum > 155 ? 255 : Math.max(0, (lum - 30) * 1.25);
-          const ratio = lum > 1 ? norm / lum : 1;
-          r = Math.min(255, Math.max(0, (r - lum) * 1.35 + lum * ratio));
-          g = Math.min(255, Math.max(0, (g - lum) * 1.35 + lum * ratio));
-          b = Math.min(255, Math.max(0, (b - lum) * 1.35 + lum * ratio));
-        } else if (mode === "magicpro") {
-          const scale = 235 / avgLum;
-          r = Math.min(255, r * scale);
-          g = Math.min(255, g * scale);
-          b = Math.min(255, b * scale);
-          const l2 = 0.299 * r + 0.587 * g + 0.114 * b;
-          if (l2 > 175) { r = g = b = 255; }
-          else {
-            r = Math.max(0, (r - 128) * 1.45 + 128);
-            g = Math.max(0, (g - 128) * 1.45 + 128);
-            b = Math.max(0, (b - 128) * 1.45 + 128);
-          }
-        } else if (mode === "noshadow") {
-          const boost = 242 / avgLum;
-          r = Math.min(255, r * boost);
-          g = Math.min(255, g * boost);
-          b = Math.min(255, b * boost);
-          if ((r + g + b) / 3 > 190) { r = g = b = 255; }
-        } else if (mode === "nohandwriting") {
-          const isBlueInk = (b - r > 22) && (lum > 75);
-          const isFaintStroke = lum > (avgLum * 0.62);
-          if (isBlueInk || isFaintStroke) { r = g = b = 255; }
-          else { const dark = Math.max(0, lum * 0.55); r = g = b = dark; }
-        } else if (mode === "bw") {
-          const v = lum > 142 ? 255 : 0;
-          r = g = b = v;
-        } else if (mode === "eco") {
-          const v = lum > 148 ? 255 : 95;
-          r = g = b = v;
-        }
-
-        if (bright !== 0 || cont !== 0) {
-          r = cFactor * (r + bright - 128) + 128;
-          g = cFactor * (g + bright - 128) + 128;
-          b = cFactor * (b + bright - 128) + 128;
-        }
-
-        if (forceGray) {
-          const gr = 0.299 * r + 0.587 * g + 0.114 * b;
-          r = g = b = gr;
-        }
-
-        d[i] = Math.min(255, Math.max(0, r));
-        d[i + 1] = Math.min(255, Math.max(0, g));
-        d[i + 2] = Math.min(255, Math.max(0, b));
-      }
-      ctx.putImageData(imgData, 0, 0);
-
-      const fontSize = Math.max(14, Math.round(w * 0.021));
-      ctx.save();
-      ctx.font = `700 ${fontSize}px sans-serif`;
-      const wmText = "SVC Scanner";
-      const pad = Math.round(fontSize * 0.7);
-      const metrics = ctx.measureText(wmText);
-      const boxW = metrics.width + pad * 1.6;
-      const boxH = fontSize + pad * 0.9;
-      ctx.fillStyle = "rgba(15, 23, 42, 0.68)";
-      ctx.fillRect(w - boxW - pad, h - boxH - pad, boxW, boxH);
-      ctx.fillStyle = "#ffffff";
-      ctx.textBaseline = "middle";
-      ctx.fillText(wmText, w - boxW - pad + pad * 0.8, h - boxH / 2 - pad);
-      ctx.restore();
-
-      if (callback) callback(targetCanvas);
-    };
-    img.src = pageObj.rawDataUrl;
-  }
-
-  function switchToEditor() {
-    if (!pages.length) { alert("Please capture or select at least 1 page first."); return; }
-    stopCamera();
-    document.getElementById("scsCameraView").style.display = "none";
-    document.getElementById("scsCropView").style.display = "none";
-    document.getElementById("scsEditorView").style.display = "flex";
-    refreshEditorUI();
-  }
-
-  function switchToCamera() {
-    document.getElementById("scsEditorView").style.display = "none";
-    document.getElementById("scsCropView").style.display = "none";
-    document.getElementById("scsCameraView").style.display = "flex";
-    startCamera();
-  }
-
-  function refreshEditorUI() {
-    if (!pages.length) { switchToCamera(); return; }
-    if (activeIdx >= pages.length) activeIdx = pages.length - 1;
-    const cur = pages[activeIdx];
-
-    document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.filter === cur.filter);
-    });
-    const grayBtn = document.getElementById("scsGrayToggle");
-    grayBtn.textContent = cur.grayscale ? "Grayscale: ON" : "Grayscale: OFF";
-    grayBtn.classList.toggle("active", cur.grayscale);
-
-    document.getElementById("scsBrightRange").value = cur.brightness || 0;
-    document.getElementById("scsContrastRange").value = cur.contrast || 0;
-
-    const selBtn = document.getElementById("scsSelectModeBtn");
-    selBtn.classList.toggle("active", multiSelectMode);
-    selBtn.textContent = multiSelectMode ? `☑️ Done (${selectedForDelete.size})` : "☑️ Select";
-
-    const strip = document.getElementById("scsPageStrip");
-    strip.innerHTML = "";
-    pages.forEach((p, idx) => {
-      const isSel = selectedForDelete.has(p.id);
-      const th = document.createElement("div");
-      th.className = "scs-thumb" + (idx === activeIdx ? " active" : "") + (isSel ? " selected-del" : "");
-      th.innerHTML = `
-        <img src="${p.rawDataUrl}">
-        <span>${idx + 1}/${pages.length}</span>
-        ${multiSelectMode ? `<div class="scs-thumb-chk">${isSel ? "✓" : ""}</div>` : ""}
-      `;
-      th.onclick = () => {
-        if (multiSelectMode) {
-          if (selectedForDelete.has(p.id)) selectedForDelete.delete(p.id);
-          else selectedForDelete.add(p.id);
-          refreshEditorUI();
-        } else {
-          if (activeIdx === idx) openFullPageViewer(idx);
-          else { activeIdx = idx; refreshEditorUI(); }
-        }
-      };
-      strip.appendChild(th);
-    });
-
-    renderProcessedPage(cur, document.getElementById("scsPreviewCanvas"));
-  }
-
-  document.getElementById("scsRotLeftBtn").onclick = () => {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) - 90 + 360) % 360;
-    persistCurrentDocToDB();
-    refreshEditorUI();
-  };
-  document.getElementById("scsRotRightBtn").onclick = () => {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) + 90) % 360;
-    persistCurrentDocToDB();
-    refreshEditorUI();
-  };
-  document.getElementById("scsSelectModeBtn").onclick = () => {
-    multiSelectMode = !multiSelectMode;
-    if (!multiSelectMode) selectedForDelete.clear();
-    refreshEditorUI();
-  };
-  document.getElementById("scsDelPageBtn").onclick = () => {
-    if (!pages.length) return;
-    if (multiSelectMode && selectedForDelete.size > 0) {
-      if (!confirm(`Delete ${selectedForDelete.size} selected page(s)?`)) return;
-      pages = pages.filter(p => !selectedForDelete.has(p.id));
+    function startNewScanSession(mode) {
+      currentDocId = "doc_" + Date.now();
+      currentSavedFiles = [];
+      docTitle = makeCamScannerDefaultName();
+      pages = [];
+      activeIdx = 0;
       selectedForDelete.clear();
       multiSelectMode = false;
-    } else {
-      if (!confirm(`Delete Page ${activeIdx + 1}?`)) return;
-      pages.splice(activeIdx, 1);
+      scanMode = mode || "batch";
+      document.querySelectorAll(".scs-mode-pill").forEach(b => b.classList.toggle("active", b.dataset.scanmode === scanMode));
+      document.getElementById("scsDocNameInp").value = docTitle;
+      updateCounters();
+      csHome.style.display = "none";
+      modal.style.display = "flex";
+      switchToCamera(true);
     }
-    updateCounters();
-    persistCurrentDocToDB();
-    refreshEditorUI();
-  };
 
-  function openFullPageViewer(idx) {
-    if (!pages[idx]) return;
-    activeIdx = idx;
-    fvZoomed = false;
-    const imgEl = document.getElementById("scsFullViewImg");
-    imgEl.style.transform = "scale(1)";
-    document.getElementById("scsFvZoomBtn").textContent = "🔍 2x";
-    document.getElementById("scsFvTitle").textContent = `Page ${idx + 1} of ${pages.length}`;
-    const tempC = document.createElement("canvas");
-    renderProcessedPage(pages[idx], tempC, () => {
-      imgEl.src = tempC.toDataURL("image/jpeg", 0.94);
-      document.getElementById("scsFullViewModal").style.display = "flex";
+    document.getElementById("cshExitToSuiteBtn").onclick = () => { csHome.style.display = "none"; };
+    document.getElementById("cshNavTools").onclick = () => { csHome.style.display = "none"; };
+    document.getElementById("cshActAllTools").onclick = () => { csHome.style.display = "none"; };
+    document.getElementById("cshFloatingCamBtn").onclick = () => startNewScanSession("batch");
+    document.getElementById("cshActSmartScan").onclick = () => startNewScanSession("batch");
+    document.getElementById("cshActIdCard").onclick = () => startNewScanSession("idcard");
+    document.getElementById("cshSearchInp").addEventListener("input", renderRecentsList);
+
+    document.getElementById("cshDeleteSelectedDocsBtn").onclick = async () => {
+      if (!selectedDocIds.size) return;
+      if (!confirm("Delete " + selectedDocIds.size + " selected document(s) from app & SVC Documents folder?")) return;
+      const dir = await ensureSvcDocumentsFolder(false);
+      if (dir) {
+        for (const id of selectedDocIds) {
+          const doc = savedDocs.find(d => d.docId === id);
+          if (doc && Array.isArray(doc.savedFiles)) {
+            for (const fn of doc.savedFiles) {
+              try { await dir.removeEntry(fn); } catch (e) {}
+            }
+          }
+        }
+      }
+      deleteDocsFromDB(Array.from(selectedDocIds), () => {
+        selectedDocIds.clear();
+        renderRecentsList();
+      });
+    };
+
+    document.getElementById("cshActImportImg").onclick = () => {
+      startNewScanSession("batch");
+      setTimeout(() => document.getElementById("scsGalleryInp").click(), 120);
+    };
+    document.getElementById("cshActImportFiles").onclick = () => {
+      startNewScanSession("batch");
+      setTimeout(() => document.getElementById("scsGalleryInp").click(), 120);
+    };
+    document.getElementById("cshActPdfTools").onclick = () => {
+      csHome.style.display = "none";
+      const tabBtn = document.querySelector('#tabs button[data-tab="pdf"]');
+      if (tabBtn) tabBtn.click();
+    };
+    document.getElementById("cshActOcr").onclick = () => {
+      csHome.style.display = "none";
+      const tabBtn = document.querySelector('#tabs button[data-tab="pdf"]');
+      if (tabBtn) tabBtn.click();
+    };
+    document.getElementById("cshActAiDraft").onclick = () => {
+      csHome.style.display = "none";
+      const tabBtn = document.querySelector('#tabs button[data-tab="aidraft"]');
+      if (tabBtn) tabBtn.click();
+    };
+
+    // --- 4. HIGH-ACCURACY OTSU + CONTOUR 4-CORNER QUAD DETECTOR ---
+    function detectFourPageCorners(sourceEl, srcW, srcH) {
+      const W = 160;
+      const H = Math.max(120, Math.round((srcH / srcW) * W));
+      const c = document.createElement("canvas");
+      c.width = W;
+      c.height = H;
+      const ctx = c.getContext("2d");
+      ctx.drawImage(sourceEl, 0, 0, W, H);
+      const d = ctx.getImageData(0, 0, W, H).data;
+
+      // 1. Grayscale + Otsu Automatic Thresholding (separates light paper from darker background)
+      const gray = new Uint8Array(W * H);
+      const hist = new Uint32Array(256);
+      for (let i = 0; i < W * H; i++) {
+        const idx = i * 4;
+        const g = Math.round(0.299 * d[idx] + 0.587 * d[idx + 1] + 0.114 * d[idx + 2]);
+        gray[i] = g;
+        hist[g]++;
+      }
+
+      let total = W * H, sum = 0;
+      for (let t = 0; t < 256; t++) sum += t * hist[t];
+      let sumB = 0, wB = 0, wF = 0, varMax = 0, otsuThresh = 135;
+      for (let t = 0; t < 256; t++) {
+        wB += hist[t];
+        if (wB === 0) continue;
+        wF = total - wB;
+        if (wF === 0) break;
+        sumB += t * hist[t];
+        const mB = sumB / wB;
+        const mF = (sum - sumB) / wF;
+        const varBetween = wB * wF * (mB - mF) * (mB - mF);
+        if (varBetween > varMax) {
+          varMax = varBetween;
+          otsuThresh = t;
+        }
+      }
+
+      // 2. Binary Sheet Mask + Morphological Closing (R=5) to absorb text/photos inside sheet
+      const mask = new Uint8Array(W * H);
+      for (let i = 0; i < W * H; i++) {
+        mask[i] = gray[i] >= otsuThresh ? 1 : 0;
+      }
+
+      const R = 5;
+      const dil = new Uint8Array(W * H);
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          let on = 0;
+          for (let dy = -R; dy <= R && !on; dy++) {
+            const ny = y + dy;
+            if (ny < 0 || ny >= H) continue;
+            for (let dx = -R; dx <= R; dx++) {
+              const nx = x + dx;
+              if (nx >= 0 && nx < W && mask[ny * W + nx]) { on = 1; break; }
+            }
+          }
+          dil[y * W + x] = on;
+        }
+      }
+      const closed = new Uint8Array(W * H);
+      for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+          let allOn = 1;
+          for (let dy = -R; dy <= R && allOn; dy++) {
+            const ny = y + dy;
+            if (ny < 0 || ny >= H) { allOn = 0; break; }
+            for (let dx = -R; dx <= R; dx++) {
+              const nx = x + dx;
+              if (nx < 0 || nx >= W || !dil[ny * W + nx]) { allOn = 0; break; }
+            }
+          }
+          closed[y * W + x] = allOn;
+        }
+      }
+
+      // 3. Find the Largest Connected Paper Component (works even if camera is tilted or shifted up/down!)
+      const visited = new Uint8Array(W * H);
+      let bestComp = null;
+      let bestScore = -1;
+      const midX = W * 0.5, midY = H * 0.5;
+
+      for (let y = 2; y < H - 2; y += 2) {
+        for (let x = 2; x < W - 2; x += 2) {
+          const startIdx = y * W + x;
+          if (!closed[startIdx] || visited[startIdx]) continue;
+
+          const q = [startIdx];
+          visited[startIdx] = 1;
+          let head = 0;
+          let sumX = 0, sumY = 0;
+          const boundary = [];
+
+          while (head < q.length) {
+            const idx = q[head++];
+            const px = idx % W;
+            const py = (idx - px) / W;
+            sumX += px;
+            sumY += py;
+
+            const nL = px > 0 ? idx - 1 : -1;
+            const nR = px < W - 1 ? idx + 1 : -1;
+            const nU = py > 0 ? idx - W : -1;
+            const nD = py < H - 1 ? idx + W : -1;
+
+            if (nL < 0 || !closed[nL] || nR < 0 || !closed[nR] || nU < 0 || !closed[nU] || nD < 0 || !closed[nD]) {
+              boundary.push({ x: px, y: py });
+            }
+
+            for (const nb of [nL, nR, nU, nD]) {
+              if (nb >= 0 && !visited[nb] && closed[nb]) {
+                visited[nb] = 1;
+                q.push(nb);
+              }
+            }
+          }
+
+          const area = q.length;
+          const areaRatio = area / (W * H);
+          if (areaRatio < 0.12 || areaRatio > 0.96) continue;
+
+          const centX = sumX / area, centY = sumY / area;
+          const centerDist = Math.hypot(centX - midX, centY - midY);
+          const score = area - centerDist * 18;
+          if (score > bestScore && boundary.length >= 20) {
+            bestScore = score;
+            bestComp = boundary;
+          }
+        }
+      }
+
+      if (!bestComp) {
+        return {
+          tl: { x: 0.08, y: 0.08 },
+          tr: { x: 0.92, y: 0.08 },
+          br: { x: 0.92, y: 0.92 },
+          bl: { x: 0.08, y: 0.92 },
+          confident: false
+        };
+      }
+
+      // 4. Extract true 4 Quad Corners from outer contour boundary points
+      let minSum = 1e9, maxSum = -1e9, minDiff = 1e9, maxDiff = -1e9;
+      let tl = bestComp[0], tr = bestComp[0], br = bestComp[0], bl = bestComp[0];
+      for (const pt of bestComp) {
+        const s = pt.x + pt.y;
+        const df = pt.x - pt.y;
+        if (s < minSum) { minSum = s; tl = pt; }
+        if (s > maxSum) { maxSum = s; br = pt; }
+        if (df > maxDiff) { maxDiff = df; tr = pt; }
+        if (df < minDiff) { minDiff = df; bl = pt; }
+      }
+
+      const clamp = v => Math.min(0.99, Math.max(0.01, v));
+      return {
+        tl: { x: clamp(tl.x / W), y: clamp(tl.y / H) },
+        tr: { x: clamp(tr.x / W), y: clamp(tr.y / H) },
+        br: { x: clamp(br.x / W), y: clamp(br.y / H) },
+        bl: { x: clamp(bl.x / W), y: clamp(bl.y / H) },
+        confident: true
+      };
+    }
+
+    function mapNormPointToOverlay(pt, vidW, vidH, ovW, ovH) {
+      const vidRatio = vidW / vidH;
+      const ovRatio = ovW / ovH;
+      let renderW, renderH, offsetX, offsetY;
+      if (vidRatio > ovRatio) {
+        renderH = ovH; renderW = ovH * vidRatio;
+        offsetX = (ovW - renderW) / 2; offsetY = 0;
+      } else {
+        renderW = ovW; renderH = ovW / vidRatio;
+        offsetX = 0; offsetY = (ovH - renderH) / 2;
+      }
+      return {
+        x: Math.min(ovW - 6, Math.max(6, offsetX + pt.x * renderW)),
+        y: Math.min(ovH - 6, Math.max(6, offsetY + pt.y * renderH))
+      };
+    }
+
+    function warpQuadToRectangleDataUrl(fullDataUrl, quad, cb) {
+      const img = new Image();
+      img.onload = () => {
+        const W = img.width, H = img.height;
+        const pTL = { x: quad.tl.x * W, y: quad.tl.y * H };
+        const pTR = { x: quad.tr.x * W, y: quad.tr.y * H };
+        const pBR = { x: quad.br.x * W, y: quad.br.y * H };
+        const pBL = { x: quad.bl.x * W, y: quad.bl.y * H };
+
+        const topW = Math.hypot(pTR.x - pTL.x, pTR.y - pTL.y);
+        const botW = Math.hypot(pBR.x - pBL.x, pBR.y - pBL.y);
+        const leftH = Math.hypot(pBL.x - pTL.x, pBL.y - pTL.y);
+        const rightH = Math.hypot(pBR.x - pTR.x, pBR.y - pTR.y);
+
+        const outW = Math.max(120, Math.round((topW + botW) / 2));
+        const outH = Math.max(120, Math.round((leftH + rightH) / 2));
+
+        const srcC = document.createElement("canvas");
+        srcC.width = W; srcC.height = H;
+        const srcCtx = srcC.getContext("2d");
+        srcCtx.drawImage(img, 0, 0);
+        const srcData = srcCtx.getImageData(0, 0, W, H).data;
+
+        const dstC = document.createElement("canvas");
+        dstC.width = outW; dstC.height = outH;
+        const dstCtx = dstC.getContext("2d");
+        const dstImg = dstCtx.createImageData(outW, outH);
+        const dstData = dstImg.data;
+
+        for (let y = 0; y < outH; y++) {
+          const v = y / (outH - 1 || 1);
+          const lx = pTL.x + (pBL.x - pTL.x) * v;
+          const ly = pTL.y + (pBL.y - pTL.y) * v;
+          const rx = pTR.x + (pBR.x - pTR.x) * v;
+          const ry = pTR.y + (pBR.y - pTR.y) * v;
+
+          for (let x = 0; x < outW; x++) {
+            const u = x / (outW - 1 || 1);
+            const sx = Math.min(W - 1, Math.max(0, Math.round(lx + (rx - lx) * u)));
+            const sy = Math.min(H - 1, Math.max(0, Math.round(ly + (ry - ly) * u)));
+            const sIdx = (sy * W + sx) * 4;
+            const dIdx = (y * outW + x) * 4;
+            dstData[dIdx] = srcData[sIdx];
+            dstData[dIdx + 1] = srcData[sIdx + 1];
+            dstData[dIdx + 2] = srcData[sIdx + 2];
+            dstData[dIdx + 3] = 255;
+          }
+        }
+        dstCtx.putImageData(dstImg, 0, 0);
+        cb(dstC.toDataURL("image/jpeg", 0.94));
+      };
+      img.src = fullDataUrl;
+    }
+
+    function startLiveEdgeDetector() {
+      stopLiveEdgeDetector();
+      detectTimer = setInterval(() => {
+        const vid = document.getElementById("scsVideo");
+        const ov = document.getElementById("scsOverlayCanvas");
+        const pill = document.getElementById("scsDetectStatus");
+        if (!vid || !ov || !vid.videoWidth || document.getElementById("scsCameraView").style.display === "none") return;
+
+        const rect = ov.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        ov.width = rect.width;
+        ov.height = rect.height;
+        const ctx = ov.getContext("2d");
+        ctx.clearRect(0, 0, ov.width, ov.height);
+
+        if (!autoEdgeOn) {
+          pill.textContent = "📷 Full Frame Mode";
+          return;
+        }
+
+        const q = detectFourPageCorners(vid, vid.videoWidth, vid.videoHeight);
+        const lerp = (a, b) => a * 0.4 + b * 0.6;
+        lastQuadNorm.tl = { x: lerp(lastQuadNorm.tl.x, q.tl.x), y: lerp(lastQuadNorm.tl.y, q.tl.y) };
+        lastQuadNorm.tr = { x: lerp(lastQuadNorm.tr.x, q.tr.x), y: lerp(lastQuadNorm.tr.y, q.tr.y) };
+        lastQuadNorm.br = { x: lerp(lastQuadNorm.br.x, q.br.x), y: lerp(lastQuadNorm.br.y, q.br.y) };
+        lastQuadNorm.bl = { x: lerp(lastQuadNorm.bl.x, q.bl.x), y: lerp(lastQuadNorm.bl.y, q.bl.y) };
+        lastQuadNorm.confident = q.confident;
+
+        const p1 = mapNormPointToOverlay(lastQuadNorm.tl, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
+        const p2 = mapNormPointToOverlay(lastQuadNorm.tr, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
+        const p3 = mapNormPointToOverlay(lastQuadNorm.br, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
+        const p4 = mapNormPointToOverlay(lastQuadNorm.bl, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.closePath();
+
+        ctx.fillStyle = q.confident ? "rgba(20, 184, 166, 0.16)" : "rgba(56, 189, 248, 0.10)";
+        ctx.fill();
+        ctx.strokeStyle = q.confident ? "#14b8a6" : "#38bdf8";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        [p1, p2, p3, p4].forEach(pt => {
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 7, 0, Math.PI * 2);
+          ctx.fillStyle = q.confident ? "#14b8a6" : "#38bdf8";
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = "#ffffff";
+          ctx.stroke();
+        });
+
+        pill.textContent = q.confident ? "✅ All 4 Corners Locked!" : "🔍 Show All 4 Corners of Page";
+      }, 240);
+    }
+
+    function stopLiveEdgeDetector() {
+      if (detectTimer) { clearInterval(detectTimer); detectTimer = null; }
+    }
+
+    document.getElementById("scsDocNameInp").addEventListener("input", function() {
+      docTitle = this.value;
+      persistCurrentDocToDB();
     });
-  }
 
-  document.getElementById("scsFullViewBtn").onclick = () => openFullPageViewer(activeIdx);
-  document.getElementById("scsPreviewCanvas").onclick = () => openFullPageViewer(activeIdx);
-  document.getElementById("scsFvCloseBtn").onclick = () => { document.getElementById("scsFullViewModal").style.display = "none"; refreshEditorUI(); };
-  document.getElementById("scsFvZoomBtn").onclick = () => {
-    fvZoomed = !fvZoomed;
-    document.getElementById("scsFullViewImg").style.transform = fvZoomed ? "scale(2)" : "scale(1)";
-    document.getElementById("scsFvZoomBtn").textContent = fvZoomed ? "🔍 1x" : "🔍 2x";
-  };
-  document.getElementById("scsFvPrevBtn").onclick = () => { if (activeIdx > 0) openFullPageViewer(activeIdx - 1); };
-  document.getElementById("scsFvNextBtn").onclick = () => { if (activeIdx < pages.length - 1) openFullPageViewer(activeIdx + 1); };
+    async function startCamera() {
+      stopCamera();
+      const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
+      const vid = document.getElementById("scsVideo");
+      const constraintList = [
+        { video: { facingMode: { ideal: "environment" }, width: { ideal: targetW }, height: { ideal: Math.round(targetW * 0.75) } }, audio: false },
+        { video: { facingMode: "environment" }, audio: false },
+        { video: true, audio: false }
+      ];
+      for (const c of constraintList) {
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia(c);
+          vid.srcObject = mediaStream;
+          await vid.play();
+          flashOn = false;
+          updateFlashBtn();
+          startLiveEdgeDetector();
+          return;
+        } catch (e) {}
+      }
+      document.getElementById("scsDetectStatus").textContent = "📷 Tap Shutter or Gallery to Capture";
+    }
 
-  document.getElementById("scsBrightRange").oninput = function() {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].brightness = Number(this.value);
-    renderProcessedPage(pages[activeIdx], document.getElementById("scsPreviewCanvas"));
-  };
-  document.getElementById("scsBrightRange").onchange = () => persistCurrentDocToDB();
-  document.getElementById("scsContrastRange").oninput = function() {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].contrast = Number(this.value);
-    renderProcessedPage(pages[activeIdx], document.getElementById("scsPreviewCanvas"));
-  };
-  document.getElementById("scsContrastRange").onchange = () => persistCurrentDocToDB();
-  document.getElementById("scsResetAdjBtn").onclick = () => {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].brightness = 0;
-    pages[activeIdx].contrast = 0;
-    persistCurrentDocToDB();
-    refreshEditorUI();
-  };
+    function stopCamera() {
+      stopLiveEdgeDetector();
+      if (mediaStream) {
+        mediaStream.getTracks().forEach(t => t.stop());
+        mediaStream = null;
+      }
+    }
 
-  document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
-    btn.onclick = () => {
+    function updateFlashBtn() {
+      const btn = document.getElementById("scsFlashBtn");
+      btn.textContent = flashOn ? "⚡ Flash: ON" : "⚡ Flash";
+      btn.classList.toggle("active", flashOn);
+    }
+
+    document.getElementById("scsFlashBtn").onclick = async () => {
+      if (!mediaStream) return;
+      const track = mediaStream.getVideoTracks()[0];
+      const caps = track.getCapabilities ? track.getCapabilities() : {};
+      if (!caps.torch) { alert("Torch/Flash is not supported on this browser camera."); return; }
+      flashOn = !flashOn;
+      try {
+        await track.applyConstraints({ advanced: [{ torch: flashOn }] });
+        updateFlashBtn();
+      } catch (e) { flashOn = false; updateFlashBtn(); }
+    };
+
+    document.getElementById("scsAutoEdgeBtn").onclick = function() {
+      autoEdgeOn = !autoEdgeOn;
+      this.textContent = autoEdgeOn ? "🔲 4-Corner" : "⬜ Full Frame";
+      this.classList.toggle("active", autoEdgeOn);
+    };
+
+    document.getElementById("scsResSelect").onchange = () => {
+      if (document.getElementById("scsCameraView").style.display !== "none") startCamera();
+    };
+
+    document.querySelectorAll(".scs-mode-pill").forEach(btn => {
+      btn.onclick = () => {
+        scanMode = btn.dataset.scanmode;
+        document.querySelectorAll(".scs-mode-pill").forEach(b => b.classList.toggle("active", b === btn));
+      };
+    });
+
+    function showCaptureFeedback(pageNum) {
+      playShutterClickSound();
+      if (navigator.vibrate) navigator.vibrate(50);
+      const fl = document.getElementById("scsFlashEffect");
+      fl.style.opacity = "0.9";
+      setTimeout(() => { fl.style.opacity = "0"; }, 140);
+      const toast = document.getElementById("scsCaptureToast");
+      toast.textContent = "✅ Page " + pageNum + " Captured!";
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1300);
+    }
+
+    function processCapturedFullDataUrl(fullDataUrl, goEditorAfter) {
+      const img = new Image();
+      img.onload = () => {
+        const quad = autoEdgeOn ? detectFourPageCorners(img, img.width, img.height) : {
+          tl: { x: 0, y: 0 }, tr: { x: 1, y: 0 }, br: { x: 1, y: 1 }, bl: { x: 0, y: 1 }
+        };
+        warpQuadToRectangleDataUrl(fullDataUrl, quad, straightenedUrl => {
+          pages.push({
+            id: Date.now() + Math.random(),
+            fullDataUrl,
+            rawDataUrl: straightenedUrl,
+            quad: JSON.parse(JSON.stringify(quad)),
+            filter: "magic",
+            grayscale: false,
+            rotation: 0,
+            brightness: 0,
+            contrast: 0
+          });
+          activeIdx = pages.length - 1;
+          updateCounters();
+          persistCurrentDocToDB();
+          showCaptureFeedback(pages.length);
+
+          const shouldOpenEditor = goEditorAfter || scanMode === "single" || (scanMode === "idcard" && pages.length >= 2);
+          if (shouldOpenEditor) setTimeout(() => switchToEditor(true), 220);
+        });
+      };
+      img.src = fullDataUrl;
+    }
+
+    document.getElementById("scsCaptureBtn").addEventListener("click", function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const vid = document.getElementById("scsVideo");
+      const vw = vid ? (vid.videoWidth || vid.clientWidth) : 0;
+      const vh = vid ? (vid.videoHeight || vid.clientHeight) : 0;
+      if (!vid || !mediaStream || vid.readyState < 2 || !vw || !vh) {
+        document.getElementById("scsNativeCamFallback").click();
+        return;
+      }
+      const c = document.createElement("canvas");
+      c.width = vid.videoWidth;
+      c.height = vid.videoHeight;
+      c.getContext("2d").drawImage(vid, 0, 0, c.width, c.height);
+      processCapturedFullDataUrl(c.toDataURL("image/jpeg", 0.94), false);
+    });
+
+    document.getElementById("scsNativeCamFallback").onchange = e => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const r = new FileReader();
+      r.onload = ev => processCapturedFullDataUrl(ev.target.result, true);
+      r.readAsDataURL(file);
+      e.target.value = "";
+    };
+
+    document.getElementById("scsGalleryInp").onchange = e => {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      let done = 0;
+      files.forEach(f => {
+        const r = new FileReader();
+        r.onload = ev => processCapturedFullDataUrl(ev.target.result, (++done === files.length));
+        r.readAsDataURL(f);
+      });
+      e.target.value = "";
+    };
+
+    function updateCounters() {
+      document.getElementById("scsBadgeCount").textContent = pages.length;
+      document.getElementById("scsTopCount").textContent = pages.length;
+      const thumbBox = document.getElementById("scsReviewThumbBtn");
+      if (pages.length > 0) {
+        thumbBox.innerHTML = '<img src="' + pages[pages.length - 1].rawDataUrl + '"><span class="scs-batch-count">' + pages.length + '</span>';
+      } else {
+        thumbBox.innerHTML = '<span style="font-size:18px;">📄</span><span class="scs-batch-count">0</span>';
+      }
+    }
+
+    // --- CROP TOOL ---
+    let tempQuad = { tl: { x: 0.08, y: 0.08 }, tr: { x: 0.92, y: 0.08 }, br: { x: 0.92, y: 0.92 }, bl: { x: 0.08, y: 0.92 } };
+    let draggingCornerKey = null;
+
+    document.getElementById("scsOpenCropBtn").onclick = () => {
+      const cur = pages[activeIdx];
+      if (!cur) return;
+      tempQuad = JSON.parse(JSON.stringify(cur.quad || {
+        tl: { x: 0.06, y: 0.06 }, tr: { x: 0.94, y: 0.06 }, br: { x: 0.94, y: 0.94 }, bl: { x: 0.06, y: 0.94 }
+      }));
+      document.getElementById("scsEditorView").style.display = "none";
+      document.getElementById("scsCropView").style.display = "flex";
+      pushNavState("cs-crop");
+      drawCropWorkspace();
+    };
+    document.getElementById("scsCropCancelBtn").onclick = () => {
+      document.getElementById("scsCropView").style.display = "none";
+      document.getElementById("scsEditorView").style.display = "flex";
+    };
+    document.getElementById("scsCropApplyBtn").onclick = () => {
+      const cur = pages[activeIdx];
+      if (!cur) return;
+      cur.quad = JSON.parse(JSON.stringify(tempQuad));
+      warpQuadToRectangleDataUrl(cur.fullDataUrl || cur.rawDataUrl, cur.quad, newUrl => {
+        cur.rawDataUrl = newUrl;
+        persistCurrentDocToDB();
+        document.getElementById("scsCropView").style.display = "none";
+        document.getElementById("scsEditorView").style.display = "flex";
+        refreshEditorUI();
+      });
+    };
+
+    function drawCropWorkspace() {
+      const cur = pages[activeIdx];
+      if (!cur) return;
+      const canvas = document.getElementById("scsCropCanvas");
+      const img = new Image();
+      img.onload = () => {
+        const maxW = Math.min(window.innerWidth - 28, 520);
+        const scale = maxW / img.width;
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const p1 = { x: tempQuad.tl.x * canvas.width, y: tempQuad.tl.y * canvas.height };
+        const p2 = { x: tempQuad.tr.x * canvas.width, y: tempQuad.tr.y * canvas.height };
+        const p3 = { x: tempQuad.br.x * canvas.width, y: tempQuad.br.y * canvas.height };
+        const p4 = { x: tempQuad.bl.x * canvas.width, y: tempQuad.bl.y * canvas.height };
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.closePath();
+        ctx.fillStyle = "rgba(20, 184, 166, 0.18)";
+        ctx.fill();
+        ctx.strokeStyle = "#14b8a6";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        [p1, p2, p3, p4].forEach(pt => {
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, 14, 0, Math.PI * 2);
+          ctx.fillStyle = "#14b8a6";
+          ctx.fill();
+          ctx.lineWidth = 3;
+          ctx.strokeStyle = "#ffffff";
+          ctx.stroke();
+        });
+      };
+      img.src = cur.fullDataUrl || cur.rawDataUrl;
+    }
+
+    const cropCanvas = document.getElementById("scsCropCanvas");
+    function getCanvasNormPos(evt) {
+      const rect = cropCanvas.getBoundingClientRect();
+      const touch = evt.touches ? evt.touches[0] : evt;
+      return {
+        nx: Math.min(0.99, Math.max(0.01, (touch.clientX - rect.left) / rect.width)),
+        ny: Math.min(0.99, Math.max(0.01, (touch.clientY - rect.top) / rect.height))
+      };
+    }
+    cropCanvas.addEventListener("pointerdown", e => {
+      const { nx, ny } = getCanvasNormPos(e);
+      let best = null, minD = 0.16;
+      for (const k of ["tl", "tr", "br", "bl"]) {
+        const dist = Math.hypot(nx - tempQuad[k].x, ny - tempQuad[k].y);
+        if (dist < minD) { minD = dist; best = k; }
+      }
+      draggingCornerKey = best;
+    });
+    cropCanvas.addEventListener("pointermove", e => {
+      if (!draggingCornerKey) return;
+      const { nx, ny } = getCanvasNormPos(e);
+      tempQuad[draggingCornerKey] = { x: nx, y: ny };
+      drawCropWorkspace();
+    });
+    window.addEventListener("pointerup", () => { draggingCornerKey = null; });
+
+    // --- IMAGE PROCESSING ENGINE ---
+    function renderProcessedPage(pageObj, targetCanvas, callback) {
+      const img = new Image();
+      img.onload = () => {
+        const rot = ((pageObj.rotation || 0) % 360 + 360) % 360;
+        const swap = rot === 90 || rot === 270;
+        const w = swap ? img.height : img.width;
+        const h = swap ? img.width : img.height;
+        targetCanvas.width = w;
+        targetCanvas.height = h;
+        const ctx = targetCanvas.getContext("2d");
+
+        ctx.save();
+        ctx.translate(w / 2, h / 2);
+        ctx.rotate((rot * Math.PI) / 180);
+        ctx.drawImage(img, -img.width / 2, -img.height / 2);
+        ctx.restore();
+
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const d = imgData.data;
+        const mode = pageObj.filter || "magic";
+        const forceGray = !!pageObj.grayscale;
+        const bright = Number(pageObj.brightness || 0);
+        const cont = Number(pageObj.contrast || 0);
+        const cFactor = (259 * (cont + 255)) / (255 * (259 - cont));
+
+        let avgLum = 180;
+        if (mode === "noshadow" || mode === "magicpro" || mode === "nohandwriting") {
+          let sum = 0, cnt = 0;
+          for (let i = 0; i < d.length; i += 40) {
+            sum += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+            cnt++;
+          }
+          avgLum = Math.max(110, sum / Math.max(1, cnt));
+        }
+
+        for (let i = 0; i < d.length; i += 4) {
+          let r = d[i], g = d[i + 1], b = d[i + 2];
+          const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+          if (mode === "lighten") {
+            r = Math.min(255, r * 1.18 + 18);
+            g = Math.min(255, g * 1.18 + 18);
+            b = Math.min(255, b * 1.18 + 18);
+          } else if (mode === "magic") {
+            const norm = lum > 155 ? 255 : Math.max(0, (lum - 30) * 1.25);
+            const ratio = lum > 1 ? norm / lum : 1;
+            r = Math.min(255, Math.max(0, (r - lum) * 1.35 + lum * ratio));
+            g = Math.min(255, Math.max(0, (g - lum) * 1.35 + lum * ratio));
+            b = Math.min(255, Math.max(0, (b - lum) * 1.35 + lum * ratio));
+          } else if (mode === "magicpro") {
+            const scale = 235 / avgLum;
+            r = Math.min(255, r * scale);
+            g = Math.min(255, g * scale);
+            b = Math.min(255, b * scale);
+            const l2 = 0.299 * r + 0.587 * g + 0.114 * b;
+            if (l2 > 175) { r = g = b = 255; }
+            else {
+              r = Math.max(0, (r - 128) * 1.45 + 128);
+              g = Math.max(0, (g - 128) * 1.45 + 128);
+              b = Math.max(0, (b - 128) * 1.45 + 128);
+            }
+          } else if (mode === "noshadow") {
+            const boost = 242 / avgLum;
+            r = Math.min(255, r * boost);
+            g = Math.min(255, g * boost);
+            b = Math.min(255, b * boost);
+            if ((r + g + b) / 3 > 190) { r = g = b = 255; }
+          } else if (mode === "nohandwriting") {
+            const isBlueInk = (b - r > 22) && (lum > 75);
+            const isFaintStroke = lum > (avgLum * 0.62);
+            if (isBlueInk || isFaintStroke) { r = g = b = 255; }
+            else { const dark = Math.max(0, lum * 0.55); r = g = b = dark; }
+          } else if (mode === "bw") {
+            const v = lum > 142 ? 255 : 0;
+            r = g = b = v;
+          } else if (mode === "eco") {
+            const v = lum > 148 ? 255 : 95;
+            r = g = b = v;
+          }
+
+          if (bright !== 0 || cont !== 0) {
+            r = cFactor * (r + bright - 128) + 128;
+            g = cFactor * (g + bright - 128) + 128;
+            b = cFactor * (b + bright - 128) + 128;
+          }
+
+          if (forceGray) {
+            const gr = 0.299 * r + 0.587 * g + 0.114 * b;
+            r = g = b = gr;
+          }
+
+          d[i] = Math.min(255, Math.max(0, r));
+          d[i + 1] = Math.min(255, Math.max(0, g));
+          d[i + 2] = Math.min(255, Math.max(0, b));
+        }
+        ctx.putImageData(imgData, 0, 0);
+
+        const fontSize = Math.max(14, Math.round(w * 0.021));
+        ctx.save();
+        ctx.font = "700 " + fontSize + "px sans-serif";
+        const wmText = "SVC Scanner";
+        const pad = Math.round(fontSize * 0.7);
+        const metrics = ctx.measureText(wmText);
+        const boxW = metrics.width + pad * 1.6;
+        const boxH = fontSize + pad * 0.9;
+        ctx.fillStyle = "rgba(15, 23, 42, 0.68)";
+        ctx.fillRect(w - boxW - pad, h - boxH - pad, boxW, boxH);
+        ctx.fillStyle = "#ffffff";
+        ctx.textBaseline = "middle";
+        ctx.fillText(wmText, w - boxW - pad + pad * 0.8, h - boxH / 2 - pad);
+        ctx.restore();
+
+        if (callback) callback(targetCanvas);
+      };
+      img.src = pageObj.rawDataUrl;
+    }
+
+    function switchToEditor(shouldPushState) {
+      if (!pages.length) { alert("Please capture or select at least 1 page first."); return; }
+      stopCamera();
+      document.getElementById("scsCameraView").style.display = "none";
+      document.getElementById("scsCropView").style.display = "none";
+      document.getElementById("scsEditorView").style.display = "flex";
+      if (shouldPushState !== false) pushNavState("cs-edit");
+      refreshEditorUI();
+    }
+
+    function switchToCamera(shouldPushState) {
+      document.getElementById("scsEditorView").style.display = "none";
+      document.getElementById("scsCropView").style.display = "none";
+      document.getElementById("scsCameraView").style.display = "flex";
+      if (shouldPushState !== false) pushNavState("cs-cam");
+      startCamera();
+    }
+
+    function refreshEditorUI() {
+      if (!pages.length) {
+        const docToRemove = currentDocId;
+        currentDocId = null;
+        selectedForDelete.clear();
+        multiSelectMode = false;
+        updateCounters();
+        if (docToRemove) {
+          deleteDocsFromDB([docToRemove], () => {
+            modal.style.display = "none";
+            openCsHome(false);
+          });
+        } else {
+          modal.style.display = "none";
+          openCsHome(false);
+        }
+        return;
+      }
+
+      if (activeIdx >= pages.length) activeIdx = pages.length - 1;
+      const cur = pages[activeIdx];
+
+      document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.filter === cur.filter);
+      });
+      const grayBtn = document.getElementById("scsGrayToggle");
+      grayBtn.textContent = cur.grayscale ? "Grayscale: ON" : "Grayscale: OFF";
+      grayBtn.classList.toggle("active", cur.grayscale);
+
+      document.getElementById("scsBrightRange").value = cur.brightness || 0;
+      document.getElementById("scsContrastRange").value = cur.contrast || 0;
+
+      const selBtn = document.getElementById("scsSelectModeBtn");
+      selBtn.classList.toggle("active", multiSelectMode);
+      selBtn.textContent = multiSelectMode ? ("☑️ Done (" + selectedForDelete.size + ")") : "☑️ Select";
+
+      const strip = document.getElementById("scsPageStrip");
+      strip.innerHTML = "";
+      pages.forEach((p, idx) => {
+        const isSel = selectedForDelete.has(p.id);
+        const th = document.createElement("div");
+        th.className = "scs-thumb" + (idx === activeIdx ? " active" : "") + (isSel ? " selected-del" : "");
+        th.innerHTML = '<img src="' + p.rawDataUrl + '"><span>' + (idx + 1) + '/' + pages.length + '</span>' + (multiSelectMode ? ('<div class="scs-thumb-chk">' + (isSel ? "✓" : "") + '</div>') : '');
+        th.onclick = () => {
+          if (multiSelectMode) {
+            if (selectedForDelete.has(p.id)) selectedForDelete.delete(p.id);
+            else selectedForDelete.add(p.id);
+            refreshEditorUI();
+          } else {
+            if (activeIdx === idx) openFullPageViewer(idx);
+            else { activeIdx = idx; refreshEditorUI(); }
+          }
+        };
+        strip.appendChild(th);
+      });
+
+      renderProcessedPage(cur, document.getElementById("scsPreviewCanvas"));
+    }
+
+    document.getElementById("scsRotLeftBtn").onclick = () => {
       if (!pages[activeIdx]) return;
-      pages[activeIdx].filter = btn.dataset.filter;
+      pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) - 90 + 360) % 360;
       persistCurrentDocToDB();
       refreshEditorUI();
     };
-  });
-  document.getElementById("scsGrayToggle").onclick = () => {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].grayscale = !pages[activeIdx].grayscale;
-    persistCurrentDocToDB();
-    refreshEditorUI();
-  };
+    document.getElementById("scsRotRightBtn").onclick = () => {
+      if (!pages[activeIdx]) return;
+      pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) + 90) % 360;
+      persistCurrentDocToDB();
+      refreshEditorUI();
+    };
+    document.getElementById("scsSelectModeBtn").onclick = () => {
+      multiSelectMode = !multiSelectMode;
+      if (!multiSelectMode) selectedForDelete.clear();
+      refreshEditorUI();
+    };
+    document.getElementById("scsDelPageBtn").onclick = () => {
+      if (!pages.length) return;
+      if (multiSelectMode && selectedForDelete.size > 0) {
+        if (!confirm("Delete " + selectedForDelete.size + " selected page(s)?")) return;
+        pages = pages.filter(p => !selectedForDelete.has(p.id));
+        selectedForDelete.clear();
+        multiSelectMode = false;
+      } else {
+        if (!confirm("Delete Page " + (activeIdx + 1) + "?")) return;
+        pages.splice(activeIdx, 1);
+      }
+      updateCounters();
+      if (pages.length > 0) persistCurrentDocToDB();
+      refreshEditorUI();
+    };
 
-  document.getElementById("scsAddMoreCamBtn").onclick = switchToCamera;
-  document.getElementById("scsReviewThumbBtn").onclick = switchToEditor;
-  document.getElementById("scsSwitchViewBtn").onclick = () => {
-    if (document.getElementById("scsEditorView").style.display === "flex") switchToCamera();
-    else switchToEditor();
-  };
-
-  // Pure Offline PDF Generator
-  async function buildPdfBlobForPages(pageArray) {
-    const jpegQual = parseFloat(document.getElementById("scsPdfQualitySel").value || "0.82");
-    const pageBlobs = [];
-    for (const p of pageArray) {
-      const c = document.createElement("canvas");
-      await new Promise(res => renderProcessedPage(p, c, res));
-      const dataUrl = c.toDataURL("image/jpeg", jpegQual);
-      const binStr = atob(dataUrl.split(",")[1]);
-      const bytes = new Uint8Array(binStr.length);
-      for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
-      pageBlobs.push({ bytes, w: c.width, h: c.height });
+    function openFullPageViewer(idx) {
+      if (!pages[idx]) return;
+      activeIdx = idx;
+      fvZoomed = false;
+      const imgEl = document.getElementById("scsFullViewImg");
+      imgEl.style.transform = "scale(1)";
+      document.getElementById("scsFvZoomBtn").textContent = "🔍 2x";
+      document.getElementById("scsFvTitle").textContent = "Page " + (idx + 1) + " of " + pages.length;
+      const tempC = document.createElement("canvas");
+      renderProcessedPage(pages[idx], tempC, () => {
+        imgEl.src = tempC.toDataURL("image/jpeg", 0.94);
+        document.getElementById("scsFullViewModal").style.display = "flex";
+        pushNavState("cs-fullview");
+      });
     }
 
-    const enc = new TextEncoder();
-    const chunks = [];
-    const offsets = [0];
-    let pos = 0;
-    const pushStr = s => { const b = enc.encode(s); chunks.push(b); pos += b.length; };
-    const pushBytes = b => { chunks.push(b); pos += b.length; };
+    document.getElementById("scsFullViewBtn").onclick = () => openFullPageViewer(activeIdx);
+    document.getElementById("scsPreviewCanvas").onclick = () => openFullPageViewer(activeIdx);
+    document.getElementById("scsFvCloseBtn").onclick = () => { document.getElementById("scsFullViewModal").style.display = "none"; refreshEditorUI(); };
+    document.getElementById("scsFvZoomBtn").onclick = () => {
+      fvZoomed = !fvZoomed;
+      document.getElementById("scsFullViewImg").style.transform = fvZoomed ? "scale(2)" : "scale(1)";
+      document.getElementById("scsFvZoomBtn").textContent = fvZoomed ? "🔍 1x" : "🔍 2x";
+    };
+    document.getElementById("scsFvPrevBtn").onclick = () => { if (activeIdx > 0) openFullPageViewer(activeIdx - 1); };
+    document.getElementById("scsFvNextBtn").onclick = () => { if (activeIdx < pages.length - 1) openFullPageViewer(activeIdx + 1); };
 
-    pushStr("%PDF-1.4\n");
-    const totalPages = pageBlobs.length;
-    offsets[1] = pos;
-    pushStr("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+    document.getElementById("scsBrightRange").oninput = function() {
+      if (!pages[activeIdx]) return;
+      pages[activeIdx].brightness = Number(this.value);
+      renderProcessedPage(pages[activeIdx], document.getElementById("scsPreviewCanvas"));
+    };
+    document.getElementById("scsBrightRange").onchange = () => persistCurrentDocToDB();
+    document.getElementById("scsContrastRange").oninput = function() {
+      if (!pages[activeIdx]) return;
+      pages[activeIdx].contrast = Number(this.value);
+      renderProcessedPage(pages[activeIdx], document.getElementById("scsPreviewCanvas"));
+    };
+    document.getElementById("scsContrastRange").onchange = () => persistCurrentDocToDB();
+    document.getElementById("scsResetAdjBtn").onclick = () => {
+      if (!pages[activeIdx]) return;
+      pages[activeIdx].brightness = 0;
+      pages[activeIdx].contrast = 0;
+      persistCurrentDocToDB();
+      refreshEditorUI();
+    };
 
-    const kidsRefs = [];
-    for (let i = 0; i < totalPages; i++) kidsRefs.push(`${3 + i * 3} 0 R`);
-    offsets[2] = pos;
-    pushStr(`2 0 obj\n<< /Type /Pages /Kids [${kidsRefs.join(" ")}] /Count ${totalPages} >>\nendobj\n`);
-
-    for (let i = 0; i < totalPages; i++) {
-      const { bytes, w, h } = pageBlobs[i];
-      const pageObj = 3 + i * 3;
-      const contentObj = 4 + i * 3;
-      const imgObj = 5 + i * 3;
-      const pdfW = 595, pdfH = Math.round((h / w) * 595);
-
-      offsets[pageObj] = pos;
-      pushStr(`${pageObj} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pdfW} ${pdfH}] /Resources << /XObject << /Im0 ${imgObj} 0 R >> >> /Contents ${contentObj} 0 R >>\nendobj\n`);
-
-      const streamCmd = `q\n${pdfW} 0 0 ${pdfH} 0 0 cm\n/Im0 Do\nQ\n`;
-      offsets[contentObj] = pos;
-      pushStr(`${contentObj} 0 obj\n<< /Length ${streamCmd.length} >>\nstream\n${streamCmd}endstream\nendobj\n`);
-
-      offsets[imgObj] = pos;
-      pushStr(`${imgObj} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n`);
-      pushBytes(bytes);
-      pushStr("\nendstream\nendobj\n");
-    }
-
-    const xrefStart = pos;
-    const totalObjs = 3 + totalPages * 3;
-    pushStr(`xref\n0 ${totalObjs}\n0000000000 65535 f \n`);
-    for (let i = 1; i < totalObjs; i++) {
-      pushStr(String(offsets[i]).padStart(10, "0") + " 00000 n \n");
-    }
-    pushStr(`trailer\n<< /Size ${totalObjs} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`);
-
-    return new Blob(chunks, { type: "application/pdf" });
-  }
-
-  function triggerDownload(blob, filename) {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-  }
-
-  async function shareFileOrFallback(blob, filename, title) {
-    const file = new File([blob], filename, { type: blob.type });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      try { await navigator.share({ files: [file], title }); return; } catch (e) {}
-    }
-    triggerDownload(blob, filename);
-  }
-
-  document.getElementById("scsSaveImgBtn").onclick = () => {
-    const base = getSafeFileName();
-    const c = document.getElementById("scsPreviewCanvas");
-    c.toBlob(blob => { if (blob) triggerDownload(blob, `${base}_Page_${activeIdx + 1}.jpg`); }, "image/jpeg", 0.92);
-  };
-  document.getElementById("scsShareImgBtn").onclick = () => {
-    const base = getSafeFileName();
-    const c = document.getElementById("scsPreviewCanvas");
-    c.toBlob(blob => { if (blob) shareFileOrFallback(blob, `${base}_Page_${activeIdx + 1}.jpg`, base); }, "image/jpeg", 0.92);
-  };
-  document.getElementById("scsSavePdfBtn").onclick = async () => {
-    if (!pages.length) return;
-    const base = getSafeFileName();
-    const btn = document.getElementById("scsSavePdfBtn");
-    btn.textContent = "⏳ Creating...";
-    const pdfBlob = await buildPdfBlobForPages(pages);
-    triggerDownload(pdfBlob, `${base}.pdf`);
-    btn.textContent = "📥 Save Full PDF";
-  };
-  document.getElementById("scsSharePdfBtn").onclick = async () => {
-    if (!pages.length) return;
-    const base = getSafeFileName();
-    const btn = document.getElementById("scsSharePdfBtn");
-    btn.textContent = "⏳ Preparing...";
-    const pdfBlob = await buildPdfBlobForPages(pages);
-    await shareFileOrFallback(pdfBlob, `${base}.pdf`, base);
-    btn.textContent = "📑 Share Full PDF";
-  };
-
-  function returnToCamScannerHome() {
-    stopCamera();
-    persistCurrentDocToDB(() => {
-      modal.style.display = "none";
-      openCsHome();
+    document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
+      btn.onclick = () => {
+        if (!pages[activeIdx]) return;
+        pages[activeIdx].filter = btn.dataset.filter;
+        persistCurrentDocToDB();
+        refreshEditorUI();
+      };
     });
-  }
+    document.getElementById("scsGrayToggle").onclick = () => {
+      if (!pages[activeIdx]) return;
+      pages[activeIdx].grayscale = !pages[activeIdx].grayscale;
+      persistCurrentDocToDB();
+      refreshEditorUI();
+    };
 
-  document.getElementById("scsCloseBtn").onclick = returnToCamScannerHome;
-  document.getElementById("scsSaveDocHomeBtn").onclick = returnToCamScannerHome;
+    document.getElementById("scsAddMoreCamBtn").onclick = () => switchToCamera(true);
+    document.getElementById("scsReviewThumbBtn").onclick = () => switchToEditor(true);
+    document.getElementById("scsSwitchViewBtn").onclick = () => {
+      if (document.getElementById("scsEditorView").style.display === "flex") switchToCamera(true);
+      else switchToEditor(true);
+    };
+
+    async function buildPdfBlobForPages(pageArray) {
+      const jpegQual = parseFloat(document.getElementById("scsPdfQualitySel").value || "0.82");
+      const pageBlobs = [];
+      for (const p of pageArray) {
+        const c = document.createElement("canvas");
+        await new Promise(res => renderProcessedPage(p, c, res));
+        const dataUrl = c.toDataURL("image/jpeg", jpegQual);
+        const binStr = atob(dataUrl.split(",")[1]);
+        const bytes = new Uint8Array(binStr.length);
+        for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
+        pageBlobs.push({ bytes, w: c.width, h: c.height });
+      }
+
+      const enc = new TextEncoder();
+      const chunks = [];
+      const offsets = [0];
+      let pos = 0;
+      const pushStr = s => { const b = enc.encode(s); chunks.push(b); pos += b.length; };
+      const pushBytes = b => { chunks.push(b); pos += b.length; };
+
+      pushStr("%PDF-1.4\n");
+      const totalPages = pageBlobs.length;
+      offsets[1] = pos;
+      pushStr("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+
+      const kidsRefs = [];
+      for (let i = 0; i < totalPages; i++) kidsRefs.push((3 + i * 3) + " 0 R");
+      offsets[2] = pos;
+      pushStr("2 0 obj\n<< /Type /Pages /Kids [" + kidsRefs.join(" ") + "] /Count " + totalPages + " >>\nendobj\n");
+
+      for (let i = 0; i < totalPages; i++) {
+        const { bytes, w, h } = pageBlobs[i];
+        const pageObj = 3 + i * 3;
+        const contentObj = 4 + i * 3;
+        const imgObj = 5 + i * 3;
+        const pdfW = 595, pdfH = Math.round((h / w) * 595);
+
+        offsets[pageObj] = pos;
+        pushStr(pageObj + " 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + pdfW + " " + pdfH + "] /Resources << /XObject << /Im0 " + imgObj + " 0 R >> >> /Contents " + contentObj + " 0 R >>\nendobj\n");
+
+        const streamCmd = "q\n" + pdfW + " 0 0 " + pdfH + " 0 0 cm\n/Im0 Do\nQ\n";
+        offsets[contentObj] = pos;
+        pushStr(contentObj + " 0 obj\n<< /Length " + streamCmd.length + " >>\nstream\n" + streamCmd + "endstream\nendobj\n");
+
+        offsets[imgObj] = pos;
+        pushStr(imgObj + " 0 obj\n<< /Type /XObject /Subtype /Image /Width " + w + " /Height " + h + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " + bytes.length + " >>\nstream\n");
+        pushBytes(bytes);
+        pushStr("\nendstream\nendobj\n");
+      }
+
+      const xrefStart = pos;
+      const totalObjs = 3 + totalPages * 3;
+      pushStr("xref\n0 " + totalObjs + "\n0000000000 65535 f \n");
+      for (let i = 1; i < totalObjs; i++) {
+        pushStr(String(offsets[i]).padStart(10, "0") + " 00000 n \n");
+      }
+      pushStr("trailer\n<< /Size " + totalObjs + " /Root 1 0 R >>\nstartxref\n" + xrefStart + "\n%%EOF");
+
+      return new Blob(chunks, { type: "application/pdf" });
+    }
+
+    function triggerDownload(blob, filename) {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+    }
+
+    async function shareFileOrFallback(blob, filename, title) {
+      const file = new File([blob], filename, { type: blob.type });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file], title }); return; } catch (e) {}
+      }
+      await saveBlobToSvcDocumentsFolder(blob, filename);
+    }
+
+    // Direct Save to "SVC Documents" Folder on Device Storage
+    document.getElementById("scsSaveImgBtn").onclick = () => {
+      const base = getSafeFileName();
+      const c = document.getElementById("scsPreviewCanvas");
+      c.toBlob(async blob => {
+        if (blob) await saveBlobToSvcDocumentsFolder(blob, base + "_Page_" + (activeIdx + 1) + ".jpg");
+      }, "image/jpeg", 0.92);
+    };
+    document.getElementById("scsShareImgBtn").onclick = () => {
+      const base = getSafeFileName();
+      const c = document.getElementById("scsPreviewCanvas");
+      c.toBlob(async blob => {
+        if (blob) await shareFileOrFallback(blob, base + "_Page_" + (activeIdx + 1) + ".jpg", base);
+      }, "image/jpeg", 0.92);
+    };
+    document.getElementById("scsSavePdfBtn").onclick = async () => {
+      if (!pages.length) return;
+      const base = getSafeFileName();
+      const btn = document.getElementById("scsSavePdfBtn");
+      btn.textContent = "⏳ Saving...";
+      const pdfBlob = await buildPdfBlobForPages(pages);
+      await saveBlobToSvcDocumentsFolder(pdfBlob, base + ".pdf");
+      btn.textContent = "📥 Save Full PDF";
+    };
+    document.getElementById("scsSharePdfBtn").onclick = async () => {
+      if (!pages.length) return;
+      const base = getSafeFileName();
+      const btn = document.getElementById("scsSharePdfBtn");
+      btn.textContent = "⏳ Preparing...";
+      const pdfBlob = await buildPdfBlobForPages(pages);
+      await shareFileOrFallback(pdfBlob, base + ".pdf", base);
+      btn.textContent = "📑 Share Full PDF";
+    };
+
+    function returnToCamScannerHome() {
+      stopCamera();
+      if (pages.length > 0) {
+        persistCurrentDocToDB(() => {
+          modal.style.display = "none";
+          openCsHome(false);
+        });
+      } else {
+        if (currentDocId) deleteDocsFromDB([currentDocId]);
+        currentDocId = null;
+        modal.style.display = "none";
+        openCsHome(false);
+      }
+    }
+
+    document.getElementById("scsCloseBtn").onclick = returnToCamScannerHome;
+    document.getElementById("scsSaveDocHomeBtn").onclick = returnToCamScannerHome;
+  } catch (err) {
+    console.error("SVC Scanner Init Error:", err);
+  }
 })();
 </script>
 </body></html>
