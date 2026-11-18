@@ -6,7 +6,10 @@
 <link rel="icon" type="image/svg+xml" href="logo.svg?v=2">
 <link rel="shortcut icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e3a8a'/%3E%3Crect x='16' y='14' width='24' height='32' rx='4' fill='%23fff'/%3E%3Ccircle cx='44' cy='44' r='11' fill='%23f59e0b'/%3E%3C/svg%3E">
 <meta name="theme-color" content="#1e3a8a">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#12366b">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://js.puter.com; connect-src 'self' blob: data: https://*.puter.com https://api.groq.com https://generativelanguage.googleapis.com https://translate.googleapis.com; img-src 'self' blob: data:; font-src 'self' blob: data:; worker-src 'self' blob:;">
 <title>SHREE VAISHNAVI COMPUTERS | Professional Tools Suite</title>
@@ -131,10 +134,10 @@ button:focus-visible{outline:3px solid #86b3ff;outline-offset:2px}
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-    <a href="https://shree-vaishnavi-computers.github.io/font-converter/" target="_blank" style="background:rgba(255,255,255,0.14);color:#ffffff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;border:1px solid rgba(255,255,255,0.28);">🔤 हिंदी फ़ॉन्ट कनवर्टर</a>
-    <a href="guide.html" target="_blank" style="background:#059669;color:#ffffff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">📘 गाइड व शर्तें</a>
-    <a href="about.html" style="background:#ffffff;color:#0f172a;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">ℹ️ परिचय व नीति</a>
-    <button type="button" id="svcPwaInstallBtn" style="display:none;background:#f59e0b;color:#0f172a;border:none;padding:8px 15px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 10px rgba(245,158,11,0.4);">📥 App इंस्टॉल करें</button>
+    <a href="https://shree-vaishnavi-computers.github.io/font-converter/" target="_blank" style="background:rgba(255,255,255,0.14);color:#ffffff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;border:1px solid rgba(255,255,255,0.28);">🔤 Hindi Font Converter</a>
+    <a href="guide.html" target="_blank" style="background:#059669;color:#ffffff;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">📘 User Guide & Terms</a>
+    <a href="about.html" style="background:#ffffff;color:#0f172a;padding:8px 14px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">ℹ️ About & Privacy</a>
+    <button type="button" id="svcPwaInstallBtn" style="display:none;background:#f59e0b;color:#0f172a;border:none;padding:8px 15px;border-radius:8px;font-weight:800;font-size:13px;cursor:pointer;box-shadow:0 3px 10px rgba(245,158,11,0.4);">📥 Install App</button>
   </div>
 </header>
 <div class="wrap">
@@ -2688,33 +2691,25 @@ STRICT OPERATING RULES:
     g("admMainScreen").style.display = "none";
     g("admPinScreen").style.display = "block";
 
-    if (!savedPin) {
-      g("admPinTitle").textContent = "🆕 नया Admin PIN सेट करें";
-      g("admPinSub").textContent = "पहली बार प्रवेश के लिए अपना 4 से 6 अंकों का गुप्त PIN बनाएं:";
-    } else {
-      g("admPinTitle").textContent = "🔐 Admin PIN दर्ज करें";
-      g("admPinSub").textContent = "एडमिन पैनल खोलने के लिए अपना गुप्त PIN डालें:";
-    }
+    g("admPinTitle").textContent = "🔐 Admin PIN दर्ज करें";
+    g("admPinSub").textContent = "एडमिन पैनल खोलने के लिए अपना गुप्त PIN डालें:";
     g("svcAdminOverlay").style.display = "flex";
     setTimeout(() => g("admPinInput").focus(), 100);
   }
 
-  g("admPinSubmitBtn").onclick = () => {
+  g("admPinSubmitBtn").onclick = async () => {
+    const MASTER_ADMIN_HASH = "fa214e5c53c6518e55973b9c8320f4f68dc8f0a67cddcaa19d8f1f939af24094";
     const val = (g("admPinInput").value || "").trim();
-    const savedPin = localStorage.getItem(PIN_KEY);
-    if (!savedPin) {
-      if (val.length < 4) { g("admPinErr").textContent = "कम से कम 4 अंकों का PIN डालें।"; return; }
-      localStorage.setItem(PIN_KEY, val);
-      g("admPinScreen").style.display = "none";
-      g("admMainScreen").style.display = "block";
-      renderAdminForm();
-      showToast("नया Admin PIN सफलतापूर्वक सेट हो गया!");
-    } else {
-      if (val !== savedPin) { g("admPinErr").textContent = "❌ गलत PIN! कृपया पुनः प्रयास करें।"; return; }
-      g("admPinScreen").style.display = "none";
-      g("admMainScreen").style.display = "block";
-      renderAdminForm();
+    if (!val) { g("admPinErr").textContent = "कृपया अपना PIN डालें।"; return; }
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(val));
+    const enteredHash = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+    if (enteredHash !== MASTER_ADMIN_HASH) {
+      g("admPinErr").textContent = "❌ गलत PIN! कृपया पुनः प्रयास करें।";
+      return;
     }
+    g("admPinScreen").style.display = "none";
+    g("admMainScreen").style.display = "block";
+    renderAdminForm();
   };
 
   g("admPinInput").addEventListener("keydown", e => { if (e.key === "Enter") g("admPinSubmitBtn").click(); });
@@ -2841,6 +2836,410 @@ STRICT OPERATING RULES:
       deferredPrompt = null;
       btn.style.display = "none";
     };
+  }
+})();
+</script>
+<style>
+#svcDashContainer {
+    font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+    color: #0f172a;
+    margin: 10px 0 24px 0;
+}
+.svc-dash-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: #ffffff;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+.svc-dash-hero-left h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+.svc-dash-hero-left p {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: #cbd5e1;
+}
+.svc-dash-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.svc-cat-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+.svc-cat-btn {
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+    padding: 7px 14px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+.svc-cat-btn:hover {
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+}
+.svc-cat-btn.active {
+    background: #1e3a8a;
+    color: #ffffff;
+    border-color: #1e3a8a;
+}
+.svc-search-box {
+    position: relative;
+    min-width: 250px;
+    flex: 0 1 320px;
+}
+.svc-search-box input {
+    width: 100%;
+    padding: 8px 14px 8px 34px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 13px;
+    background: #ffffff;
+    color: #0f172a;
+    transition: all 0.15s ease;
+}
+.svc-search-box input:focus {
+    outline: none;
+    border-color: #1e3a8a;
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+.svc-search-box span {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #64748b;
+}
+#svcHomeDashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.svc-tool-tile {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.18s ease;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+}
+.svc-tool-tile:hover {
+    transform: translateY(-3px);
+    border-color: var(--tile-accent, #1e3a8a);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+}
+.svc-tile-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.svc-tile-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    font-weight: 700;
+}
+.svc-tile-arrow {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    padding: 3px 9px;
+    border-radius: 5px;
+    transition: all 0.15s ease;
+}
+.svc-tool-tile:hover .svc-tile-arrow {
+    background: var(--tile-accent, #1e3a8a);
+    color: #ffffff;
+    border-color: transparent;
+}
+.svc-tile-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 2px 0 0 0;
+}
+.svc-tile-desc {
+    font-size: 12.8px;
+    color: #475569;
+    line-height: 1.5;
+    margin: 0;
+}
+.svc-tile-tag {
+    align-self: flex-start;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 5px;
+    margin-top: auto;
+}
+.svc-workspace-hidden .panel, .svc-workspace-hidden #tabs {
+    display: none !important;
+}
+#svcBackHomeBar {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    padding: 10px 16px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+#svcQuickSwitchSelect {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 12.5px;
+    cursor: pointer;
+}
+</style>
+
+<script>
+(function(){
+  const wrap = document.querySelector(".wrap");
+  const tabs = document.getElementById("tabs");
+  if (!wrap || !tabs) return;
+
+  const tiles = [
+    { tab: "aidraft", cat: "ai", icon: "🤖", bg: "#eff6ff", color: "#1d4ed8", tag: "AI · Voice · Excel · Image", keys: "ai assistant draft letter order poster image voice excel", title: "AI+ Assistant & Drafter", desc: "Draft official letters and notices, analyze up to 4 files together, and generate HD graphics." },
+    { tab: "aitranslate", cat: "ai", icon: "🌐", bg: "#fff7ed", color: "#c2410c", tag: "Layout-Safe Translation", keys: "translate hindi english lens photo pdf word layout", title: "Same-Format Translator", desc: "Translate images, PDFs, or Word files into Hindi while keeping original formatting intact." },
+    { tab: "pdf", cat: "files", icon: "📕", bg: "#f5f3ff", color: "#6d28d9", tag: "AES Lock · Compress · OCR", keys: "pdf merge split compress lock password unlock ocr watermark", title: "PDF Manager & OCR", desc: "Lock/unlock PDFs, smart compress, merge, split, watermark, and run local OCR." },
+    { tab: "photo", cat: "files", icon: "🖼️", bg: "#f0fdfa", color: "#0f766e", tag: "Exam Ready · KB & DPI", keys: "photo signature resize crop kb dpi passport image", title: "Photo & Signature Resizer", desc: "Resize passport photos and signatures to exact pixel dimensions and KB file limits." },
+    { tab: "typing", cat: "office", icon: "⌨️", bg: "#fffbeb", color: "#b45309", tag: "RSSB & SSC Pattern", keys: "typing test hindi english devlys kruti unicode wpm", title: "Hindi & English Typing Test", desc: "Live WPM typing practice with word-lock in DevLys 010, Kruti Dev, and Unicode." },
+    { tab: "excel", cat: "files", icon: "📊", bg: "#f0fdf4", color: "#15803d", tag: "Offline Sheet Editor", keys: "excel csv xlsx sheet duplicate sort filter", title: "Excel & CSV Toolkit", desc: "Remove duplicates and blank rows, sort or filter sheets, and export clean XLSX/CSV." },
+    { tab: "calc", cat: "office", icon: "🧮", bg: "#fdf2f8", color: "#be185d", tag: "GST · TDS · Exact Age", keys: "calculator age percentage gst tds tax", title: "Office Calculators", desc: "Calculate exact age, percentages, CGST/SGST/IGST splits, and TDS deductions." },
+    { tab: "words", cat: "office", icon: "₹", bg: "#eef2ff", color: "#3730a3", tag: "Indian Currency Format", keys: "number to words rupees currency lakh crore", title: "Number to Words", desc: "Convert numeric amounts into Indian numbering words (Lakhs/Crores) in English or Hindi." }
+  ];
+
+  const dashContainer = document.createElement("div");
+  dashContainer.id = "svcDashContainer";
+
+  const lastTab = localStorage.getItem("svc_last_tool_tab");
+  const lastTile = tiles.find(x => x.tab === lastTab);
+
+  dashContainer.innerHTML = `
+    <div class="svc-dash-hero">
+      <div class="svc-dash-hero-left">
+        <h2>Workstation Dashboard</h2>
+        <p>Select a tool below to begin. All local utilities run privately inside your browser.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        ${lastTile ? `<button type="button" id="svcResumeLastBtn" style="background:#f59e0b;color:#0f172a;border:none;border-radius:7px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer;">⚡ Resume: ${lastTile.title}</button>` : ""}
+      </div>
+    </div>
+    <div class="svc-dash-controls">
+      <div class="svc-cat-pills" id="svcCatPills">
+        <button type="button" class="svc-cat-btn active" data-cat="all">All Tools (8)</button>
+        <button type="button" class="svc-cat-btn" data-cat="ai">AI & Translation</button>
+        <button type="button" class="svc-cat-btn" data-cat="files">PDF, Photo & Excel</button>
+        <button type="button" class="svc-cat-btn" data-cat="office">Typing & Calculators</button>
+      </div>
+      <div class="svc-search-box">
+        <span>🔍</span>
+        <input type="text" id="svcToolSearchInp" placeholder="Search tools (PDF, OCR, GST, Photo)...">
+      </div>
+    </div>
+  `;
+
+  const grid = document.createElement("div");
+  grid.id = "svcHomeDashboard";
+  dashContainer.appendChild(grid);
+
+  const backBar = document.createElement("div");
+  backBar.id = "svcBackHomeBar";
+  backBar.innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button type="button" id="svcGoHomeBtn" class="btn primary" style="padding:6px 14px;background:#1e3a8a;border-color:#1e3a8a;">← All Tools</button>
+      <span id="svcActiveToolLabel" style="font-weight:700;color:#0f172a;font-size:14.5px;"></span>
+    </div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <span style="font-size:12px;color:#64748b;font-weight:600;">Switch Tool:</span>
+      <select id="svcQuickSwitchSelect">
+        ${tiles.map(t => `<option value="${t.tab}">${t.icon} ${t.title}</option>`).join("")}
+      </select>
+    </div>
+  `;
+
+  let activeCat = "all";
+  function renderTiles() {
+    const q = (document.getElementById("svcToolSearchInp")?.value || "").trim().toLowerCase();
+    grid.innerHTML = "";
+    const filtered = tiles.filter(t => {
+      const matchCat = activeCat === "all" || t.cat === activeCat;
+      const matchQ = !q || t.title.toLowerCase().includes(q) || t.desc.toLowerCase().includes(q) || t.keys.includes(q);
+      return matchCat && matchQ;
+    });
+    if (!filtered.length) {
+      grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:28px;background:#ffffff;border-radius:10px;border:1px dashed #cbd5e1;color:#64748b;font-size:13.5px;">No matching tools found. Try a different keyword.</div>`;
+      return;
+    }
+    filtered.forEach(t => {
+      const card = document.createElement("div");
+      card.className = "svc-tool-tile";
+      card.style.setProperty("--tile-accent", t.color);
+      card.innerHTML = `
+        <div class="svc-tile-top">
+          <div class="svc-tile-icon" style="background:${t.bg};color:${t.color};">${t.icon}</div>
+          <span class="svc-tile-arrow">Open ↗</span>
+        </div>
+        <h3 class="svc-tile-title">${t.title}</h3>
+        <p class="svc-tile-desc">${t.desc}</p>
+        <span class="svc-tile-tag" style="background:${t.bg};color:${t.color};">${t.tag}</span>
+      `;
+      card.onclick = () => openToolWorkspace(t.tab, t.title);
+      grid.appendChild(card);
+    });
+  }
+
+  wrap.insertBefore(backBar, tabs);
+  wrap.insertBefore(dashContainer, backBar);
+
+  function showHomeDashboard() {
+    wrap.classList.add("svc-workspace-hidden");
+    dashContainer.style.display = "block";
+    backBar.style.display = "none";
+    renderTiles();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function openToolWorkspace(tabId, titleText) {
+    try { localStorage.setItem("svc_last_tool_tab", tabId); } catch (e) {}
+    wrap.classList.remove("svc-workspace-hidden");
+    dashContainer.style.display = "none";
+    backBar.style.display = "flex";
+    const lbl = document.getElementById("svcActiveToolLabel");
+    if (lbl) lbl.textContent = titleText || "";
+    const sw = document.getElementById("svcQuickSwitchSelect");
+    if (sw) sw.value = tabId;
+    const targetBtn = tabs.querySelector(`button[data-tab="${tabId}"]`);
+    if (targetBtn) targetBtn.click();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  document.getElementById("svcGoHomeBtn").onclick = showHomeDashboard;
+  document.getElementById("svcQuickSwitchSelect").onchange = function() {
+    const found = tiles.find(x => x.tab === this.value);
+    if (found) openToolWorkspace(found.tab, found.title);
+  };
+  if (lastTile && document.getElementById("svcResumeLastBtn")) {
+    document.getElementById("svcResumeLastBtn").onclick = () => openToolWorkspace(lastTile.tab, lastTile.title);
+  }
+  document.getElementById("svcCatPills").addEventListener("click", e => {
+    const btn = e.target.closest(".svc-cat-btn");
+    if (!btn) return;
+    activeCat = btn.dataset.cat;
+    document.querySelectorAll(".svc-cat-btn").forEach(b => b.classList.toggle("active", b === btn));
+    renderTiles();
+  });
+  document.getElementById("svcToolSearchInp").addEventListener("input", renderTiles);
+
+  tabs.addEventListener("click", e => {
+    const b = e.target.closest("button[data-tab]");
+    if (b) {
+      const found = tiles.find(x => x.tab === b.dataset.tab);
+      const lbl = document.getElementById("svcActiveToolLabel");
+      const sw = document.getElementById("svcQuickSwitchSelect");
+      if (found) {
+        if (lbl) lbl.textContent = found.title;
+        if (sw) sw.value = found.tab;
+        try { localStorage.setItem("svc_last_tool_tab", found.tab); } catch (err) {}
+      }
+    }
+  });
+
+  showHomeDashboard();
+})();
+</script>
+<style>
+/* Native App Feel & Mobile Lock */
+html, body {
+  overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
+}
+button, .svc-tool-tile, .svc-cat-btn {
+  user-select: none;
+  -webkit-user-select: none;
+}
+@media all and (display-mode: standalone) {
+  #installBtn, [id*="install" i], .install-btn {
+    display: none !important;
+  }
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+@media (max-width: 768px) {
+  #svcHomeDashboard {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .svc-dash-hero {
+    padding: 16px !important;
+  }
+  .svc-dash-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .svc-search-box {
+    min-width: 100% !important;
+  }
+}
+</style>
+<script>
+(function(){
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true || location.search.includes('mode=app');
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  if (isStandalone || isTouchDevice) {
+    const vp = document.querySelector('meta[name="viewport"]');
+    if (vp) {
+      vp.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+    }
+  }
+
+  if (isStandalone) {
+    document.documentElement.classList.add('svc-pwa-installed');
+    document.querySelectorAll('header a, header button').forEach(el => {
+      if (/install/i.test(el.textContent)) el.style.display = 'none';
+    });
   }
 })();
 </script>
