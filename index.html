@@ -3308,4 +3308,943 @@ html.svc-true-mobile header {
   window.addEventListener('orientationchange', enforceNativeMobileApp);
 })();
 </script>
+<style>
+/* --- SVC Mobile-Only CamScanner UI --- */
+#svcMobScanCard, #svcMobScanFab { display: none; }
+
+@media (max-width: 768px), (pointer: coarse) {
+  #svcMobScanCard {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    color: #ffffff;
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+    cursor: pointer;
+    border: 1px solid #3b82f6;
+  }
+  #svcMobScanFab {
+    display: flex !important;
+    position: fixed;
+    right: 18px;
+    bottom: 20px;
+    z-index: 9990;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #ffffff;
+    border: none;
+    border-radius: 99px;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.45);
+    cursor: pointer;
+  }
+}
+
+#svcScannerModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  background: #090d16;
+  color: #f8fafc;
+  flex-direction: column;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  user-select: none;
+}
+.scs-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  gap: 6px;
+}
+.scs-btn-icon {
+  background: #1e293b;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.scs-btn-icon.active {
+  background: #f59e0b;
+  color: #0f172a;
+  border-color: #f59e0b;
+}
+.scs-select {
+  background: #1e293b;
+  color: #ffffff;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.scs-rename-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #111827;
+  border-bottom: 1px solid #1e293b;
+}
+.scs-rename-bar input {
+  flex: 1;
+  background: #1e293b;
+  color: #ffffff;
+  border: 1px solid #3b82f6;
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.scs-rename-bar input:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+.scs-view-area {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000000;
+}
+#scsVideo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.scs-guide-frame {
+  position: absolute;
+  inset: 10% 8%;
+  border: 2px dashed rgba(56, 189, 248, 0.65);
+  border-radius: 12px;
+  pointer-events: none;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.28);
+}
+.scs-cam-controls {
+  background: #0f172a;
+  padding: 12px 16px 22px 16px;
+  border-top: 1px solid #1e293b;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.scs-mode-switch {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+.scs-mode-pill {
+  padding: 5px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #1e293b;
+  color: #94a3b8;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.scs-mode-pill.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+.scs-shutter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.scs-shutter-btn {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 5px solid #38bdf8;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
+}
+.scs-shutter-btn:active { transform: scale(0.93); }
+.scs-batch-badge {
+  position: relative;
+  width: 50px;
+  height: 56px;
+  border-radius: 8px;
+  background: #1e293b;
+  border: 1.5px solid #475569;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  overflow: hidden;
+}
+.scs-batch-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.scs-batch-count {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 99px;
+}
+#scsEditorView {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  background: #0b1120;
+}
+.scs-canvas-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  overflow: auto;
+}
+#scsPreviewCanvas {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 6px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  background: #ffffff;
+}
+.scs-page-strip {
+  display: flex;
+  gap: 8px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+}
+.scs-thumb {
+  width: 48px;
+  height: 62px;
+  border-radius: 6px;
+  border: 2px solid #334155;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  cursor: pointer;
+}
+.scs-thumb.active { border-color: #38bdf8; }
+.scs-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.scs-thumb span {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.7);
+  font-size: 10px;
+  text-align: center;
+}
+.scs-filter-bar {
+  display: flex;
+  gap: 7px;
+  padding: 10px 12px;
+  overflow-x: auto;
+  background: #111827;
+  border-top: 1px solid #1e293b;
+}
+.scs-filter-chip {
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #1e293b;
+  color: #cbd5e1;
+  border: 1px solid #334155;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.scs-filter-chip.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #60a5fa;
+}
+.scs-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  padding: 10px 12px 18px 12px;
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+}
+.scs-act-btn {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+</style>
+
+<script>
+(function(){
+  const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && Math.min(screen.width, screen.height) <= 768);
+  if (!isMobileDevice) return;
+
+  function makeDefaultDocName() {
+    const now = new Date();
+    const pad = n => String(n).padStart(2, "0");
+    const datePart = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    const timePart = `${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
+    return `SVC_Doc_${datePart}_${timePart}`;
+  }
+
+  function getSafeFileName() {
+    const inp = document.getElementById("scsDocNameInp");
+    const raw = (inp ? inp.value : "").trim() || makeDefaultDocName();
+    return raw.replace(/[\\/:*?"<>|]+/g, "_");
+  }
+
+  // 1. Add Mobile-Only Scanner Card on Dashboard & Floating Camera Button
+  const dashGrid = document.getElementById("svcHomeDashboard");
+  if (dashGrid && dashGrid.parentNode) {
+    const scanBanner = document.createElement("div");
+    scanBanner.id = "svcMobScanCard";
+    scanBanner.innerHTML = `
+      <div>
+        <div style="font-size:11px;font-weight:800;color:#93c5fd;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · Mobile App Exclusive</div>
+        <div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div>
+        <div style="font-size:12px;color:#cbd5e1;margin-top:3px;">Magic Pro, No Shadow, Batch Scan & Instant PDF</div>
+      </div>
+      <div style="background:#2563eb;padding:10px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Scan ↗</div>
+    `;
+    scanBanner.onclick = () => openSvcScanner();
+    dashGrid.parentNode.insertBefore(scanBanner, dashGrid);
+  }
+
+  const fab = document.createElement("button");
+  fab.id = "svcMobScanFab";
+  fab.type = "button";
+  fab.innerHTML = `📷 Scan Doc`;
+  fab.onclick = () => openSvcScanner();
+  document.body.appendChild(fab);
+
+  // 2. Build Fullscreen CamScanner Modal
+  const modal = document.createElement("div");
+  modal.id = "svcScannerModal";
+  modal.innerHTML = `
+    <div class="scs-topbar">
+      <button type="button" class="scs-btn-icon" id="scsCloseBtn">✕ Close</button>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button type="button" class="scs-btn-icon" id="scsFlashBtn">⚡ Flash: OFF</button>
+        <select id="scsResSelect" class="scs-select" title="HD Resolution">
+          <option value="1280">SD 720p</option>
+          <option value="1920" selected>HD 1080p</option>
+          <option value="3840">Ultra HD 4K</option>
+        </select>
+      </div>
+      <button type="button" class="scs-btn-icon" id="scsSwitchViewBtn" style="background:#1d4ed8;border-color:#3b82f6;">Pages (<span id="scsTopCount">0</span>)</button>
+    </div>
+
+    <!-- CAMERA VIEW -->
+    <div id="scsCameraView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
+      <div class="scs-view-area">
+        <video id="scsVideo" autoplay playsinline muted></video>
+        <div class="scs-guide-frame"></div>
+      </div>
+      <div class="scs-cam-controls">
+        <div class="scs-mode-switch">
+          <button type="button" class="scs-mode-pill" data-scanmode="single">Single Page</button>
+          <button type="button" class="scs-mode-pill active" data-scanmode="batch">Batch Mode (Multi-Page)</button>
+        </div>
+        <div class="scs-shutter-row">
+          <label class="scs-btn-icon" style="cursor:pointer;">
+            🖼️ Gallery
+            <input type="file" id="scsGalleryInp" accept="image/*" multiple style="display:none;">
+          </label>
+          <button type="button" class="scs-shutter-btn" id="scsCaptureBtn" title="Capture Page"></button>
+          <div class="scs-batch-badge" id="scsReviewThumbBtn" title="Review Scanned Pages">
+            <span style="font-size:18px;">📄</span>
+            <span class="scs-batch-count" id="scsBadgeCount">0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITOR & EXPORT VIEW -->
+    <div id="scsEditorView">
+      <div class="scs-rename-bar">
+        <span style="font-size:15px;">✏️</span>
+        <input type="text" id="scsDocNameInp" placeholder="Enter document name...">
+        <button type="button" class="scs-btn-icon" id="scsNewDocBtn" title="Start New Document" style="background:#7f1d1d;border-color:#991b1b;">+ New</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#1e293b;font-size:12px;">
+        <button type="button" class="scs-btn-icon" id="scsAddMoreCamBtn">+ Scan More</button>
+        <span id="scsPageIndicator" style="font-weight:700;">Page 1 of 1</span>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="scs-btn-icon" id="scsRotateBtn">↻ Rotate</button>
+          <button type="button" class="scs-btn-icon" id="scsDelPageBtn" style="color:#fca5a5;">🗑️</button>
+        </div>
+      </div>
+      <div class="scs-canvas-wrap">
+        <canvas id="scsPreviewCanvas"></canvas>
+      </div>
+      <div class="scs-page-strip" id="scsPageStrip"></div>
+      <div class="scs-filter-bar" id="scsFilterBar">
+        <button type="button" class="scs-filter-chip" data-filter="original">Original</button>
+        <button type="button" class="scs-filter-chip" data-filter="lighten">Lighten</button>
+        <button type="button" class="scs-filter-chip active" data-filter="magic">Magic Color</button>
+        <button type="button" class="scs-filter-chip" data-filter="magicpro">Magic Pro</button>
+        <button type="button" class="scs-filter-chip" data-filter="noshadow">No Shadow</button>
+        <button type="button" class="scs-filter-chip" data-filter="nohandwriting">No Handwriting</button>
+        <button type="button" class="scs-filter-chip" data-filter="bw">B&amp;W</button>
+        <button type="button" class="scs-filter-chip" data-filter="eco">Eco</button>
+        <button type="button" class="scs-filter-chip" id="scsGrayToggle">Grayscale: OFF</button>
+      </div>
+      <div class="scs-action-grid">
+        <button type="button" class="scs-act-btn" id="scsSaveImgBtn" style="background:#1e293b;color:#ffffff;border:1px solid #475569;">💾 Save Image</button>
+        <button type="button" class="scs-act-btn" id="scsShareImgBtn" style="background:#0284c7;color:#ffffff;">📤 Share Image</button>
+        <button type="button" class="scs-act-btn" id="scsSavePdfBtn" style="background:#16a34a;color:#ffffff;">📥 Save Full PDF</button>
+        <button type="button" class="scs-act-btn" id="scsSharePdfBtn" style="background:#f59e0b;color:#0f172a;">📑 Share Full PDF</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  // 3. State & IndexedDB Offline Storage
+  let pages = [];
+  let docTitle = makeDefaultDocName();
+  let activeIdx = 0;
+  let scanMode = "batch";
+  let flashOn = false;
+  let mediaStream = null;
+  const DB_NAME = "svc_offline_scanner_db";
+
+  function savePagesToDeviceDB() {
+    try {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = e => e.target.result.createObjectStore("scans", { keyPath: "id" });
+      req.onsuccess = e => {
+        const tx = e.target.result.transaction("scans", "readwrite");
+        tx.objectStore("scans").put({ id: "current_session", pages, docTitle });
+      };
+    } catch (err) {}
+  }
+
+  function loadPagesFromDeviceDB(cb) {
+    try {
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = e => e.target.result.createObjectStore("scans", { keyPath: "id" });
+      req.onsuccess = e => {
+        const tx = e.target.result.transaction("scans", "readonly");
+        const getReq = tx.objectStore("scans").get("current_session");
+        getReq.onsuccess = () => {
+          if (getReq.result) {
+            if (Array.isArray(getReq.result.pages)) pages = getReq.result.pages;
+            docTitle = (pages.length && getReq.result.docTitle) ? getReq.result.docTitle : makeDefaultDocName();
+          } else {
+            docTitle = makeDefaultDocName();
+          }
+          document.getElementById("scsDocNameInp").value = docTitle;
+          if (cb) cb();
+        };
+      };
+    } catch (err) {
+      docTitle = makeDefaultDocName();
+      document.getElementById("scsDocNameInp").value = docTitle;
+      if (cb) cb();
+    }
+  }
+
+  document.getElementById("scsDocNameInp").addEventListener("input", function() {
+    docTitle = this.value;
+    savePagesToDeviceDB();
+  });
+
+  document.getElementById("scsNewDocBtn").onclick = () => {
+    if (pages.length && !confirm("Start a new document? Current scanned pages will be cleared.")) return;
+    pages = [];
+    activeIdx = 0;
+    docTitle = makeDefaultDocName();
+    document.getElementById("scsDocNameInp").value = docTitle;
+    updateCounters();
+    savePagesToDeviceDB();
+    switchToCamera();
+  };
+
+  // 4. Camera Controls (HD + Flash Torch)
+  async function startCamera() {
+    stopCamera();
+    const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+          width: { ideal: targetW },
+          height: { ideal: Math.round(targetW * 0.75) }
+        },
+        audio: false
+      });
+      const vid = document.getElementById("scsVideo");
+      vid.srcObject = mediaStream;
+      flashOn = false;
+      updateFlashBtn();
+    } catch (err) {
+      alert("Camera access unavailable. You can still import photos using the Gallery button.");
+    }
+  }
+
+  function stopCamera() {
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(t => t.stop());
+      mediaStream = null;
+    }
+  }
+
+  function updateFlashBtn() {
+    const btn = document.getElementById("scsFlashBtn");
+    btn.textContent = flashOn ? "⚡ Flash: ON" : "⚡ Flash: OFF";
+    btn.classList.toggle("active", flashOn);
+  }
+
+  document.getElementById("scsFlashBtn").onclick = async () => {
+    if (!mediaStream) return;
+    const track = mediaStream.getVideoTracks()[0];
+    const caps = track.getCapabilities ? track.getCapabilities() : {};
+    if (!caps.torch) {
+      alert("Torch/Flash is not supported on this browser camera.");
+      return;
+    }
+    flashOn = !flashOn;
+    try {
+      await track.applyConstraints({ advanced: [{ torch: flashOn }] });
+      updateFlashBtn();
+    } catch (e) {
+      flashOn = false;
+      updateFlashBtn();
+    }
+  };
+
+  document.getElementById("scsResSelect").onchange = () => {
+    if (document.getElementById("scsCameraView").style.display !== "none") startCamera();
+  };
+
+  document.querySelectorAll(".scs-mode-pill").forEach(btn => {
+    btn.onclick = () => {
+      scanMode = btn.dataset.scanmode;
+      document.querySelectorAll(".scs-mode-pill").forEach(b => b.classList.toggle("active", b === btn));
+    };
+  });
+
+  document.getElementById("scsCaptureBtn").onclick = () => {
+    const vid = document.getElementById("scsVideo");
+    if (!vid || !vid.videoWidth) return;
+    if (pages.length === 0) {
+      docTitle = makeDefaultDocName();
+      document.getElementById("scsDocNameInp").value = docTitle;
+    }
+    const c = document.createElement("canvas");
+    c.width = vid.videoWidth;
+    c.height = vid.videoHeight;
+    c.getContext("2d").drawImage(vid, 0, 0, c.width, c.height);
+    addPageFromDataUrl(c.toDataURL("image/jpeg", 0.94));
+    if (scanMode === "single") switchToEditor();
+  };
+
+  document.getElementById("scsGalleryInp").onchange = e => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    if (pages.length === 0) {
+      docTitle = makeDefaultDocName();
+      document.getElementById("scsDocNameInp").value = docTitle;
+    }
+    let loaded = 0;
+    files.forEach(f => {
+      const r = new FileReader();
+      r.onload = ev => {
+        addPageFromDataUrl(ev.target.result);
+        loaded++;
+        if (loaded === files.length) switchToEditor();
+      };
+      r.readAsDataURL(f);
+    });
+    e.target.value = "";
+  };
+
+  function addPageFromDataUrl(dataUrl) {
+    pages.push({
+      id: Date.now() + Math.random(),
+      rawDataUrl: dataUrl,
+      filter: "magic",
+      grayscale: false,
+      rotation: 0
+    });
+    activeIdx = pages.length - 1;
+    updateCounters();
+    savePagesToDeviceDB();
+  }
+
+  function updateCounters() {
+    document.getElementById("scsBadgeCount").textContent = pages.length;
+    document.getElementById("scsTopCount").textContent = pages.length;
+    const thumbBox = document.getElementById("scsReviewThumbBtn");
+    if (pages.length > 0) {
+      thumbBox.innerHTML = `<img src="${pages[pages.length - 1].rawDataUrl}"><span class="scs-batch-count">${pages.length}</span>`;
+    } else {
+      thumbBox.innerHTML = `<span style="font-size:18px;">📄</span><span class="scs-batch-count">0</span>`;
+    }
+  }
+
+  // 5. Image Processing Engine + Default "SVC Scanner" Watermark
+  function renderProcessedPage(pageObj, targetCanvas, callback) {
+    const img = new Image();
+    img.onload = () => {
+      const rot = (pageObj.rotation || 0) % 360;
+      const swap = rot === 90 || rot === 270;
+      const w = swap ? img.height : img.width;
+      const h = swap ? img.width : img.height;
+      targetCanvas.width = w;
+      targetCanvas.height = h;
+      const ctx = targetCanvas.getContext("2d");
+
+      ctx.save();
+      ctx.translate(w / 2, h / 2);
+      ctx.rotate((rot * Math.PI) / 180);
+      ctx.drawImage(img, -img.width / 2, -img.height / 2);
+      ctx.restore();
+
+      const imgData = ctx.getImageData(0, 0, w, h);
+      const d = imgData.data;
+      const mode = pageObj.filter || "magic";
+      const forceGray = !!pageObj.grayscale;
+
+      let avgLum = 180;
+      if (mode === "noshadow" || mode === "magicpro" || mode === "nohandwriting") {
+        let sum = 0, cnt = 0;
+        for (let i = 0; i < d.length; i += 40) {
+          sum += 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+          cnt++;
+        }
+        avgLum = Math.max(110, sum / Math.max(1, cnt));
+      }
+
+      for (let i = 0; i < d.length; i += 4) {
+        let r = d[i], g = d[i + 1], b = d[i + 2];
+        const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+
+        if (mode === "lighten") {
+          r = Math.min(255, r * 1.18 + 18);
+          g = Math.min(255, g * 1.18 + 18);
+          b = Math.min(255, b * 1.18 + 18);
+        } else if (mode === "magic") {
+          const norm = lum > 155 ? 255 : Math.max(0, (lum - 30) * 1.25);
+          const ratio = lum > 1 ? norm / lum : 1;
+          r = Math.min(255, Math.max(0, (r - lum) * 1.35 + lum * ratio));
+          g = Math.min(255, Math.max(0, (g - lum) * 1.35 + lum * ratio));
+          b = Math.min(255, Math.max(0, (b - lum) * 1.35 + lum * ratio));
+        } else if (mode === "magicpro") {
+          const scale = 235 / avgLum;
+          r = Math.min(255, r * scale);
+          g = Math.min(255, g * scale);
+          b = Math.min(255, b * scale);
+          const l2 = 0.299 * r + 0.587 * g + 0.114 * b;
+          if (l2 > 175) { r = g = b = 255; }
+          else {
+            r = Math.max(0, (r - 128) * 1.45 + 128);
+            g = Math.max(0, (g - 128) * 1.45 + 128);
+            b = Math.max(0, (b - 128) * 1.45 + 128);
+          }
+        } else if (mode === "noshadow") {
+          const boost = 242 / avgLum;
+          r = Math.min(255, r * boost);
+          g = Math.min(255, g * boost);
+          b = Math.min(255, b * boost);
+          if ((r + g + b) / 3 > 190) { r = g = b = 255; }
+        } else if (mode === "nohandwriting") {
+          const isBlueInk = (b - r > 22) && (lum > 75);
+          const isFaintStroke = lum > (avgLum * 0.62);
+          if (isBlueInk || isFaintStroke) {
+            r = g = b = 255;
+          } else {
+            const dark = Math.max(0, lum * 0.55);
+            r = g = b = dark;
+          }
+        } else if (mode === "bw") {
+          const v = lum > 142 ? 255 : 0;
+          r = g = b = v;
+        } else if (mode === "eco") {
+          const v = lum > 148 ? 255 : 95;
+          r = g = b = v;
+        }
+
+        if (forceGray) {
+          const gr = 0.299 * r + 0.587 * g + 0.114 * b;
+          r = g = b = gr;
+        }
+
+        d[i] = r; d[i + 1] = g; d[i + 2] = b;
+      }
+      ctx.putImageData(imgData, 0, 0);
+
+      // Default "SVC Scanner" Watermark
+      const fontSize = Math.max(14, Math.round(w * 0.021));
+      ctx.save();
+      ctx.font = `700 ${fontSize}px sans-serif`;
+      const wmText = "SVC Scanner";
+      const pad = Math.round(fontSize * 0.7);
+      const metrics = ctx.measureText(wmText);
+      const boxW = metrics.width + pad * 1.6;
+      const boxH = fontSize + pad * 0.9;
+      ctx.fillStyle = "rgba(15, 23, 42, 0.68)";
+      ctx.fillRect(w - boxW - pad, h - boxH - pad, boxW, boxH);
+      ctx.fillStyle = "#ffffff";
+      ctx.textBaseline = "middle";
+      ctx.fillText(wmText, w - boxW - pad + pad * 0.8, h - boxH / 2 - pad);
+      ctx.restore();
+
+      if (callback) callback(targetCanvas);
+    };
+    img.src = pageObj.rawDataUrl;
+  }
+
+  // 6. Editor Navigation & Filters
+  function switchToEditor() {
+    if (!pages.length) {
+      alert("Please capture or select at least 1 page first.");
+      return;
+    }
+    stopCamera();
+    document.getElementById("scsCameraView").style.display = "none";
+    document.getElementById("scsEditorView").style.display = "flex";
+    refreshEditorUI();
+  }
+
+  function switchToCamera() {
+    document.getElementById("scsEditorView").style.display = "none";
+    document.getElementById("scsCameraView").style.display = "flex";
+    startCamera();
+  }
+
+  function refreshEditorUI() {
+    if (!pages.length) { switchToCamera(); return; }
+    if (activeIdx >= pages.length) activeIdx = pages.length - 1;
+    const cur = pages[activeIdx];
+    document.getElementById("scsPageIndicator").textContent = `Page ${activeIdx + 1} of ${pages.length}`;
+
+    document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.filter === cur.filter);
+    });
+    const grayBtn = document.getElementById("scsGrayToggle");
+    grayBtn.textContent = cur.grayscale ? "Grayscale: ON" : "Grayscale: OFF";
+    grayBtn.classList.toggle("active", cur.grayscale);
+
+    const strip = document.getElementById("scsPageStrip");
+    strip.innerHTML = "";
+    pages.forEach((p, idx) => {
+      const th = document.createElement("div");
+      th.className = "scs-thumb" + (idx === activeIdx ? " active" : "");
+      th.innerHTML = `<img src="${p.rawDataUrl}"><span>${idx + 1}</span>`;
+      th.onclick = () => { activeIdx = idx; refreshEditorUI(); };
+      strip.appendChild(th);
+    });
+
+    renderProcessedPage(cur, document.getElementById("scsPreviewCanvas"));
+  }
+
+  document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
+    btn.onclick = () => {
+      if (!pages[activeIdx]) return;
+      pages[activeIdx].filter = btn.dataset.filter;
+      savePagesToDeviceDB();
+      refreshEditorUI();
+    };
+  });
+
+  document.getElementById("scsGrayToggle").onclick = () => {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].grayscale = !pages[activeIdx].grayscale;
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
+
+  document.getElementById("scsRotateBtn").onclick = () => {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) + 90) % 360;
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
+
+  document.getElementById("scsDelPageBtn").onclick = () => {
+    if (!pages.length) return;
+    pages.splice(activeIdx, 1);
+    updateCounters();
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
+
+  document.getElementById("scsAddMoreCamBtn").onclick = switchToCamera;
+  document.getElementById("scsReviewThumbBtn").onclick = switchToEditor;
+  document.getElementById("scsSwitchViewBtn").onclick = () => {
+    if (document.getElementById("scsEditorView").style.display === "flex") switchToCamera();
+    else switchToEditor();
+  };
+
+  // 7. Pure Offline Multi-Page JPEG-to-PDF Generator
+  async function buildMultiPagePdfBlob() {
+    const pageBlobs = [];
+    for (const p of pages) {
+      const c = document.createElement("canvas");
+      await new Promise(res => renderProcessedPage(p, c, res));
+      const dataUrl = c.toDataURL("image/jpeg", 0.88);
+      const binStr = atob(dataUrl.split(",")[1]);
+      const bytes = new Uint8Array(binStr.length);
+      for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
+      pageBlobs.push({ bytes, w: c.width, h: c.height });
+    }
+
+    const enc = new TextEncoder();
+    const chunks = [];
+    const offsets = [0];
+    let pos = 0;
+    const pushStr = s => { const b = enc.encode(s); chunks.push(b); pos += b.length; };
+    const pushBytes = b => { chunks.push(b); pos += b.length; };
+
+    pushStr("%PDF-1.4\n");
+    const totalPages = pageBlobs.length;
+    offsets[1] = pos;
+    pushStr("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+
+    const kidsRefs = [];
+    for (let i = 0; i < totalPages; i++) kidsRefs.push(`${3 + i * 3} 0 R`);
+    offsets[2] = pos;
+    pushStr(`2 0 obj\n<< /Type /Pages /Kids [${kidsRefs.join(" ")}] /Count ${totalPages} >>\nendobj\n`);
+
+    for (let i = 0; i < totalPages; i++) {
+      const { bytes, w, h } = pageBlobs[i];
+      const pageObj = 3 + i * 3;
+      const contentObj = 4 + i * 3;
+      const imgObj = 5 + i * 3;
+
+      const pdfW = 595, pdfH = Math.round((h / w) * 595);
+
+      offsets[pageObj] = pos;
+      pushStr(`${pageObj} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pdfW} ${pdfH}] /Resources << /XObject << /Im0 ${imgObj} 0 R >> >> /Contents ${contentObj} 0 R >>\nendobj\n`);
+
+      const streamCmd = `q\n${pdfW} 0 0 ${pdfH} 0 0 cm\n/Im0 Do\nQ\n`;
+      offsets[contentObj] = pos;
+      pushStr(`${contentObj} 0 obj\n<< /Length ${streamCmd.length} >>\nstream\n${streamCmd}endstream\nendobj\n`);
+
+      offsets[imgObj] = pos;
+      pushStr(`${imgObj} 0 obj\n<< /Type /XObject /Subtype /Image /Width ${w} /Height ${h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n`);
+      pushBytes(bytes);
+      pushStr("\nendstream\nendobj\n");
+    }
+
+    const xrefStart = pos;
+    const totalObjs = 3 + totalPages * 3;
+    pushStr(`xref\n0 ${totalObjs}\n0000000000 65535 f \n`);
+    for (let i = 1; i < totalObjs; i++) {
+      pushStr(String(offsets[i]).padStart(10, "0") + " 00000 n \n");
+    }
+    pushStr(`trailer\n<< /Size ${totalObjs} /Root 1 0 R >>\nstartxref\n${xrefStart}\n%%EOF`);
+
+    return new Blob(chunks, { type: "application/pdf" });
+  }
+
+  function triggerDownload(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+  }
+
+  async function shareFileOrFallback(blob, filename, title) {
+    const file = new File([blob], filename, { type: blob.type });
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+      try {
+        await navigator.share({ files: [file], title });
+        return;
+      } catch (e) {}
+    }
+    triggerDownload(blob, filename);
+  }
+
+  // Save & Share Single Image with Custom/Timestamp Name
+  document.getElementById("scsSaveImgBtn").onclick = () => {
+    const base = getSafeFileName();
+    const c = document.getElementById("scsPreviewCanvas");
+    c.toBlob(blob => {
+      if (blob) triggerDownload(blob, `${base}_Page_${activeIdx + 1}.jpg`);
+    }, "image/jpeg", 0.92);
+  };
+
+  document.getElementById("scsShareImgBtn").onclick = () => {
+    const base = getSafeFileName();
+    const c = document.getElementById("scsPreviewCanvas");
+    c.toBlob(blob => {
+      if (blob) shareFileOrFallback(blob, `${base}_Page_${activeIdx + 1}.jpg`, base);
+    }, "image/jpeg", 0.92);
+  };
+
+  // Save & Share Full Multi-Page PDF with Custom/Timestamp Name
+  document.getElementById("scsSavePdfBtn").onclick = async () => {
+    if (!pages.length) return;
+    const base = getSafeFileName();
+    const btn = document.getElementById("scsSavePdfBtn");
+    btn.textContent = "⏳ Creating PDF...";
+    const pdfBlob = await buildMultiPagePdfBlob();
+    triggerDownload(pdfBlob, `${base}.pdf`);
+    btn.textContent = "📥 Save Full PDF";
+  };
+
+  document.getElementById("scsSharePdfBtn").onclick = async () => {
+    if (!pages.length) return;
+    const base = getSafeFileName();
+    const btn = document.getElementById("scsSharePdfBtn");
+    btn.textContent = "⏳ Preparing...";
+    const pdfBlob = await buildMultiPagePdfBlob();
+    await shareFileOrFallback(pdfBlob, `${base}.pdf`, base);
+    btn.textContent = "📑 Share Full PDF";
+  };
+
+  // Open / Close Modal
+  window.openSvcScanner = function() {
+    modal.style.display = "flex";
+    loadPagesFromDeviceDB(() => {
+      updateCounters();
+      switchToCamera();
+    });
+  };
+
+  document.getElementById("scsCloseBtn").onclick = () => {
+    stopCamera();
+    modal.style.display = "none";
+  };
+})();
+</script>
 </body></html>
