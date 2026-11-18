@@ -3243,4 +3243,69 @@ button, .svc-tool-tile, .svc-cat-btn {
   }
 })();
 </script>
+<style>
+/* Force True Mobile App Layout even when Chrome Desktop Site is ON */
+html.svc-true-mobile body,
+html.svc-true-mobile .wrap {
+  max-width: 100% !important;
+  width: 100% !important;
+  padding-left: 10px !important;
+  padding-right: 10px !important;
+  box-sizing: border-box !important;
+}
+html.svc-true-mobile #svcHomeDashboard {
+  grid-template-columns: 1fr !important;
+  gap: 12px !important;
+}
+html.svc-true-mobile .svc-dash-hero {
+  padding: 16px !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+html.svc-true-mobile .svc-dash-controls {
+  flex-direction: column !important;
+  align-items: stretch !important;
+}
+html.svc-true-mobile .svc-search-box {
+  min-width: 100% !important;
+  flex: 1 1 100% !important;
+}
+html.svc-true-mobile header {
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+</style>
+<script>
+(function(){
+  function enforceNativeMobileApp() {
+    const realScreenW = Math.min(window.screen.width || 9999, window.screen.height || 9999);
+    const isTouchPhone = (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) && realScreenW <= 650;
+
+    if (!isTouchPhone) {
+      document.documentElement.classList.remove('svc-true-mobile');
+      document.documentElement.style.zoom = '';
+      return;
+    }
+
+    document.documentElement.classList.add('svc-true-mobile');
+
+    const vp = document.querySelector('meta[name="viewport"]');
+    if (vp) {
+      vp.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
+    }
+
+    // Neutralize Chrome's forced 980px Desktop-Site zoom on phones
+    if (window.innerWidth > realScreenW + 60) {
+      const scaleFix = window.innerWidth / realScreenW;
+      document.documentElement.style.zoom = scaleFix.toFixed(3);
+    } else {
+      document.documentElement.style.zoom = '';
+    }
+  }
+
+  enforceNativeMobileApp();
+  window.addEventListener('resize', enforceNativeMobileApp);
+  window.addEventListener('orientationchange', enforceNativeMobileApp);
+})();
+</script>
 </body></html>
