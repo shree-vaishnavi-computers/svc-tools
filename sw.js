@@ -1,4 +1,4 @@
-const CACHE_NAME = "svc-office-suite-v1";
+const CACHE_NAME = 'svc-tools-v5';
 const CORE_ASSETS = [
   "./",
   "./index.html",
