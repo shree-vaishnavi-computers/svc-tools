@@ -8,7 +8,6 @@
 
     document.documentElement.classList.add("svc-mobile-device");
 
-    // Inject Scoped Scanner CSS Safely
     const styleEl = document.createElement("style");
     styleEl.textContent = `
       #svcMobScanCard, #svcMobScanFab { display: none; }
@@ -22,7 +21,7 @@
         display: flex !important; position: fixed; right: 16px; bottom: 18px; z-index: 9999;
         background: #14b8a6; color: #ffffff; border: none; border-radius: 50%;
         width: 58px; height: 58px; font-size: 24px; align-items: center; justify-content: center;
-        box-shadow: 0 10px 25px rgba(20, 184, 166, 0.45); cursor: pointer;
+        box-shadow: 0 10px 25px rgba(20, 184, 166, 0.45); cursor: pointer; touch-action: manipulation;
       }
       #svcCsHomeModal {
         display: none; position: fixed; inset: 0; z-index: 10040; background: #121212;
@@ -36,19 +35,20 @@
       }
       .csh-search-wrap span { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); font-size: 13px; color: #a1a1aa; }
       .csh-top-icon {
-        width: 36px; height: 36px; border-radius: 50%; background: #27272a; border: 1px solid #3f3f46;
-        color: #38bdf8; display: grid; place-items: center; font-size: 16px; cursor: pointer; flex-shrink: 0;
+        width: 38px; height: 38px; border-radius: 50%; background: #27272a; border: 1px solid #3f3f46;
+        color: #38bdf8; display: grid; place-items: center; font-size: 16px; cursor: pointer; flex-shrink: 0; touch-action: manipulation;
       }
       .csh-folder-bar {
-        display: flex; align-items: center; justify-content: space-between; padding: 6px 14px;
+        display: flex; align-items: center; justify-content: space-between; padding: 7px 14px;
         background: #1c1c1f; border-bottom: 1px solid #27272a; font-size: 11.5px; color: #a1a1aa;
       }
       .csh-quick-grid {
         display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px 8px;
-        padding: 12px 12px 16px 12px; background: #18181b; border-bottom: 1px solid #27272a;
+        padding: 14px 12px 16px 12px; background: #18181b; border-bottom: 1px solid #27272a;
       }
-      .csh-q-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; }
+      .csh-q-item { display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; touch-action: manipulation; }
       .csh-q-circle { width: 48px; height: 48px; border-radius: 50%; background: #27272a; display: grid; place-items: center; font-size: 20px; }
+      .csh-q-item:active .csh-q-circle { transform: scale(0.92); }
       .csh-q-label { font-size: 11px; color: #d4d4d8; font-weight: 600; text-align: center; white-space: nowrap; }
       .csh-recents-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 8px 16px; }
       .csh-recents-head h3 { margin: 0; font-size: 16px; font-weight: 700; color: #ffffff; }
@@ -61,27 +61,25 @@
       .csh-doc-sub { font-size: 11.5px; color: #a1a1aa; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
       .csh-doc-chk { width: 20px; height: 20px; accent-color: #14b8a6; cursor: pointer; }
       .csh-doc-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-      .csh-doc-act-btn { background: #2c2c2e; color: #e4e4e7; border: none; border-radius: 8px; padding: 7px 6px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; }
+      .csh-doc-act-btn { background: #2c2c2e; color: #e4e4e7; border: none; border-radius: 8px; padding: 8px 6px; font-size: 12px; font-weight: 600; cursor: pointer; text-align: center; touch-action: manipulation; }
       .csh-cam-fab {
-        position: fixed; right: 18px; bottom: 68px; width: 58px; height: 58px; border-radius: 50%;
-        background: #14b8a6; color: #ffffff; border: none; font-size: 25px; display: grid; place-items: center;
-        box-shadow: 0 8px 24px rgba(20, 184, 166, 0.45); cursor: pointer; z-index: 10045;
+        position: fixed; right: 18px; bottom: 22px; width: 62px; height: 62px; border-radius: 50%;
+        background: #14b8a6; color: #ffffff; border: none; font-size: 26px; display: grid; place-items: center;
+        box-shadow: 0 8px 24px rgba(20, 184, 166, 0.5); cursor: pointer; z-index: 10048; touch-action: manipulation;
       }
-      .csh-bottom-nav { display: grid; grid-template-columns: repeat(4, 1fr); background: #18181b; border-top: 1px solid #27272a; padding: 7px 0 10px 0; }
-      .csh-nav-btn { background: none; border: none; color: #a1a1aa; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; cursor: pointer; }
-      .csh-nav-btn.active { color: #14b8a6; }
+      .csh-cam-fab:active { transform: scale(0.92); }
 
       #svcScannerModal {
-        display: none; position: fixed; inset: 0; z-index: 10050; background: #090d16;
+        display: none; position: fixed; inset: 0; z-index: 10060; background: #090d16;
         color: #f8fafc; flex-direction: column; font-family: 'Inter', 'Segoe UI', sans-serif; user-select: none;
       }
       .scs-topbar { display: flex; align-items: center; justify-content: space-between; padding: 9px 10px; background: #0f172a; border-bottom: 1px solid #1e293b; gap: 5px; }
       .scs-btn-icon {
         background: #1e293b; color: #f8fafc; border: 1px solid #334155; border-radius: 8px;
-        padding: 6px 9px; font-size: 11.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+        padding: 7px 10px; font-size: 11.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; touch-action: manipulation;
       }
       .scs-btn-icon.active { background: #14b8a6; color: #042f2e; border-color: #14b8a6; }
-      .scs-select { background: #1e293b; color: #ffffff; border: 1px solid #334155; border-radius: 8px; padding: 5px 7px; font-size: 11.5px; font-weight: 700; }
+      .scs-select { background: #1e293b; color: #ffffff; border: 1px solid #334155; border-radius: 8px; padding: 6px 7px; font-size: 11.5px; font-weight: 700; }
       .scs-rename-bar { display: flex; align-items: center; gap: 6px; padding: 7px 10px; background: #111827; border-bottom: 1px solid #1e293b; }
       .scs-rename-bar input {
         flex: 1; min-width: 0; background: #1e293b; color: #ffffff; border: 1px solid #14b8a6;
@@ -101,14 +99,18 @@
         position: absolute; top: 10px; left: 50%; transform: translateX(-50%); background: rgba(15, 23, 42, 0.85);
         border: 1px solid #14b8a6; color: #5eead4; padding: 4px 12px; border-radius: 99px; font-size: 11px; font-weight: 700; pointer-events: none; white-space: nowrap; z-index: 4;
       }
+      #scsCamFallbackBanner {
+        display: none; position: absolute; inset: 0; z-index: 7; background: rgba(9, 13, 22, 0.92);
+        flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; gap: 14px;
+      }
       .scs-cam-controls { background: #0f172a; padding: 10px 14px 20px 14px; border-top: 1px solid #1e293b; display: flex; flex-direction: column; gap: 10px; }
       .scs-mode-switch { display: flex; justify-content: center; gap: 8px; }
-      .scs-mode-pill { padding: 5px 13px; border-radius: 99px; font-size: 11.5px; font-weight: 700; background: #1e293b; color: #94a3b8; border: 1px solid transparent; cursor: pointer; }
+      .scs-mode-pill { padding: 5px 13px; border-radius: 99px; font-size: 11.5px; font-weight: 700; background: #1e293b; color: #94a3b8; border: 1px solid transparent; cursor: pointer; touch-action: manipulation; }
       .scs-mode-pill.active { background: #14b8a6; color: #042f2e; }
       .scs-shutter-row { display: flex; align-items: center; justify-content: space-around; }
-      .scs-shutter-btn { width: 68px; height: 68px; border-radius: 50%; background: #ffffff; border: 5px solid #14b8a6; cursor: pointer; touch-action: manipulation; }
+      .scs-shutter-btn { width: 70px; height: 70px; border-radius: 50%; background: #ffffff; border: 5px solid #14b8a6; cursor: pointer; touch-action: manipulation; }
       .scs-shutter-btn:active { transform: scale(0.9); }
-      .scs-batch-badge { position: relative; width: 52px; height: 58px; border-radius: 8px; background: #1e293b; border: 1.5px solid #475569; display: grid; place-items: center; cursor: pointer; overflow: hidden; }
+      .scs-batch-badge { position: relative; width: 52px; height: 58px; border-radius: 8px; background: #1e293b; border: 1.5px solid #475569; display: grid; place-items: center; cursor: pointer; overflow: hidden; touch-action: manipulation; }
       .scs-batch-badge img { width: 100%; height: 100%; object-fit: cover; }
       .scs-batch-count { position: absolute; top: -1px; right: -1px; background: #14b8a6; color: #042f2e; font-size: 11px; font-weight: 800; padding: 2px 6px; border-radius: 99px; }
 
@@ -128,14 +130,15 @@
       .scs-thumb-chk { position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; border-radius: 4px; background: rgba(15,23,42,0.85); border: 1.5px solid #ffffff; color: #ffffff; font-size: 11px; display: grid; place-items: center; font-weight: 800; }
       .scs-thumb.selected-del .scs-thumb-chk { background: #ef4444; border-color: #ef4444; }
       .scs-filter-bar { display: flex; gap: 6px; padding: 8px 10px; overflow-x: auto; background: #111827; border-top: 1px solid #1e293b; }
-      .scs-filter-chip { padding: 5px 11px; border-radius: 8px; font-size: 11.5px; font-weight: 700; background: #1e293b; color: #cbd5e1; border: 1px solid #334155; white-space: nowrap; cursor: pointer; }
+      .scs-filter-chip { padding: 5px 11px; border-radius: 8px; font-size: 11.5px; font-weight: 700; background: #1e293b; color: #cbd5e1; border: 1px solid #334155; white-space: nowrap; cursor: pointer; touch-action: manipulation; }
       .scs-filter-chip.active { background: #14b8a6; color: #042f2e; border-color: #5eead4; }
       .scs-action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 7px; padding: 8px 10px 16px 10px; background: #0f172a; border-top: 1px solid #1e293b; }
-      .scs-act-btn { padding: 9px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; }
+      .scs-act-btn { padding: 10px; border-radius: 8px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; touch-action: manipulation; }
       #scsFullViewModal { display: none; position: fixed; inset: 0; z-index: 10090; background: rgba(2, 6, 23, 0.97); flex-direction: column; }
       .scs-fv-top { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #0f172a; border-bottom: 1px solid #1e293b; }
       .scs-fv-body { flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px; }
       #scsFullViewImg { max-width: 100%; max-height: 100%; border-radius: 6px; transition: transform 0.2s ease; }
+      .scs-offscreen-input { position: fixed; left: -9999px; top: 0; opacity: 0; width: 1px; height: 1px; }
     `;
     document.head.appendChild(styleEl);
 
@@ -182,7 +185,7 @@
       if (dashGrid && dashGrid.parentNode && !document.getElementById("svcMobScanCard")) {
         const scanBanner = document.createElement("div");
         scanBanner.id = "svcMobScanCard";
-        scanBanner.innerHTML = '<div><div style="font-size:11px;font-weight:800;color:#5eead4;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · CamScanner Studio</div><div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div><div style="font-size:12px;color:#cbd5e1;margin-top:3px;">4-Corner Auto Detect, SVC Documents Folder & PDF</div></div><div style="background:#14b8a6;color:#042f2e;padding:9px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Open ↗</div>';
+        scanBanner.innerHTML = '<div><div style="font-size:11px;font-weight:800;color:#5eead4;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · Document Scanner</div><div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div><div style="font-size:12px;color:#cbd5e1;margin-top:3px;">4-Corner Auto Detect, SVC Documents Folder & PDF</div></div><div style="background:#14b8a6;color:#042f2e;padding:9px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Open ↗</div>';
         scanBanner.onclick = () => openCsHome(true);
         dashGrid.parentNode.insertBefore(scanBanner, dashGrid);
       }
@@ -202,54 +205,48 @@
       mountMobileScannerUI();
     }
 
+    // --- 1. CLEAN CAMSCANNER HOME (ZERO DUMMY ELEMENTS) ---
     const csHome = document.createElement("div");
     csHome.id = "svcCsHomeModal";
     csHome.innerHTML = `
       <div class="csh-top-search">
-        <button type="button" class="csh-top-icon" id="cshExitToSuiteBtn" title="Back to SVC Tools" style="color:#f4f4f5;font-size:14px;">←</button>
+        <button type="button" class="csh-top-icon" id="cshExitToSuiteBtn" title="Back to SVC Tools" style="color:#f4f4f5;font-size:15px;">←</button>
         <div class="csh-search-wrap">
           <span>🔍</span>
-          <input type="text" id="cshSearchInp" placeholder="Search">
+          <input type="text" id="cshSearchInp" placeholder="Search scanned files...">
         </div>
         <button type="button" class="csh-top-icon" id="cshDeleteSelectedDocsBtn" title="Delete Selected" style="color:#f87171;display:none;">🗑️</button>
-        <button type="button" class="csh-top-icon" id="cshFolderSetupBtn" title="Connect SVC Documents Folder" style="color:#38bdf8;">📁</button>
-        <div class="csh-top-icon" style="color:#f59e0b;" title="100% Offline Pro">👑</div>
+        <button type="button" class="csh-top-icon" id="cshFolderSetupBtn" title="Link SVC Documents Folder" style="color:#38bdf8;">📁</button>
       </div>
 
       <div class="csh-folder-bar">
         <span id="cshFolderStatusTxt">📁 Storage: Tap 📁 to link "SVC Documents" folder</span>
-        <button type="button" id="cshSyncNowBtn" style="background:#27272a;color:#5eead4;border:1px solid #3f3f46;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;">↻ Sync</button>
+        <button type="button" id="cshSyncNowBtn" style="background:#27272a;color:#5eead4;border:1px solid #3f3f46;border-radius:6px;padding:4px 9px;font-size:11px;font-weight:700;cursor:pointer;">↻ Sync</button>
       </div>
 
       <div class="csh-quick-grid">
         <div class="csh-q-item" id="cshActSmartScan"><div class="csh-q-circle" style="color:#2dd4bf;">⛶</div><span class="csh-q-label">Smart Scan</span></div>
-        <div class="csh-q-item" id="cshActPdfTools"><div class="csh-q-circle" style="color:#f87171;">📕</div><span class="csh-q-label">PDF Tools</span></div>
-        <div class="csh-q-item" id="cshActImportImg"><div class="csh-q-circle" style="color:#60a5fa;">🖼️</div><span class="csh-q-label">Import Images</span></div>
-        <div class="csh-q-item" id="cshActImportFiles"><div class="csh-q-circle" style="color:#38bdf8;">📂</div><span class="csh-q-label">Import Files</span></div>
+        <div class="csh-q-item" id="cshActSingleScan"><div class="csh-q-circle" style="color:#38bdf8;">📄</div><span class="csh-q-label">Single Page</span></div>
         <div class="csh-q-item" id="cshActIdCard"><div class="csh-q-circle" style="color:#34d399;">🪪</div><span class="csh-q-label">ID Cards</span></div>
+        <div class="csh-q-item" id="cshActImportImg"><div class="csh-q-circle" style="color:#60a5fa;">🖼️</div><span class="csh-q-label">Import Images</span></div>
+        <div class="csh-q-item" id="cshActPdfTools"><div class="csh-q-circle" style="color:#f87171;">📕</div><span class="csh-q-label">PDF Tools</span></div>
         <div class="csh-q-item" id="cshActOcr"><div class="csh-q-circle" style="color:#2dd4bf;">🅃</div><span class="csh-q-label">Extract Text</span></div>
-        <div class="csh-q-item" id="cshActAiDraft"><div class="csh-q-circle" style="color:#34d399;">✨</div><span class="csh-q-label">Solver AI</span></div>
-        <div class="csh-q-item" id="cshActAllTools"><div class="csh-q-circle" style="color:#2dd4bf;">❖</div><span class="csh-q-label">All</span></div>
+        <div class="csh-q-item" id="cshActAiDraft"><div class="csh-q-circle" style="color:#34d399;">✨</div><span class="csh-q-label">AI Drafter</span></div>
+        <div class="csh-q-item" id="cshActAllTools"><div class="csh-q-circle" style="color:#a78bfa;">⊞</div><span class="csh-q-label">All Tools</span></div>
       </div>
 
       <div class="csh-recents-head">
         <h3>Recents</h3>
-        <span id="cshTotalDocsLabel" style="font-size:12.5px;color:#a1a1aa;font-weight:600;">View All ›</span>
+        <span id="cshTotalDocsLabel" style="font-size:12.5px;color:#a1a1aa;font-weight:600;">0 Docs</span>
       </div>
 
       <div class="csh-recents-list" id="cshRecentsList"></div>
 
-      <button type="button" class="csh-cam-fab" id="cshFloatingCamBtn" title="Scan New Document">📷</button>
-
-      <div class="csh-bottom-nav">
-        <button type="button" class="csh-nav-btn active" id="cshNavHome"><span style="font-size:18px;">🏠</span><span>Home</span></button>
-        <button type="button" class="csh-nav-btn" id="cshNavFiles"><span style="font-size:18px;">📄</span><span>Files</span></button>
-        <button type="button" class="csh-nav-btn" id="cshNavTools"><span style="font-size:18px;">⊞</span><span>Tools</span></button>
-        <button type="button" class="csh-nav-btn" id="cshNavMe"><span style="font-size:18px;">👤</span><span>Me</span></button>
-      </div>
+      <button type="button" class="csh-cam-fab" id="cshFloatingCamBtn" title="Open Camera to Scan">📷</button>
     `;
     document.body.appendChild(csHome);
 
+    // --- 2. FULLSCREEN CAMERA & EDITOR MODAL ---
     const modal = document.createElement("div");
     modal.id = "svcScannerModal";
     modal.innerHTML = `
@@ -273,7 +270,13 @@
           <canvas id="scsOverlayCanvas"></canvas>
           <div id="scsFlashEffect"></div>
           <div id="scsCaptureToast">✅ Page Captured!</div>
-          <div class="scs-detect-pill" id="scsDetectStatus">🔍 Detecting 4 Page Corners...</div>
+          <div class="scs-detect-pill" id="scsDetectStatus">🔍 Starting Camera...</div>
+          <div id="scsCamFallbackBanner">
+            <div style="font-size:42px;">📷</div>
+            <div style="font-size:15px;font-weight:700;color:#f8fafc;">Direct Web Camera Blocked by Browser</div>
+            <div style="font-size:12.5px;color:#94a3b8;max-width:280px;">Tap the button below to capture directly using your phone's built-in camera app.</div>
+            <button type="button" id="scsTriggerNativeCamBtn" style="background:#14b8a6;color:#042f2e;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:800;cursor:pointer;">📸 Open Phone Camera</button>
+          </div>
         </div>
         <div class="scs-cam-controls">
           <div class="scs-mode-switch">
@@ -282,12 +285,8 @@
             <button type="button" class="scs-mode-pill" data-scanmode="idcard">ID Card (2-Side)</button>
           </div>
           <div class="scs-shutter-row">
-            <label class="scs-btn-icon" style="cursor:pointer;">
-              🖼️ Gallery
-              <input type="file" id="scsGalleryInp" accept="image/*" multiple style="display:none;">
-            </label>
+            <button type="button" class="scs-btn-icon" id="scsGalleryBtn">🖼️ Gallery</button>
             <button type="button" class="scs-shutter-btn" id="scsCaptureBtn" title="Capture Page"></button>
-            <input type="file" id="scsNativeCamFallback" accept="image/*" capture="environment" style="display:none;">
             <div class="scs-batch-badge" id="scsReviewThumbBtn" title="Review Scanned Pages">
               <span style="font-size:18px;">📄</span>
               <span class="scs-batch-count" id="scsBadgeCount">0</span>
@@ -295,6 +294,9 @@
           </div>
         </div>
       </div>
+
+      <input type="file" id="scsGalleryInp" class="scs-offscreen-input" accept="image/*" multiple>
+      <input type="file" id="scsNativeCamFallback" class="scs-offscreen-input" accept="image/*" capture="environment">
 
       <div id="scsCropView">
         <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#1e293b;font-size:12.5px;">
@@ -600,13 +602,13 @@
       const listEl = document.getElementById("cshRecentsList");
       const q = (document.getElementById("cshSearchInp").value || "").trim().toLowerCase();
       const filtered = savedDocs.filter(d => !q || (d.title || "").toLowerCase().includes(q));
-      document.getElementById("cshTotalDocsLabel").textContent = filtered.length ? filtered.length + " Docs ›" : "View All ›";
+      document.getElementById("cshTotalDocsLabel").textContent = filtered.length + " Docs";
 
       const delTopBtn = document.getElementById("cshDeleteSelectedDocsBtn");
       delTopBtn.style.display = selectedDocIds.size > 0 ? "grid" : "none";
 
       if (!filtered.length) {
-        listEl.innerHTML = '<div style="text-align:center;padding:42px 18px;color:#71717a;"><div style="font-size:38px;margin-bottom:8px;">📄</div><div style="font-size:14px;font-weight:700;color:#d4d4d8;">No Scanned Documents</div><div style="font-size:12px;margin-top:4px;">Tap the green camera button below to scan into SVC Documents.</div></div>';
+        listEl.innerHTML = '<div style="text-align:center;padding:42px 18px;color:#71717a;"><div style="font-size:38px;margin-bottom:8px;">📄</div><div style="font-size:14px;font-weight:700;color:#d4d4d8;">No Scanned Documents</div><div style="font-size:12px;margin-top:4px;">Tap the green camera button below to scan your first document.</div></div>';
         return;
       }
 
@@ -693,10 +695,10 @@
     }
 
     document.getElementById("cshExitToSuiteBtn").onclick = () => { csHome.style.display = "none"; };
-    document.getElementById("cshNavTools").onclick = () => { csHome.style.display = "none"; };
     document.getElementById("cshActAllTools").onclick = () => { csHome.style.display = "none"; };
     document.getElementById("cshFloatingCamBtn").onclick = () => startNewScanSession("batch");
     document.getElementById("cshActSmartScan").onclick = () => startNewScanSession("batch");
+    document.getElementById("cshActSingleScan").onclick = () => startNewScanSession("single");
     document.getElementById("cshActIdCard").onclick = () => startNewScanSession("idcard");
     document.getElementById("cshSearchInp").addEventListener("input", renderRecentsList);
 
@@ -721,10 +723,6 @@
     };
 
     document.getElementById("cshActImportImg").onclick = () => {
-      startNewScanSession("batch");
-      setTimeout(() => document.getElementById("scsGalleryInp").click(), 120);
-    };
-    document.getElementById("cshActImportFiles").onclick = () => {
       startNewScanSession("batch");
       setTimeout(() => document.getElementById("scsGalleryInp").click(), 120);
     };
@@ -1027,25 +1025,43 @@
 
     async function startCamera() {
       stopCamera();
-      const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
+      const fb = document.getElementById("scsCamFallbackBanner");
+      if (fb) fb.style.display = "none";
+      const pill = document.getElementById("scsDetectStatus");
+      if (pill) pill.textContent = "🔍 Starting Camera...";
+
       const vid = document.getElementById("scsVideo");
+      vid.muted = true;
+      vid.playsInline = true;
+      vid.setAttribute("playsinline", "");
+      vid.setAttribute("muted", "");
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (fb) fb.style.display = "flex";
+        return;
+      }
+
+      const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
       const constraintList = [
         { video: { facingMode: { ideal: "environment" }, width: { ideal: targetW }, height: { ideal: Math.round(targetW * 0.75) } }, audio: false },
         { video: { facingMode: "environment" }, audio: false },
         { video: true, audio: false }
       ];
+
       for (const c of constraintList) {
         try {
           mediaStream = await navigator.mediaDevices.getUserMedia(c);
           vid.srcObject = mediaStream;
-          await vid.play();
+          try { await vid.play(); } catch (playErr) {}
           flashOn = false;
           updateFlashBtn();
           startLiveEdgeDetector();
           return;
         } catch (e) {}
       }
-      document.getElementById("scsDetectStatus").textContent = "📷 Tap Shutter or Gallery to Capture";
+
+      if (fb) fb.style.display = "flex";
+      if (pill) pill.textContent = "📷 Tap Open Phone Camera";
     }
 
     function stopCamera() {
@@ -1128,19 +1144,26 @@
       img.src = fullDataUrl;
     }
 
+    document.getElementById("scsTriggerNativeCamBtn").onclick = () => {
+      document.getElementById("scsNativeCamFallback").click();
+    };
+    document.getElementById("scsGalleryBtn").onclick = () => {
+      document.getElementById("scsGalleryInp").click();
+    };
+
     document.getElementById("scsCaptureBtn").addEventListener("click", function (e) {
       e.preventDefault();
       e.stopPropagation();
       const vid = document.getElementById("scsVideo");
-      const vw = vid ? vid.videoWidth || vid.clientWidth : 0;
-      const vh = vid ? vid.videoHeight || vid.clientHeight : 0;
-      if (!vid || !mediaStream || vid.readyState < 2 || !vw || !vh) {
+      const vw = vid ? vid.videoWidth : 0;
+      const vh = vid ? vid.videoHeight : 0;
+      if (!vid || !mediaStream || !vw || !vh) {
         document.getElementById("scsNativeCamFallback").click();
         return;
       }
       const c = document.createElement("canvas");
-      c.width = vid.videoWidth;
-      c.height = vid.videoHeight;
+      c.width = vw;
+      c.height = vh;
       c.getContext("2d").drawImage(vid, 0, 0, c.width, c.height);
       processCapturedFullDataUrl(c.toDataURL("image/jpeg", 0.94), false);
     });

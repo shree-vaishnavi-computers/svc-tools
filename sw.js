@@ -1,4 +1,4 @@
-const CACHE_NAME = 'svc-tools-v20';
+const CACHE_NAME = 'svc-tools-auto-v21';
 const OFFLINE_ASSETS = [
   './',
   './index.html',
