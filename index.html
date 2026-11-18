@@ -3312,39 +3312,37 @@ html.svc-true-mobile header {
 /* --- SVC Mobile-Only CamScanner UI --- */
 #svcMobScanCard, #svcMobScanFab { display: none; }
 
-@media (max-width: 768px), (pointer: coarse) {
-  #svcMobScanCard {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 14px;
-    background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-    color: #ffffff;
-    border-radius: 14px;
-    padding: 16px 18px;
-    margin-bottom: 14px;
-    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
-    cursor: pointer;
-    border: 1px solid #3b82f6;
-  }
-  #svcMobScanFab {
-    display: flex !important;
-    position: fixed;
-    right: 18px;
-    bottom: 20px;
-    z-index: 9990;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: #ffffff;
-    border: none;
-    border-radius: 99px;
-    padding: 13px 18px;
-    font-size: 14px;
-    font-weight: 700;
-    align-items: center;
-    gap: 8px;
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.45);
-    cursor: pointer;
-  }
+html.svc-mobile-device #svcMobScanCard {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 16px 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.16);
+  cursor: pointer;
+  border: 1px solid #3b82f6;
+}
+html.svc-mobile-device #svcMobScanFab {
+  display: flex !important;
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  z-index: 9999;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  border: none;
+  border-radius: 99px;
+  padding: 13px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.45);
+  cursor: pointer;
 }
 
 #svcScannerModal {
@@ -3610,8 +3608,10 @@ html.svc-true-mobile header {
 
 <script>
 (function(){
-  const isMobileDevice = window.innerWidth <= 768 || ('ontouchstart' in window && Math.min(screen.width, screen.height) <= 768);
-  if (!isMobileDevice) return;
+  const isTouchOrMobile = (navigator.maxTouchPoints > 0) || ('ontouchstart' in window) || /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+  if (!isTouchOrMobile) return;
+
+  document.documentElement.classList.add("svc-mobile-device");
 
   function makeDefaultDocName() {
     const now = new Date();
@@ -3627,31 +3627,40 @@ html.svc-true-mobile header {
     return raw.replace(/[\\/:*?"<>|]+/g, "_");
   }
 
-  // 1. Add Mobile-Only Scanner Card on Dashboard & Floating Camera Button
-  const dashGrid = document.getElementById("svcHomeDashboard");
-  if (dashGrid && dashGrid.parentNode) {
-    const scanBanner = document.createElement("div");
-    scanBanner.id = "svcMobScanCard";
-    scanBanner.innerHTML = `
-      <div>
-        <div style="font-size:11px;font-weight:800;color:#93c5fd;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · Mobile App Exclusive</div>
-        <div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div>
-        <div style="font-size:12px;color:#cbd5e1;margin-top:3px;">Magic Pro, No Shadow, Batch Scan & Instant PDF</div>
-      </div>
-      <div style="background:#2563eb;padding:10px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Scan ↗</div>
-    `;
-    scanBanner.onclick = () => openSvcScanner();
-    dashGrid.parentNode.insertBefore(scanBanner, dashGrid);
+  function mountMobileScannerUI() {
+    if (document.getElementById("svcMobScanFab")) return;
+
+    const dashGrid = document.getElementById("svcHomeDashboard");
+    if (dashGrid && dashGrid.parentNode && !document.getElementById("svcMobScanCard")) {
+      const scanBanner = document.createElement("div");
+      scanBanner.id = "svcMobScanCard";
+      scanBanner.innerHTML = `
+        <div>
+          <div style="font-size:11px;font-weight:800;color:#93c5fd;text-transform:uppercase;letter-spacing:0.5px;">100% Offline · Mobile App Exclusive</div>
+          <div style="font-size:17px;font-weight:800;margin-top:2px;">📷 SVC Document Scanner</div>
+          <div style="font-size:12px;color:#cbd5e1;margin-top:3px;">Magic Pro, No Shadow, Batch Scan & Instant PDF</div>
+        </div>
+        <div style="background:#2563eb;padding:10px 14px;border-radius:10px;font-weight:800;font-size:13px;white-space:nowrap;">Scan ↗</div>
+      `;
+      scanBanner.onclick = () => openSvcScanner();
+      dashGrid.parentNode.insertBefore(scanBanner, dashGrid);
+    }
+
+    const fab = document.createElement("button");
+    fab.id = "svcMobScanFab";
+    fab.type = "button";
+    fab.innerHTML = `📷 Scan Doc`;
+    fab.onclick = () => openSvcScanner();
+    document.body.appendChild(fab);
   }
 
-  const fab = document.createElement("button");
-  fab.id = "svcMobScanFab";
-  fab.type = "button";
-  fab.innerHTML = `📷 Scan Doc`;
-  fab.onclick = () => openSvcScanner();
-  document.body.appendChild(fab);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mountMobileScannerUI);
+  } else {
+    mountMobileScannerUI();
+  }
 
-  // 2. Build Fullscreen CamScanner Modal
+  // Build Fullscreen CamScanner Modal
   const modal = document.createElement("div");
   modal.id = "svcScannerModal";
   modal.innerHTML = `
@@ -3668,7 +3677,6 @@ html.svc-true-mobile header {
       <button type="button" class="scs-btn-icon" id="scsSwitchViewBtn" style="background:#1d4ed8;border-color:#3b82f6;">Pages (<span id="scsTopCount">0</span>)</button>
     </div>
 
-    <!-- CAMERA VIEW -->
     <div id="scsCameraView" style="display:flex;flex-direction:column;flex:1;overflow:hidden;">
       <div class="scs-view-area">
         <video id="scsVideo" autoplay playsinline muted></video>
@@ -3693,7 +3701,6 @@ html.svc-true-mobile header {
       </div>
     </div>
 
-    <!-- EDITOR & EXPORT VIEW -->
     <div id="scsEditorView">
       <div class="scs-rename-bar">
         <span style="font-size:15px;">✏️</span>
@@ -3733,7 +3740,6 @@ html.svc-true-mobile header {
   `;
   document.body.appendChild(modal);
 
-  // 3. State & IndexedDB Offline Storage
   let pages = [];
   let docTitle = makeDefaultDocName();
   let activeIdx = 0;
@@ -3794,7 +3800,6 @@ html.svc-true-mobile header {
     switchToCamera();
   };
 
-  // 4. Camera Controls (HD + Flash Torch)
   async function startCamera() {
     stopCamera();
     const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
@@ -3917,7 +3922,6 @@ html.svc-true-mobile header {
     }
   }
 
-  // 5. Image Processing Engine + Default "SVC Scanner" Watermark
   function renderProcessedPage(pageObj, targetCanvas, callback) {
     const img = new Image();
     img.onload = () => {
@@ -4008,7 +4012,6 @@ html.svc-true-mobile header {
       }
       ctx.putImageData(imgData, 0, 0);
 
-      // Default "SVC Scanner" Watermark
       const fontSize = Math.max(14, Math.round(w * 0.021));
       ctx.save();
       ctx.font = `700 ${fontSize}px sans-serif`;
@@ -4029,7 +4032,6 @@ html.svc-true-mobile header {
     img.src = pageObj.rawDataUrl;
   }
 
-  // 6. Editor Navigation & Filters
   function switchToEditor() {
     if (!pages.length) {
       alert("Please capture or select at least 1 page first.");
@@ -4111,7 +4113,6 @@ html.svc-true-mobile header {
     else switchToEditor();
   };
 
-  // 7. Pure Offline Multi-Page JPEG-to-PDF Generator
   async function buildMultiPagePdfBlob() {
     const pageBlobs = [];
     for (const p of pages) {
@@ -4146,7 +4147,6 @@ html.svc-true-mobile header {
       const pageObj = 3 + i * 3;
       const contentObj = 4 + i * 3;
       const imgObj = 5 + i * 3;
-
       const pdfW = 595, pdfH = Math.round((h / w) * 595);
 
       offsets[pageObj] = pos;
@@ -4194,7 +4194,6 @@ html.svc-true-mobile header {
     triggerDownload(blob, filename);
   }
 
-  // Save & Share Single Image with Custom/Timestamp Name
   document.getElementById("scsSaveImgBtn").onclick = () => {
     const base = getSafeFileName();
     const c = document.getElementById("scsPreviewCanvas");
@@ -4211,7 +4210,6 @@ html.svc-true-mobile header {
     }, "image/jpeg", 0.92);
   };
 
-  // Save & Share Full Multi-Page PDF with Custom/Timestamp Name
   document.getElementById("scsSavePdfBtn").onclick = async () => {
     if (!pages.length) return;
     const base = getSafeFileName();
@@ -4232,7 +4230,6 @@ html.svc-true-mobile header {
     btn.textContent = "📑 Share Full PDF";
   };
 
-  // Open / Close Modal
   window.openSvcScanner = function() {
     modal.style.display = "flex";
     loadPagesFromDeviceDB(() => {
