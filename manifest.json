@@ -1,8 +1,8 @@
 {
   "name": "SHREE VAISHNAVI COMPUTERS",
   "short_name": "SVC Tools",
-  "description": "AI+ Office Suite, Offline PDF, OCR, Photo & Typing Tools",
-  "start_url": "./index.html?mode=app",
+  "description": "100% Offline Office Suite, Document Scanner, PDF, OCR & Typing Tools",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
