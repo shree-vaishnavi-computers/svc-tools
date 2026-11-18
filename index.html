@@ -3310,7 +3310,8 @@ html.svc-true-mobile header {
 </script>
 <style>
 <style>
-/* --- SVC Mobile-Only CamScanner UI with Auto Edge Detector --- */
+<style>
+/* --- SVC Pro Mobile Document Scanner UI --- */
 #svcMobScanCard, #svcMobScanFab { display: none; }
 
 html.svc-mobile-device #svcMobScanCard {
@@ -3361,23 +3362,24 @@ html.svc-mobile-device #svcMobScanFab {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 9px 10px;
   background: #0f172a;
   border-bottom: 1px solid #1e293b;
-  gap: 6px;
+  gap: 5px;
 }
 .scs-btn-icon {
   background: #1e293b;
   color: #f8fafc;
   border: 1px solid #334155;
   border-radius: 8px;
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 6px 9px;
+  font-size: 11.5px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
+  white-space: nowrap;
 }
 .scs-btn-icon.active {
   background: #f59e0b;
@@ -3389,26 +3391,27 @@ html.svc-mobile-device #svcMobScanFab {
   color: #ffffff;
   border: 1px solid #334155;
   border-radius: 8px;
-  padding: 6px 8px;
-  font-size: 12px;
+  padding: 5px 7px;
+  font-size: 11.5px;
   font-weight: 700;
 }
 .scs-rename-bar {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 6px;
+  padding: 7px 10px;
   background: #111827;
   border-bottom: 1px solid #1e293b;
 }
 .scs-rename-bar input {
   flex: 1;
+  min-width: 0;
   background: #1e293b;
   color: #ffffff;
   border: 1px solid #3b82f6;
   border-radius: 7px;
-  padding: 7px 10px;
-  font-size: 13px;
+  padding: 6px 9px;
+  font-size: 12.5px;
   font-weight: 700;
   user-select: text;
   -webkit-user-select: text;
@@ -3440,30 +3443,53 @@ html.svc-mobile-device #svcMobScanFab {
   background: #ffffff;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.12s ease;
+  transition: opacity 0.14s ease;
+  z-index: 5;
+}
+#scsCaptureToast {
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(22, 163, 74, 0.94);
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.22s ease;
+  z-index: 6;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+#scsCaptureToast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 .scs-detect-pill {
   position: absolute;
-  top: 12px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.82);
+  background: rgba(15, 23, 42, 0.85);
   border: 1px solid #22c55e;
   color: #86efac;
   padding: 4px 12px;
   border-radius: 99px;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   pointer-events: none;
   white-space: nowrap;
+  z-index: 4;
 }
 .scs-cam-controls {
   background: #0f172a;
-  padding: 12px 16px 22px 16px;
+  padding: 10px 14px 20px 14px;
   border-top: 1px solid #1e293b;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 .scs-mode-switch {
   display: flex;
@@ -3471,9 +3497,9 @@ html.svc-mobile-device #svcMobScanFab {
   gap: 8px;
 }
 .scs-mode-pill {
-  padding: 5px 14px;
+  padding: 5px 13px;
   border-radius: 99px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   background: #1e293b;
   color: #94a3b8;
@@ -3498,12 +3524,20 @@ html.svc-mobile-device #svcMobScanFab {
   cursor: pointer;
   box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.25);
   touch-action: manipulation;
+  position: relative;
 }
-.scs-shutter-btn:active { transform: scale(0.92); }
+.scs-shutter-btn::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+}
+.scs-shutter-btn:active { transform: scale(0.9); background: #e0f2fe; }
 .scs-batch-badge {
   position: relative;
-  width: 50px;
-  height: 56px;
+  width: 52px;
+  height: 58px;
   border-radius: 8px;
   background: #1e293b;
   border: 1.5px solid #475569;
@@ -3511,16 +3545,14 @@ html.svc-mobile-device #svcMobScanFab {
   place-items: center;
   cursor: pointer;
   overflow: hidden;
+  transition: transform 0.18s ease;
 }
-.scs-batch-badge img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.scs-batch-badge.pulse { transform: scale(1.14); border-color: #22c55e; }
+.scs-batch-badge img { width: 100%; height: 100%; object-fit: cover; }
 .scs-batch-count {
   position: absolute;
-  top: -2px;
-  right: -2px;
+  top: -1px;
+  right: -1px;
   background: #ef4444;
   color: #ffffff;
   font-size: 11px;
@@ -3528,6 +3560,7 @@ html.svc-mobile-device #svcMobScanFab {
   padding: 2px 6px;
   border-radius: 99px;
 }
+
 #scsEditorView, #scsCropView {
   display: none;
   flex: 1;
@@ -3535,12 +3568,22 @@ html.svc-mobile-device #svcMobScanFab {
   overflow: hidden;
   background: #0b1120;
 }
+.scs-tool-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: #1e293b;
+  font-size: 11.5px;
+  gap: 4px;
+  overflow-x: auto;
+}
 .scs-canvas-wrap {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: 10px;
   overflow: auto;
   position: relative;
 }
@@ -3552,17 +3595,40 @@ html.svc-mobile-device #svcMobScanFab {
   background: #ffffff;
   touch-action: none;
 }
+.scs-adjust-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: #0f172a;
+  border-top: 1px solid #1e293b;
+  font-size: 11px;
+  color: #cbd5e1;
+}
+.scs-adjust-bar label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 1;
+  font-weight: 600;
+}
+.scs-adjust-bar input[type="range"] {
+  flex: 1;
+  accent-color: #3b82f6;
+  height: 4px;
+}
 .scs-page-strip {
   display: flex;
+  align-items: center;
   gap: 8px;
-  padding: 8px 12px;
+  padding: 7px 10px;
   overflow-x: auto;
   background: #0f172a;
   border-top: 1px solid #1e293b;
 }
 .scs-thumb {
-  width: 48px;
-  height: 62px;
+  width: 50px;
+  height: 64px;
   border-radius: 6px;
   border: 2px solid #334155;
   overflow: hidden;
@@ -3570,29 +3636,50 @@ html.svc-mobile-device #svcMobScanFab {
   position: relative;
   cursor: pointer;
 }
-.scs-thumb.active { border-color: #38bdf8; }
+.scs-thumb.active { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35); }
+.scs-thumb.selected-del { border-color: #ef4444; }
 .scs-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .scs-thumb span {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0,0,0,0.75);
   font-size: 10px;
   text-align: center;
+  font-weight: 700;
+}
+.scs-thumb-chk {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: rgba(15,23,42,0.85);
+  border: 1.5px solid #ffffff;
+  color: #ffffff;
+  font-size: 11px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+}
+.scs-thumb.selected-del .scs-thumb-chk {
+  background: #ef4444;
+  border-color: #ef4444;
 }
 .scs-filter-bar {
   display: flex;
-  gap: 7px;
-  padding: 10px 12px;
+  gap: 6px;
+  padding: 8px 10px;
   overflow-x: auto;
   background: #111827;
   border-top: 1px solid #1e293b;
 }
 .scs-filter-chip {
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 8px;
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 700;
   background: #1e293b;
   color: #cbd5e1;
@@ -3608,22 +3695,55 @@ html.svc-mobile-device #svcMobScanFab {
 .scs-action-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  padding: 10px 12px 18px 12px;
+  gap: 7px;
+  padding: 8px 10px 16px 10px;
   background: #0f172a;
   border-top: 1px solid #1e293b;
 }
 .scs-act-btn {
-  padding: 10px;
+  padding: 9px;
   border-radius: 8px;
   border: none;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
+}
+
+/* Fullscreen Page Viewer Overlay */
+#scsFullViewModal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 10090;
+  background: rgba(2, 6, 23, 0.97);
+  flex-direction: column;
+}
+.scs-fv-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+}
+.scs-fv-body {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+#scsFullViewImg {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 6px;
+  transition: transform 0.2s ease;
+  transform-origin: center center;
 }
 </style>
 
@@ -3633,6 +3753,26 @@ html.svc-mobile-device #svcMobScanFab {
   if (!isTouchOrMobile) return;
 
   document.documentElement.classList.add("svc-mobile-device");
+
+  // Realistic Offline Camera Shutter Sound (Zero External Audio File)
+  function playShutterClickSound() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(950, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(140, ctx.currentTime + 0.065);
+      gain.gain.setValueAtTime(0.32, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.07);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.075);
+    } catch (e) {}
+  }
 
   function makeDefaultDocName() {
     const now = new Date();
@@ -3683,12 +3823,12 @@ html.svc-mobile-device #svcMobScanFab {
   modal.innerHTML = `
     <div class="scs-topbar">
       <button type="button" class="scs-btn-icon" id="scsCloseBtn">✕ Close</button>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <button type="button" class="scs-btn-icon" id="scsFlashBtn">⚡ Flash: OFF</button>
-        <button type="button" class="scs-btn-icon active" id="scsAutoEdgeBtn">🔲 Auto-Edge: ON</button>
+      <div style="display:flex;align-items:center;gap:5px;">
+        <button type="button" class="scs-btn-icon" id="scsFlashBtn">⚡ Flash</button>
+        <button type="button" class="scs-btn-icon active" id="scsAutoEdgeBtn">🔲 Auto-Edge</button>
         <select id="scsResSelect" class="scs-select" title="HD Resolution">
-          <option value="1280">SD 720p</option>
-          <option value="1920" selected>HD 1080p</option>
+          <option value="1280">SD</option>
+          <option value="1920" selected>HD</option>
           <option value="3840">4K</option>
         </select>
       </div>
@@ -3701,7 +3841,8 @@ html.svc-mobile-device #svcMobScanFab {
         <video id="scsVideo" autoplay playsinline muted></video>
         <canvas id="scsOverlayCanvas"></canvas>
         <div id="scsFlashEffect"></div>
-        <div class="scs-detect-pill" id="scsDetectStatus">🔍 Detecting Top Page Edges...</div>
+        <div id="scsCaptureToast">✅ Page Captured!</div>
+        <div class="scs-detect-pill" id="scsDetectStatus">🔍 Detecting Top Page...</div>
       </div>
       <div class="scs-cam-controls">
         <div class="scs-mode-switch">
@@ -3728,7 +3869,7 @@ html.svc-mobile-device #svcMobScanFab {
       <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#1e293b;font-size:12.5px;">
         <button type="button" class="scs-btn-icon" id="scsCropCancelBtn">← Back</button>
         <span style="font-weight:700;color:#93c5fd;">Drag Corners to Fit Top Page</span>
-        <button type="button" class="scs-btn-icon" id="scsCropApplyBtn" style="background:#16a34a;border-color:#22c55e;">✓ Apply Crop</button>
+        <button type="button" class="scs-btn-icon" id="scsCropApplyBtn" style="background:#16a34a;border-color:#22c55e;">✓ Apply</button>
       </div>
       <div class="scs-canvas-wrap">
         <canvas id="scsCropCanvas"></canvas>
@@ -3738,21 +3879,31 @@ html.svc-mobile-device #svcMobScanFab {
     <!-- EDITOR & EXPORT VIEW -->
     <div id="scsEditorView">
       <div class="scs-rename-bar">
-        <span style="font-size:15px;">✏️</span>
-        <input type="text" id="scsDocNameInp" placeholder="Enter document name...">
+        <span style="font-size:14px;">✏️</span>
+        <input type="text" id="scsDocNameInp" placeholder="Document name...">
+        <select id="scsPdfQualitySel" class="scs-select" title="PDF Size & Quality">
+          <option value="0.62">Low KB</option>
+          <option value="0.82" selected>Balanced</option>
+          <option value="0.95">HD PDF</option>
+        </select>
         <button type="button" class="scs-btn-icon" id="scsNewDocBtn" style="background:#7f1d1d;border-color:#991b1b;">+ New</button>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#1e293b;font-size:12px;gap:6px;">
+      <div class="scs-tool-strip">
         <button type="button" class="scs-btn-icon" id="scsAddMoreCamBtn">+ Scan</button>
-        <span id="scsPageIndicator" style="font-weight:700;">Page 1 of 1</span>
-        <div style="display:flex;gap:5px;">
-          <button type="button" class="scs-btn-icon" id="scsOpenCropBtn">✂️ Crop</button>
-          <button type="button" class="scs-btn-icon" id="scsRotateBtn">↻</button>
-          <button type="button" class="scs-btn-icon" id="scsDelPageBtn" style="color:#fca5a5;">🗑️</button>
-        </div>
+        <button type="button" class="scs-btn-icon" id="scsFullViewBtn">🔍 Full</button>
+        <button type="button" class="scs-btn-icon" id="scsOpenCropBtn">✂️ Crop</button>
+        <button type="button" class="scs-btn-icon" id="scsRotLeftBtn" title="Rotate Left 90°">↺ Left</button>
+        <button type="button" class="scs-btn-icon" id="scsRotRightBtn" title="Rotate Right 90°">↻ Right</button>
+        <button type="button" class="scs-btn-icon" id="scsSelectModeBtn">☑️ Select</button>
+        <button type="button" class="scs-btn-icon" id="scsDelPageBtn" style="color:#fca5a5;">🗑️</button>
       </div>
-      <div class="scs-canvas-wrap">
-        <canvas id="scsPreviewCanvas"></canvas>
+      <div class="scs-canvas-wrap" id="scsPreviewWrap">
+        <canvas id="scsPreviewCanvas" title="Tap for Full Screen View"></canvas>
+      </div>
+      <div class="scs-adjust-bar">
+        <label>☀️ <input type="range" id="scsBrightRange" min="-50" max="60" value="0"></label>
+        <label>◐ <input type="range" id="scsContrastRange" min="-40" max="70" value="0"></label>
+        <button type="button" class="scs-btn-icon" id="scsResetAdjBtn" style="padding:3px 7px;font-size:10.5px;">Reset</button>
       </div>
       <div class="scs-page-strip" id="scsPageStrip"></div>
       <div class="scs-filter-bar" id="scsFilterBar">
@@ -3773,10 +3924,28 @@ html.svc-mobile-device #svcMobScanFab {
         <button type="button" class="scs-act-btn" id="scsSharePdfBtn" style="background:#f59e0b;color:#0f172a;">📑 Share Full PDF</button>
       </div>
     </div>
+
+    <!-- FULLSCREEN PAGE VIEWER MODAL -->
+    <div id="scsFullViewModal">
+      <div class="scs-fv-top">
+        <button type="button" class="scs-btn-icon" id="scsFvCloseBtn">← Back to Editor</button>
+        <span id="scsFvTitle" style="font-size:13px;font-weight:700;">Page 1</span>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="scs-btn-icon" id="scsFvPrevBtn">◀ Prev</button>
+          <button type="button" class="scs-btn-icon" id="scsFvZoomBtn">🔍 2x Zoom</button>
+          <button type="button" class="scs-btn-icon" id="scsFvNextBtn">Next ▶</button>
+        </div>
+      </div>
+      <div class="scs-fv-body">
+        <img id="scsFullViewImg" alt="Full Page Preview">
+      </div>
+    </div>
   `;
   document.body.appendChild(modal);
 
-  let pages = []; // { id, fullDataUrl, rawDataUrl, cropBox, filter, grayscale, rotation }
+  let pages = []; // { id, fullDataUrl, rawDataUrl, cropBox, filter, grayscale, rotation, brightness, contrast }
+  let selectedForDelete = new Set();
+  let multiSelectMode = false;
   let docTitle = makeDefaultDocName();
   let activeIdx = 0;
   let scanMode = "batch";
@@ -3785,101 +3954,105 @@ html.svc-mobile-device #svcMobScanFab {
   let mediaStream = null;
   let detectTimer = null;
   let lastDetectedNorm = { x: 0.08, y: 0.08, w: 0.84, h: 0.84 };
+  let fvZoomed = false;
   const DB_NAME = "svc_offline_scanner_db";
 
-  // --- SMART TOP-PAGE EDGE DETECTOR (Isolates primary central sheet from background / underlying pages) ---
-  function detectTopPageBounds(sourceCanvasOrVideo, srcW, srcH) {
-    const anaW = 180;
-    const anaH = Math.max(120, Math.round((srcH / srcW) * anaW));
+  // --- IMPROVED TOP-PAGE EDGE DETECTOR (Sustained Paper Color + Gradient Boundary) ---
+  function detectTopPageBounds(sourceEl, srcW, srcH) {
+    const anaW = 160;
+    const anaH = Math.max(110, Math.round((srcH / srcW) * anaW));
     const c = document.createElement("canvas");
     c.width = anaW;
     c.height = anaH;
     const ctx = c.getContext("2d");
-    ctx.drawImage(sourceCanvasOrVideo, 0, 0, anaW, anaH);
+    ctx.drawImage(sourceEl, 0, 0, anaW, anaH);
     const d = ctx.getImageData(0, 0, anaW, anaH).data;
 
-    // Grayscale luminance array
-    const lum = new Float32Array(anaW * anaH);
-    for (let i = 0; i < anaW * anaH; i++) {
-      const idx = i * 4;
-      lum[i] = 0.299 * d[idx] + 0.587 * d[idx + 1] + 0.114 * d[idx + 2];
+    // Sample average RGB of the central top sheet (22%x22% center patch)
+    let sumR = 0, sumG = 0, sumB = 0, cnt = 0;
+    const xStart = Math.floor(anaW * 0.39), xEnd = Math.floor(anaW * 0.61);
+    const yStart = Math.floor(anaH * 0.39), yEnd = Math.floor(anaH * 0.61);
+    for (let y = yStart; y < yEnd; y++) {
+      for (let x = xStart; x < xEnd; x++) {
+        const idx = (y * anaW + x) * 4;
+        sumR += d[idx]; sumG += d[idx + 1]; sumB += d[idx + 2];
+        cnt++;
+      }
+    }
+    const pR = sumR / cnt, pG = sumG / cnt, pB = sumB / cnt;
+
+    function pixelColorDiff(x, y) {
+      const idx = (y * anaW + x) * 4;
+      const dr = d[idx] - pR, dg = d[idx + 1] - pG, db = d[idx + 2] - pB;
+      return Math.sqrt(dr * dr + dg * dg + db * db);
     }
 
-    // Smooth with 3x3 box blur to suppress inner printed text lines while keeping outer page edges sharp
-    const blur = new Float32Array(anaW * anaH);
-    for (let y = 1; y < anaH - 1; y++) {
-      for (let x = 1; x < anaW - 1; x++) {
-        let s = 0;
-        for (let dy = -1; dy <= 1; dy++) {
-          for (let dx = -1; dx <= 1; dx++) {
-            s += lum[(y + dy) * anaW + (x + dx)];
+    // March outward from center; only lock an edge when 5 consecutive pixels differ from top sheet color
+    // (ignores thin black text lines inside the document!)
+    function findEdge(isHoriz, dir) {
+      const candidates = [];
+      const s0 = isHoriz ? Math.floor(anaH * 0.25) : Math.floor(anaW * 0.25);
+      const s1 = isHoriz ? Math.floor(anaH * 0.75) : Math.floor(anaW * 0.75);
+      const mid = isHoriz ? Math.floor(anaW * 0.5) : Math.floor(anaH * 0.5);
+      const limit = isHoriz ? (dir > 0 ? anaW - 6 : 5) : (dir > 0 ? anaH - 6 : 5);
+
+      for (let s = s0; s <= s1; s += 3) {
+        let edgePos = isHoriz ? (dir > 0 ? anaW - 2 : 1) : (dir > 0 ? anaH - 2 : 1);
+        for (let p = mid + dir * 14; dir > 0 ? p < limit : p > limit; p += dir) {
+          let outsideCount = 0;
+          for (let k = 0; k < 5; k++) {
+            const px = isHoriz ? p + dir * k : s;
+            const py = isHoriz ? s : p + dir * k;
+            if (pixelColorDiff(px, py) > 36) outsideCount++;
           }
-        }
-        blur[y * anaW + x] = s / 9;
-      }
-    }
-
-    // Sample core paper brightness in the central 30% zone (where the top page is aimed)
-    let coreSum = 0, coreCnt = 0;
-    const cx0 = Math.floor(anaW * 0.35), cx1 = Math.floor(anaW * 0.65);
-    const cy0 = Math.floor(anaH * 0.35), cy1 = Math.floor(anaH * 0.65);
-    for (let y = cy0; y < cy1; y++) {
-      for (let x = cx0; x < cx1; x++) {
-        coreSum += blur[y * anaW + x];
-        coreCnt++;
-      }
-    }
-    const paperLum = coreSum / Math.max(1, coreCnt);
-
-    // Raycast outward from center along multiple scanlines to find the TOP page boundary
-    // Stops at strong paper-to-background OR paper-to-underlying-sheet edge gradient
-    function findEdgeFromCenter(isHorizontal, dir) {
-      const hits = [];
-      const bandStart = isHorizontal ? Math.floor(anaH * 0.25) : Math.floor(anaW * 0.25);
-      const bandEnd = isHorizontal ? Math.floor(anaH * 0.75) : Math.floor(anaW * 0.75);
-      const mid = isHorizontal ? Math.floor(anaW * 0.5) : Math.floor(anaH * 0.5);
-      const limit = isHorizontal ? (dir > 0 ? anaW - 3 : 2) : (dir > 0 ? anaH - 3 : 2);
-
-      for (let s = bandStart; s <= bandEnd; s += 3) {
-        let found = limit;
-        for (let p = mid + dir * 12; dir > 0 ? p < limit : p > limit; p += dir) {
-          const x = isHorizontal ? p : s;
-          const y = isHorizontal ? s : p;
-          const xNext = isHorizontal ? p + dir * 2 : s;
-          const yNext = isHorizontal ? s : p + dir * 2;
-          const curVal = blur[y * anaW + x];
-          const nextVal = blur[yNext * anaW + xNext];
-          const grad = Math.abs(curVal - nextVal);
-          const diffFromPaper = Math.abs(nextVal - paperLum);
-
-          // Boundary detected when sharp paper-edge drop/shadow line occurs
-          if (grad > 16 && diffFromPaper > 22) {
-            found = p;
+          if (outsideCount >= 4) {
+            edgePos = p;
             break;
           }
         }
-        hits.push(found);
+        candidates.push(edgePos);
       }
-      hits.sort((a, b) => a - b);
-      // Use median to ignore small notches or overlapping corner distractions
-      return hits[Math.floor(hits.length / 2)];
+      candidates.sort((a, b) => a - b);
+      return candidates[Math.floor(candidates.length / 2)];
     }
 
-    const leftPx = findEdgeFromCenter(true, -1);
-    const rightPx = findEdgeFromCenter(true, 1);
-    const topPx = findEdgeFromCenter(false, -1);
-    const bottomPx = findEdgeFromCenter(false, 1);
+    const lPx = findEdge(true, -1);
+    const rPx = findEdge(true, 1);
+    const tPx = findEdge(false, -1);
+    const bPx = findEdge(false, 1);
 
-    let nx = Math.max(0.01, leftPx / anaW);
-    let ny = Math.max(0.01, topPx / anaH);
-    let nw = Math.min(0.98 - nx, (rightPx - leftPx) / anaW);
-    let nh = Math.min(0.98 - ny, (bottomPx - topPx) / anaH);
+    const nx = Math.max(0.01, lPx / anaW);
+    const ny = Math.max(0.01, tPx / anaH);
+    const nw = Math.min(0.98 - nx, (rPx - lPx) / anaW);
+    const nh = Math.min(0.98 - ny, (bPx - tPx) / anaH);
 
-    // Sanity check: ensure valid document box (at least 35% of frame)
-    if (nw < 0.35 || nh < 0.35) {
+    if (nw < 0.32 || nh < 0.32 || (nw > 0.94 && nh > 0.94)) {
       return { x: 0.06, y: 0.06, w: 0.88, h: 0.88, confident: false };
     }
     return { x: nx, y: ny, w: nw, h: nh, confident: true };
+  }
+
+  // Maps raw video normalized coordinates accurately onto object-fit:cover screen overlay
+  function mapVideoNormToOverlay(normBox, vidW, vidH, ovW, ovH) {
+    const vidRatio = vidW / vidH;
+    const ovRatio = ovW / ovH;
+    let renderW, renderH, offsetX, offsetY;
+    if (vidRatio > ovRatio) {
+      renderH = ovH;
+      renderW = ovH * vidRatio;
+      offsetX = (ovW - renderW) / 2;
+      offsetY = 0;
+    } else {
+      renderW = ovW;
+      renderH = ovW / vidRatio;
+      offsetX = 0;
+      offsetY = (ovH - renderH) / 2;
+    }
+    const x1 = Math.max(4, offsetX + normBox.x * renderW);
+    const y1 = Math.max(4, offsetY + normBox.y * renderH);
+    const x2 = Math.min(ovW - 4, offsetX + (normBox.x + normBox.w) * renderW);
+    const y2 = Math.min(ovH - 4, offsetY + (normBox.y + normBox.h) * renderH);
+    return { x: x1, y: y1, w: Math.max(40, x2 - x1), h: Math.max(40, y2 - y1) };
   }
 
   function applyNormalizedCropToDataUrl(fullDataUrl, box, cb) {
@@ -3898,7 +4071,6 @@ html.svc-mobile-device #svcMobScanFab {
     img.src = fullDataUrl;
   }
 
-  // Live Viewfinder Edge Overlay Loop
   function startLiveEdgeDetector() {
     stopLiveEdgeDetector();
     detectTimer = setInterval(() => {
@@ -3908,6 +4080,7 @@ html.svc-mobile-device #svcMobScanFab {
       if (!vid || !ov || !vid.videoWidth || document.getElementById("scsCameraView").style.display === "none") return;
 
       const rect = ov.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
       ov.width = rect.width;
       ov.height = rect.height;
       const ctx = ov.getContext("2d");
@@ -3921,41 +4094,34 @@ html.svc-mobile-device #svcMobScanFab {
       }
 
       const box = detectTopPageBounds(vid, vid.videoWidth, vid.videoHeight);
-      // Smooth jitter
-      lastDetectedNorm.x = lastDetectedNorm.x * 0.55 + box.x * 0.45;
-      lastDetectedNorm.y = lastDetectedNorm.y * 0.55 + box.y * 0.45;
-      lastDetectedNorm.w = lastDetectedNorm.w * 0.55 + box.w * 0.45;
-      lastDetectedNorm.h = lastDetectedNorm.h * 0.55 + box.h * 0.45;
+      lastDetectedNorm.x = lastDetectedNorm.x * 0.45 + box.x * 0.55;
+      lastDetectedNorm.y = lastDetectedNorm.y * 0.45 + box.y * 0.55;
+      lastDetectedNorm.w = lastDetectedNorm.w * 0.45 + box.w * 0.55;
+      lastDetectedNorm.h = lastDetectedNorm.h * 0.45 + box.h * 0.55;
 
-      const bx = lastDetectedNorm.x * ov.width;
-      const by = lastDetectedNorm.y * ov.height;
-      const bw = lastDetectedNorm.w * ov.width;
-      const bh = lastDetectedNorm.h * ov.height;
+      const scr = mapVideoNormToOverlay(lastDetectedNorm, vid.videoWidth, vid.videoHeight, ov.width, ov.height);
 
-      // Dim outside area
-      ctx.fillStyle = "rgba(0, 0, 0, 0.35)";
+      ctx.fillStyle = "rgba(0, 0, 0, 0.34)";
       ctx.fillRect(0, 0, ov.width, ov.height);
-      ctx.clearRect(bx, by, bw, bh);
+      ctx.clearRect(scr.x, scr.y, scr.w, scr.h);
 
-      // Draw glowing green/cyan page boundary
       ctx.strokeStyle = box.confident ? "#22c55e" : "#38bdf8";
       ctx.lineWidth = 3;
-      ctx.strokeRect(bx, by, bw, bh);
+      ctx.strokeRect(scr.x, scr.y, scr.w, scr.h);
 
-      // Draw 4 corner brackets
-      const arm = 22;
+      const arm = 24;
       ctx.lineWidth = 5;
       ctx.beginPath();
-      ctx.moveTo(bx, by + arm); ctx.lineTo(bx, by); ctx.lineTo(bx + arm, by);
-      ctx.moveTo(bx + bw - arm, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by + arm);
-      ctx.moveTo(bx, by + bh - arm); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + arm, by + bh);
-      ctx.moveTo(bx + bw - arm, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by + bh - arm);
+      ctx.moveTo(scr.x, scr.y + arm); ctx.lineTo(scr.x, scr.y); ctx.lineTo(scr.x + arm, scr.y);
+      ctx.moveTo(scr.x + scr.w - arm, scr.y); ctx.lineTo(scr.x + scr.w, scr.y); ctx.lineTo(scr.x + scr.w, scr.y + arm);
+      ctx.moveTo(scr.x, scr.y + scr.h - arm); ctx.lineTo(scr.x, scr.y + scr.h); ctx.lineTo(scr.x + arm, scr.y + scr.h);
+      ctx.moveTo(scr.x + scr.w - arm, scr.y + scr.h); ctx.lineTo(scr.x + scr.w, scr.y + scr.h); ctx.lineTo(scr.x + scr.w, scr.y + scr.h - arm);
       ctx.stroke();
 
-      pill.textContent = box.confident ? "✅ Top Page Locked (Ready)" : "🔍 Align Top Page Inside Frame";
+      pill.textContent = box.confident ? "✅ Top Page Locked (Ready)" : "🔍 Place Top Page in Center";
       pill.style.borderColor = box.confident ? "#22c55e" : "#38bdf8";
       pill.style.color = box.confident ? "#86efac" : "#bae6fd";
-    }, 320);
+    }, 260);
   }
 
   function stopLiveEdgeDetector() {
@@ -4007,6 +4173,8 @@ html.svc-mobile-device #svcMobScanFab {
   document.getElementById("scsNewDocBtn").onclick = () => {
     if (pages.length && !confirm("Start a new document? Current scanned pages will be cleared.")) return;
     pages = [];
+    selectedForDelete.clear();
+    multiSelectMode = false;
     activeIdx = 0;
     docTitle = makeDefaultDocName();
     document.getElementById("scsDocNameInp").value = docTitle;
@@ -4015,7 +4183,6 @@ html.svc-mobile-device #svcMobScanFab {
     switchToCamera();
   };
 
-  // Reliable Camera Starter with Fallback Constraints
   async function startCamera() {
     stopCamera();
     const targetW = parseInt(document.getElementById("scsResSelect").value || "1920", 10);
@@ -4050,7 +4217,7 @@ html.svc-mobile-device #svcMobScanFab {
 
   function updateFlashBtn() {
     const btn = document.getElementById("scsFlashBtn");
-    btn.textContent = flashOn ? "⚡ Flash: ON" : "⚡ Flash: OFF";
+    btn.textContent = flashOn ? "⚡ Flash: ON" : "⚡ Flash";
     btn.classList.toggle("active", flashOn);
   }
 
@@ -4074,7 +4241,7 @@ html.svc-mobile-device #svcMobScanFab {
 
   document.getElementById("scsAutoEdgeBtn").onclick = function() {
     autoEdgeOn = !autoEdgeOn;
-    this.textContent = autoEdgeOn ? "🔲 Auto-Edge: ON" : "🔲 Auto-Edge: OFF";
+    this.textContent = autoEdgeOn ? "🔲 Auto-Edge" : "⬜ Full Frame";
     this.classList.toggle("active", autoEdgeOn);
   };
 
@@ -4089,7 +4256,24 @@ html.svc-mobile-device #svcMobScanFab {
     };
   });
 
-  // Process newly captured full frame with Auto Top-Page Crop
+  function showCaptureFeedback(pageNum) {
+    playShutterClickSound();
+    if (navigator.vibrate) navigator.vibrate(50);
+
+    const fl = document.getElementById("scsFlashEffect");
+    fl.style.opacity = "0.9";
+    setTimeout(() => { fl.style.opacity = "0"; }, 140);
+
+    const toast = document.getElementById("scsCaptureToast");
+    toast.textContent = `✅ Page ${pageNum} Captured!`;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 1300);
+
+    const badge = document.getElementById("scsReviewThumbBtn");
+    badge.classList.add("pulse");
+    setTimeout(() => badge.classList.remove("pulse"), 260);
+  }
+
   function processCapturedFullDataUrl(fullDataUrl, goEditorAfter) {
     if (pages.length === 0) {
       docTitle = makeDefaultDocName();
@@ -4106,18 +4290,22 @@ html.svc-mobile-device #svcMobScanFab {
           cropBox: { x: box.x, y: box.y, w: box.w, h: box.h },
           filter: "magic",
           grayscale: false,
-          rotation: 0
+          rotation: 0,
+          brightness: 0,
+          contrast: 0
         });
         activeIdx = pages.length - 1;
         updateCounters();
         savePagesToDeviceDB();
-        if (goEditorAfter || scanMode === "single") switchToEditor();
+        showCaptureFeedback(pages.length);
+        if (goEditorAfter || scanMode === "single") {
+          setTimeout(switchToEditor, 220);
+        }
       });
     };
     img.src = fullDataUrl;
   }
 
-  // SHUTTER CLICK HANDLER (With Visual Flash + Vibration + Native Camera Fallback)
   document.getElementById("scsCaptureBtn").addEventListener("click", function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -4127,16 +4315,9 @@ html.svc-mobile-device #svcMobScanFab {
     const vh = vid ? (vid.videoHeight || vid.clientHeight) : 0;
 
     if (!vid || !mediaStream || vid.readyState < 2 || !vw || !vh) {
-      // Fallback to native Android/iOS camera capture if live stream isn't active
       document.getElementById("scsNativeCamFallback").click();
       return;
     }
-
-    // Visual shutter flash + haptic feedback
-    if (navigator.vibrate) navigator.vibrate(45);
-    const fl = document.getElementById("scsFlashEffect");
-    fl.style.opacity = "0.85";
-    setTimeout(() => { fl.style.opacity = "0"; }, 130);
 
     const c = document.createElement("canvas");
     c.width = vid.videoWidth;
@@ -4179,7 +4360,7 @@ html.svc-mobile-device #svcMobScanFab {
     }
   }
 
-  // --- MANUAL / FINE-TUNE CROP TOOL ---
+  // --- MANUAL CROP ADJUST TOOL ---
   let tempCropBox = { x: 0.05, y: 0.05, w: 0.9, h: 0.9 };
   let draggingCorner = null;
 
@@ -4236,13 +4417,9 @@ html.svc-mobile-device #svcMobScanFab {
       ctx.lineWidth = 2.5;
       ctx.strokeRect(x, y, w, h);
 
-      // Draw 4 draggable handles
-      const corners = [
-        [x, y], [x + w, y], [x, y + h], [x + w, y + h]
-      ];
-      corners.forEach(([cx, cy]) => {
+      [[x, y], [x + w, y], [x, y + h], [x + w, y + h]].forEach(([cx, cy]) => {
         ctx.beginPath();
-        ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+        ctx.arc(cx, cy, 13, 0, Math.PI * 2);
         ctx.fillStyle = "#2563eb";
         ctx.fill();
         ctx.lineWidth = 3;
@@ -4270,7 +4447,7 @@ html.svc-mobile-device #svcMobScanFab {
       bl: [tempCropBox.x, tempCropBox.y + tempCropBox.h],
       br: [tempCropBox.x + tempCropBox.w, tempCropBox.y + tempCropBox.h]
     };
-    let best = null, minD = 0.14;
+    let best = null, minD = 0.15;
     for (const [k, [px, py]] of Object.entries(pts)) {
       const dist = Math.hypot(nx - px, ny - py);
       if (dist < minD) { minD = dist; best = k; }
@@ -4291,11 +4468,11 @@ html.svc-mobile-device #svcMobScanFab {
   });
   window.addEventListener("pointerup", () => { draggingCorner = null; });
 
-  // --- 9 FILTERS + DEFAULT "SVC Scanner" WATERMARK ---
+  // --- IMAGE PROCESSING ENGINE + BRIGHTNESS/CONTRAST + "SVC Scanner" WATERMARK ---
   function renderProcessedPage(pageObj, targetCanvas, callback) {
     const img = new Image();
     img.onload = () => {
-      const rot = (pageObj.rotation || 0) % 360;
+      const rot = ((pageObj.rotation || 0) % 360 + 360) % 360;
       const swap = rot === 90 || rot === 270;
       const w = swap ? img.height : img.width;
       const h = swap ? img.width : img.height;
@@ -4313,6 +4490,9 @@ html.svc-mobile-device #svcMobScanFab {
       const d = imgData.data;
       const mode = pageObj.filter || "magic";
       const forceGray = !!pageObj.grayscale;
+      const bright = Number(pageObj.brightness || 0);
+      const cont = Number(pageObj.contrast || 0);
+      const cFactor = (259 * (cont + 255)) / (255 * (259 - cont));
 
       let avgLum = 180;
       if (mode === "noshadow" || mode === "magicpro" || mode === "nohandwriting") {
@@ -4373,14 +4553,25 @@ html.svc-mobile-device #svcMobScanFab {
           r = g = b = v;
         }
 
+        // Manual Brightness & Contrast adjustment
+        if (bright !== 0 || cont !== 0) {
+          r = cFactor * (r + bright - 128) + 128;
+          g = cFactor * (g + bright - 128) + 128;
+          b = cFactor * (b + bright - 128) + 128;
+        }
+
         if (forceGray) {
           const gr = 0.299 * r + 0.587 * g + 0.114 * b;
           r = g = b = gr;
         }
-        d[i] = r; d[i + 1] = g; d[i + 2] = b;
+
+        d[i] = Math.min(255, Math.max(0, r));
+        d[i + 1] = Math.min(255, Math.max(0, g));
+        d[i + 2] = Math.min(255, Math.max(0, b));
       }
       ctx.putImageData(imgData, 0, 0);
 
+      // Default "SVC Scanner" Watermark
       const fontSize = Math.max(14, Math.round(w * 0.021));
       ctx.save();
       ctx.font = `700 ${fontSize}px sans-serif`;
@@ -4424,7 +4615,6 @@ html.svc-mobile-device #svcMobScanFab {
     if (!pages.length) { switchToCamera(); return; }
     if (activeIdx >= pages.length) activeIdx = pages.length - 1;
     const cur = pages[activeIdx];
-    document.getElementById("scsPageIndicator").textContent = `Page ${activeIdx + 1} of ${pages.length}`;
 
     document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.filter === cur.filter);
@@ -4433,18 +4623,139 @@ html.svc-mobile-device #svcMobScanFab {
     grayBtn.textContent = cur.grayscale ? "Grayscale: ON" : "Grayscale: OFF";
     grayBtn.classList.toggle("active", cur.grayscale);
 
+    document.getElementById("scsBrightRange").value = cur.brightness || 0;
+    document.getElementById("scsContrastRange").value = cur.contrast || 0;
+
+    const selBtn = document.getElementById("scsSelectModeBtn");
+    selBtn.classList.toggle("active", multiSelectMode);
+    selBtn.textContent = multiSelectMode ? `☑️ Done (${selectedForDelete.size})` : "☑️ Select";
+
     const strip = document.getElementById("scsPageStrip");
     strip.innerHTML = "";
     pages.forEach((p, idx) => {
+      const isSel = selectedForDelete.has(p.id);
       const th = document.createElement("div");
-      th.className = "scs-thumb" + (idx === activeIdx ? " active" : "");
-      th.innerHTML = `<img src="${p.rawDataUrl}"><span>${idx + 1}</span>`;
-      th.onclick = () => { activeIdx = idx; refreshEditorUI(); };
+      th.className = "scs-thumb" + (idx === activeIdx ? " active" : "") + (isSel ? " selected-del" : "");
+      th.innerHTML = `
+        <img src="${p.rawDataUrl}">
+        <span>${idx + 1}/${pages.length}</span>
+        ${multiSelectMode ? `<div class="scs-thumb-chk">${isSel ? "✓" : ""}</div>` : ""}
+      `;
+      th.onclick = () => {
+        if (multiSelectMode) {
+          if (selectedForDelete.has(p.id)) selectedForDelete.delete(p.id);
+          else selectedForDelete.add(p.id);
+          refreshEditorUI();
+        } else {
+          if (activeIdx === idx) {
+            openFullPageViewer(idx);
+          } else {
+            activeIdx = idx;
+            refreshEditorUI();
+          }
+        }
+      };
       strip.appendChild(th);
     });
 
     renderProcessedPage(cur, document.getElementById("scsPreviewCanvas"));
   }
+
+  // Left & Right 90° Rotation
+  document.getElementById("scsRotLeftBtn").onclick = () => {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) - 90 + 360) % 360;
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
+
+  document.getElementById("scsRotRightBtn").onclick = () => {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) + 90) % 360;
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
+
+  // Multi-Select & Delete
+  document.getElementById("scsSelectModeBtn").onclick = () => {
+    multiSelectMode = !multiSelectMode;
+    if (!multiSelectMode) selectedForDelete.clear();
+    refreshEditorUI();
+  };
+
+  document.getElementById("scsDelPageBtn").onclick = () => {
+    if (!pages.length) return;
+    if (multiSelectMode && selectedForDelete.size > 0) {
+      if (!confirm(`Delete ${selectedForDelete.size} selected page(s)?`)) return;
+      pages = pages.filter(p => !selectedForDelete.has(p.id));
+      selectedForDelete.clear();
+      multiSelectMode = false;
+    } else {
+      if (!confirm(`Delete Page ${activeIdx + 1}?`)) return;
+      pages.splice(activeIdx, 1);
+    }
+    updateCounters();
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
+
+  // Fullscreen Page Viewer
+  function openFullPageViewer(idx) {
+    if (!pages[idx]) return;
+    activeIdx = idx;
+    fvZoomed = false;
+    const imgEl = document.getElementById("scsFullViewImg");
+    imgEl.style.transform = "scale(1)";
+    document.getElementById("scsFvZoomBtn").textContent = "🔍 2x Zoom";
+    document.getElementById("scsFvTitle").textContent = `Page ${idx + 1} of ${pages.length}`;
+
+    const tempC = document.createElement("canvas");
+    renderProcessedPage(pages[idx], tempC, () => {
+      imgEl.src = tempC.toDataURL("image/jpeg", 0.94);
+      document.getElementById("scsFullViewModal").style.display = "flex";
+    });
+  }
+
+  document.getElementById("scsFullViewBtn").onclick = () => openFullPageViewer(activeIdx);
+  document.getElementById("scsPreviewCanvas").onclick = () => openFullPageViewer(activeIdx);
+  document.getElementById("scsFvCloseBtn").onclick = () => {
+    document.getElementById("scsFullViewModal").style.display = "none";
+    refreshEditorUI();
+  };
+  document.getElementById("scsFvZoomBtn").onclick = () => {
+    fvZoomed = !fvZoomed;
+    document.getElementById("scsFullViewImg").style.transform = fvZoomed ? "scale(2)" : "scale(1)";
+    document.getElementById("scsFvZoomBtn").textContent = fvZoomed ? "🔍 1x Fit" : "🔍 2x Zoom";
+  };
+  document.getElementById("scsFvPrevBtn").onclick = () => {
+    if (activeIdx > 0) openFullPageViewer(activeIdx - 1);
+  };
+  document.getElementById("scsFvNextBtn").onclick = () => {
+    if (activeIdx < pages.length - 1) openFullPageViewer(activeIdx + 1);
+  };
+
+  // Brightness & Contrast Sliders
+  document.getElementById("scsBrightRange").oninput = function() {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].brightness = Number(this.value);
+    renderProcessedPage(pages[activeIdx], document.getElementById("scsPreviewCanvas"));
+  };
+  document.getElementById("scsBrightRange").onchange = savePagesToDeviceDB;
+
+  document.getElementById("scsContrastRange").oninput = function() {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].contrast = Number(this.value);
+    renderProcessedPage(pages[activeIdx], document.getElementById("scsPreviewCanvas"));
+  };
+  document.getElementById("scsContrastRange").onchange = savePagesToDeviceDB;
+
+  document.getElementById("scsResetAdjBtn").onclick = () => {
+    if (!pages[activeIdx]) return;
+    pages[activeIdx].brightness = 0;
+    pages[activeIdx].contrast = 0;
+    savePagesToDeviceDB();
+    refreshEditorUI();
+  };
 
   document.querySelectorAll("#scsFilterBar .scs-filter-chip[data-filter]").forEach(btn => {
     btn.onclick = () => {
@@ -4462,21 +4773,6 @@ html.svc-mobile-device #svcMobScanFab {
     refreshEditorUI();
   };
 
-  document.getElementById("scsRotateBtn").onclick = () => {
-    if (!pages[activeIdx]) return;
-    pages[activeIdx].rotation = ((pages[activeIdx].rotation || 0) + 90) % 360;
-    savePagesToDeviceDB();
-    refreshEditorUI();
-  };
-
-  document.getElementById("scsDelPageBtn").onclick = () => {
-    if (!pages.length) return;
-    pages.splice(activeIdx, 1);
-    updateCounters();
-    savePagesToDeviceDB();
-    refreshEditorUI();
-  };
-
   document.getElementById("scsAddMoreCamBtn").onclick = switchToCamera;
   document.getElementById("scsReviewThumbBtn").onclick = switchToEditor;
   document.getElementById("scsSwitchViewBtn").onclick = () => {
@@ -4484,13 +4780,14 @@ html.svc-mobile-device #svcMobScanFab {
     else switchToEditor();
   };
 
-  // Pure Offline Multi-Page PDF Builder
+  // Pure Offline Multi-Page PDF Builder with Quality Control
   async function buildMultiPagePdfBlob() {
+    const jpegQual = parseFloat(document.getElementById("scsPdfQualitySel").value || "0.82");
     const pageBlobs = [];
     for (const p of pages) {
       const c = document.createElement("canvas");
       await new Promise(res => renderProcessedPage(p, c, res));
-      const dataUrl = c.toDataURL("image/jpeg", 0.88);
+      const dataUrl = c.toDataURL("image/jpeg", jpegQual);
       const binStr = atob(dataUrl.split(",")[1]);
       const bytes = new Uint8Array(binStr.length);
       for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
